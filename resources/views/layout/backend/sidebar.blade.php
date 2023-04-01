@@ -19,21 +19,6 @@
             <span>Dashboard</span></a>
     </li>
     @endcan
-
-    @can('user')
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('user') }}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
-    </li>  
-    @elseCan('admin')
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('user') }}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>User Dashboard</span></a>
-    </li>
-    @endCan
-
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -44,12 +29,12 @@
 
     @can('admin')
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-            aria-expanded="true" aria-controls="collapseUtilities">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities1"
+            aria-expanded="true" aria-controls="collapseUtilities1">
             <i class="fas fa-fw fa-table"></i>
             <span>Master Data</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseUtilities1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('user.index') }}">User</a>
                 <a class="collapse-item" href="{{ route('anggota.index') }}">Anggota</a>

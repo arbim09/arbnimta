@@ -18,9 +18,11 @@ class CreateAnggotaTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->integer('umur');
+            $table->string('tempat_lahir');
+            $table->datetime('tanggal_lahir');
+            $table->integer('umur')->nullable();
             $table->text('alamat');
-            $table->string('no_hp');
+            $table->string('no_hp')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

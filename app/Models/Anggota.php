@@ -19,5 +19,8 @@ class Anggota extends Authenticatable
         'email',
         'jenis_kelamin',
         'umur',
+        'tempat_lahir',
+        'tanggal_lahir',
+        
     ];
 }
