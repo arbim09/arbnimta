@@ -93,7 +93,8 @@ class AnggotaController extends Controller
      */
     public function show($id)
     {
-        //
+        $anggota = Anggota::findOrFail($id);
+        return view('admin.anggota.show')->with(compact('anggota'));
     }
 
     /**
@@ -104,7 +105,8 @@ class AnggotaController extends Controller
      */
     public function edit($id)
     {
-        //
+        $anggota = Anggota::findOrFail($id);
+        return view('admin.anggota.edit')->with(compact('anggota'));
     }
 
     /**
@@ -116,7 +118,37 @@ class AnggotaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $anggota = Anggota::findOrFail($id);
+
+        $rules = [
+            'name'          => 'required|string|max:255',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tempat_lahir'  => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'alamat'        => 'required|string',
+        ];
+    
+        $validatedData = $request->validate($rules);
+    
+        $anggota->name = $validatedData['name'];
+        $anggota->jenis_kelamin = $validatedData['jenis_kelamin'];
+        $anggota->tempat_lahir = $validatedData['tempat_lahir'];
+        $anggota->tanggal_lahir = $validatedData['tanggal_lahir'];
+        $anggota->alamat = $validatedData['alamat'];
+        $anggota->no_hp = $request->no_hp;
+        $anggota->email = $request->email;
+    
+        // Check if password field is present in request
+        if (!empty($request->password)) {
+            $anggota->password = Hash::make($request->password);
+        }
+    
+        $anggota->save();
+    
+        // Kembalikan respons sukses
+        return response()->json([
+            'message' => 'Data anggota berhasil diupdate!'
+        ]);
     }
 
     /**
@@ -129,12 +161,10 @@ class AnggotaController extends Controller
     {
         $anggota = Anggota::find($id);
 
-    if (!$anggota) {
-        return response()->json(['message' => 'Anggota tidak ditemukan'], 404);
-    }
-
-    $anggota->delete();
-
-    return response()->json(['message' => 'Anggota berhasil dihapus'], 200);
+        if (!$anggota) {
+            return response()->json(['message' => 'Anggota tidak ditemukan'], 404);
+        }
+        $anggota->delete();
+        return response()->json(['message' => 'Anggota berhasil dihapus'], 200);
     }
 }

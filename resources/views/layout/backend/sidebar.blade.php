@@ -1,11 +1,11 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{route('admin.dashboard')}}">
         <div class="sidebar-brand-icon">
             <img src="{{ asset('images/backend/logo-rtik.png')}}" height="42" width="42">
         </div>
-        <div class="sidebar-brand-text mx-3">CHIKADMIN</div>
+        <div class="sidebar-brand-text mx-3">RTIK CIREBON</div>
     </a>
 
     <!-- Divider -->
@@ -14,7 +14,7 @@
     <!-- Nav Item - Dashboard -->
     @can('admin')
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin') }}">
+        <a class="nav-link" href="{{ route('admin.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -36,7 +36,7 @@
         </a>
         <div id="collapseUtilities1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('user.index') }}">User</a>
+                <a class="collapse-item" href="{{ route('admin.index') }}">Admin</a>
                 <a class="collapse-item" href="{{ route('anggota.index') }}">Anggota</a>
             </div>
         </div>
@@ -121,11 +121,11 @@
             <span>Tables</span></a>
     </li>
 
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link" href="{{ route('profile') }}">
             <i class="fas fa-fw fa-user"></i>
             <span>Profile</span></a>
-    </li>
+    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

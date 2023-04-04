@@ -29,13 +29,13 @@ Route::view('/','welcome');
 Route::group(['namespace' => 'Admin','middleware' => 'auth','prefix' => 'admin'],function(){
 	
 	// Route::get('/',[AdminController::class,'index'])->name('admin')->middleware(['can:admin']);
-	Route::get('/',[AdminController::class,'index'])->name('admin')->middleware(['can:admin']);
+	Route::get('/',[AdminController::class,'dashboard'])->name('admin.dashboard')->middleware(['can:admin']);
 	//Route Rescource
 	Route::resource('/user','UserController')->middleware(['can:admin']);
 	Route::resource('/anggota','AnggotaController')->middleware(['can:admin']);
-	// Route::resource([
-	// 	'anggota' 		=> Controllers\Admin\AnggotaController::class,
-	// ]);
+	Route::resource('/admin','AdminController')->middleware(['can:admin']);
+
+	
 	//Route View
 	
 	Route::view('/404-page','admin.404-page')->name('404-page');
