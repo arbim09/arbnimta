@@ -17,7 +17,7 @@
       </li>
       <li class="nav-item">
       	@auth
-      		<a class="nav-link" href="{{ route('admin') }}">Dashboard</a>
+      		<a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
       	@else
       		<a class="nav-link" href="{{ route('login') }}">Login</a>
       	@endauth

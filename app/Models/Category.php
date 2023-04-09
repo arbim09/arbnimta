@@ -9,6 +9,11 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $table = 'anggota';
+    protected $table = 'categories';
     protected $fillable = ['name'];
+
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class);
+    }
 }

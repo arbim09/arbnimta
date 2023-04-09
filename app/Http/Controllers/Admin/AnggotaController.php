@@ -8,6 +8,7 @@ use App\Models\Anggota;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\DB;
 
 
 class AnggotaController extends Controller
@@ -20,7 +21,7 @@ class AnggotaController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Anggota::select('*')->orderBy('created_at','DESC');
+            $data = Anggota::select('*');
             return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
@@ -166,5 +167,14 @@ class AnggotaController extends Controller
         }
         $anggota->delete();
         return response()->json(['message' => 'Anggota berhasil dihapus'], 200);
+    }
+
+    public function chart()
+    {
+        $data = Anggota::select('gender', DB::raw('count(*) as total'))
+                        ->groupBy('gender')
+                        ->get();
+        
+        return response()->json($data);
     }
 }

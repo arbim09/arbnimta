@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Posts;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use App\Models\User;
@@ -20,7 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             AnggotaSeeder::class,
-            CategorySeeder::class
+            CategorySeeder::class,
+            PostSeeder::class
         ]);
     }
 }

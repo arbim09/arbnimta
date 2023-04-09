@@ -1,6 +1,6 @@
 @extends('layout.backend.app',[
-    'title' => 'Manage Admin',
-    'pageTitle' =>'Manage Admin',
+    'title' => 'Manage Kategori',
+    'pageTitle' =>'Manage Kategori',
 ])
 
 @push('css')
@@ -13,9 +13,9 @@
 
 <div class="card">
         <div class="card-header d-flex align-items-center">
-          <h5 class="card-title">Daftar Admin</h5>
+          <h5 class="card-title">Daftar Kategori</h5>
           <div class="card-tools ml-auto mr-0">
-              <a href="{{ route('admin.create') }}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
+              <a href="{{ route('category.create') }}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
                   <i class="fas fa-plus mr-1"></i> Tambah Baru
               </a>
           </div>
@@ -26,8 +26,7 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
+                            <th>Nama Kategori</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -53,13 +52,12 @@
         processing: true,
         serverSide: true,
         "ajax": {
-				"url": "{{route('admin.index')}}",
+				"url": "{{route('category.index')}}",
 				"type": "GET" //(untuk mendapatkan data)
 			},
         columns: [
             {data: 'DT_RowIndex' , name: 'id', orderable: false },
             {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
             {data: 'action', name: 'action', orderable: false, searchable: true},
         ]
     });
@@ -82,7 +80,7 @@
       }, function () {
           $.ajax({
               type: "DELETE",
-              url: "{{ route('admin.destroy', ':id') }}".replace(':id', id),
+              url: "{{ route('category.destroy', ':id') }}".replace(':id', id),
               data: {
                   "_token": "{{ csrf_token() }}"
               },

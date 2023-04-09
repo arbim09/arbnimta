@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Yajra\Datatables\Datatables;
+use App\Http\Controllers\Admin\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -19,7 +20,7 @@ class AdminController extends Controller
     public function index(Request $request)
     {          
         if ($request->ajax()) {
-            $data = User::select('*')->orderBy('created_at','DESC');
+            $data = User::select('*');
             return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('action', function($row){

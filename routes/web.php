@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 
 //Namespace Admin
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\AnggotaController;
+use App\Http\Controllers\Admin\ChartController;
 //Namespace User
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\ProfileController;
@@ -28,13 +28,18 @@ Route::view('/','welcome');
 
 Route::group(['namespace' => 'Admin','middleware' => 'auth','prefix' => 'admin'],function(){
 	
-	// Route::get('/',[AdminController::class,'index'])->name('admin')->middleware(['can:admin']);
+
 	Route::get('/',[AdminController::class,'dashboard'])->name('admin.dashboard')->middleware(['can:admin']);
+	// Route::get('/anggota/chart',[AnggotaController::class,'chart'])->name('chart.gender')->middleware(['can:admin']);
+	Route::get('/chart/gender', [ChartController::class, 'gender'])->name('chart.gender')->middleware(['can:admin']);
 	//Route Rescource
 	Route::resource('/user','UserController')->middleware(['can:admin']);
 	Route::resource('/anggota','AnggotaController')->middleware(['can:admin']);
 	Route::resource('/admin','AdminController')->middleware(['can:admin']);
-
+	Route::resource('/category','CategoryController')->middleware(['can:admin']);
+	Route::resource('/posts','PostsController')->middleware(['can:admin']);
+	Route::resource('/test','PercobaabController')->middleware(['can:admin']);
+ 
 	
 	//Route View
 	
@@ -51,12 +56,6 @@ Route::group(['namespace' => 'Admin','middleware' => 'auth','prefix' => 'admin']
 	
 
 });
-
-// Route::group(['namespace' => 'User','middleware' => 'auth' ,'prefix' => 'user'],function(){
-// 	Route::get('/',[UserController::class,'index'])->name('user');
-// 	Route::get('/profile',[ProfileController::class,'index'])->name('profile');
-// 	Route::patch('/profile/update/{user}',[ProfileController::class,'update'])->name('profile.update');
-// });
 
 Route::group(['namespace' => 'Auth','middleware' => 'guest'],function(){
 	Route::view('/login','auth.login')->name('login');
