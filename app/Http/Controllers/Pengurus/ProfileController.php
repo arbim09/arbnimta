@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Pengurus;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use Hash;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 
@@ -13,7 +12,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
-    	return view('user.profile');
+    	return view('pengurus.profile');
     }
 
     public function update(Request $request, User $user)

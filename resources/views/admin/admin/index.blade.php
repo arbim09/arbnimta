@@ -1,6 +1,6 @@
 @extends('layout.backend.app',[
-    'title' => 'Manage Admin',
-    'pageTitle' =>'Manage Admin',
+    'title' => 'Manage Users',
+    'pageTitle' =>'Manage Users',
 ])
 
 @push('css')
@@ -13,7 +13,7 @@
 
 <div class="card">
         <div class="card-header d-flex align-items-center">
-          <h5 class="card-title">Daftar Admin</h5>
+          <h5 class="card-title">Daftar Users</h5>
           <div class="card-tools ml-auto mr-0">
               <a href="{{ route('admin.create') }}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
                   <i class="fas fa-plus mr-1"></i> Tambah Baru
@@ -27,7 +27,9 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
+                            <th>Umur</th>
                             <th>Email</th>
+                            <th>Role</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -59,7 +61,9 @@
         columns: [
             {data: 'DT_RowIndex' , name: 'id', orderable: false },
             {data: 'name', name: 'name'},
+            {data: 'umur', name: 'umur'},
             {data: 'email', name: 'email'},
+            {data: 'role', name: 'role'},
             {data: 'action', name: 'action', orderable: false, searchable: true},
         ]
     });

@@ -46,7 +46,7 @@
                 <label for="input-jenis_kelamin" class="mb-2 col-sm-6 col-form-label text-danger">Jenis Kelamin</label><br/>
                 <div class="">
                     <input type="radio" id="Male" name="jenis_kelamin" value="Laki-laki" {{ $anggota->jenis_kelamin == 'Laki-laki' ? 'checked' : '' }}> Laki-Laki  
-                        <input type="radio" class=" ml-2" id="Female" name="jenis_kelamin" value="Perempuan" {{ $anggota->jenis_kelamin == 'Perempuan' ? 'checked' : '' }}> Perempuan   
+                    <input type="radio" class=" ml-2" id="Female" name="jenis_kelamin" value="Perempuan" {{ $anggota->jenis_kelamin == 'Perempuan' ? 'checked' : '' }}> Perempuan   
                 </div>
                     @error('jenis_kelamin')
                     <span class="invalid-feedback">{{ $message }}</span>

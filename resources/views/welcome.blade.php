@@ -18,8 +18,13 @@
       <li class="nav-item">
       	@auth
       		<a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
+          <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn btn-primary">Logout</button>
+        </form>
       	@else
       		<a class="nav-link" href="{{ route('login') }}">Login</a>
+          
       	@endauth
       </li>
     </ul>

@@ -23,22 +23,6 @@ class Posts extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function setImageAttribute($value)
-    {
-        $attribute_name = "image";
-        $disk = "public";
-        $destination_path = "images/posts";
-
-        if (!empty($value)) {
-            // generate unique file name
-            $file_name = Str::slug(pathinfo($value->getClientOriginalName(), PATHINFO_FILENAME)) . '-' . uniqid() . '.' . $value->getClientOriginalExtension();
-            // move file to storage
-            $value->storeAs($destination_path, $file_name, $disk);
-            // set image attribute
-            $this->attributes[$attribute_name] = "$destination_path/$file_name";
-        }
-    }
-
     public function sluggable(): array
     {
         return [

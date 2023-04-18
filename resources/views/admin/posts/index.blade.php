@@ -63,7 +63,13 @@
             {data: 'judul', name: 'judul'},
             {data: 'slug', name: 'slug'},
             {data: 'category_name', name: 'category_name'},
-            {data: 'content', name: 'content'},
+            {data: 'content', name: 'content',
+                render: function(data, type, full, meta){
+                return type === 'display' && data.length > 50 ? 
+                        data.substr(0, 50)+'...' : 
+                        data;
+                }
+            },
             {data: 'action', name: 'action', orderable: false, searchable: true},
         ]
     });

@@ -14,11 +14,7 @@
   <div class="col-12">
       <div class="card">
         <div class="card-header">
-            <!-- Button trigger modal -->
-          <a href="{{route('anggota.create')}}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
-            <i class="fas fa-plus mr-1"></i> Tambah Baru
-        </a>
-        <a href="{{route('chart.gender')}}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
+        <a href="#" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
           <i class="fas fa-plus mr-1"></i> Chart
       </a>
         </div>
@@ -110,7 +106,7 @@
       }, function () {
           $.ajax({
               type: "DELETE",
-              url: "{{ route('anggota.destroy', ':id') }}".replace(':id', id),
+              url: "{{ route('admin.destroy', ':id') }}".replace(':id', id),
               data: {
                   "_token": "{{ csrf_token() }}"
               },

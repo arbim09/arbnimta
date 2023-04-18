@@ -1,16 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 //Namespace Auth
-use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Route;
 
 //Namespace Admin
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\ChartController;
 //Namespace User
-use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Pengurus\UserController;
+use App\Http\Controllers\Pengurus\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,19 +27,28 @@ use App\Http\Controllers\User\ProfileController;
 Route::view('/','welcome');
 
 
-Route::group(['namespace' => 'Admin','middleware' => 'auth','prefix' => 'admin'],function(){
-	
+//USER)_CONTACT
+Route::post('/contact', 'ContactController@sendMail')->name('contact.send');
+Route::post('/send-email', 'ContactController@store')->name('send.email');
+Route::get('/coba', 'ContactController@create')->name('show.form');
 
+
+route::get('/absensi/kegiatan', 'AbsensiController@kegiatan')->name('form-absensi.kegiatan');
+route::post('/absensi/kegiatan', 'AbsensiController@submitKegiatan')->name('absensi.kegiatan');
+
+
+Route::group(['namespace' => 'Admin','middleware' => ['auth', 'can:admin'],'prefix' => 'admin'],function(){
+	
 	Route::get('/',[AdminController::class,'dashboard'])->name('admin.dashboard')->middleware(['can:admin']);
-	// Route::get('/anggota/chart',[AnggotaController::class,'chart'])->name('chart.gender')->middleware(['can:admin']);
-	Route::get('/chart/gender', [ChartController::class, 'gender'])->name('chart.gender')->middleware(['can:admin']);
-	//Route Rescource
-	Route::resource('/user','UserController')->middleware(['can:admin']);
-	Route::resource('/anggota','AnggotaController')->middleware(['can:admin']);
-	Route::resource('/admin','AdminController')->middleware(['can:admin']);
+	Route::resource('/contact', 'ContactController')->middleware(['can:admin,pengurus']);
+	Route::resource('/anggota','AnggotaController')->middleware(['can:admin,pengurus']);
+	Route::resource('/pengurus','PengurusController')->middleware(['can:admin,pengurus']);
+	Route::resource('/admin','AdminController')->middleware(['can:admin,pengurus']);
 	Route::resource('/category','CategoryController')->middleware(['can:admin']);
 	Route::resource('/posts','PostsController')->middleware(['can:admin']);
-	Route::resource('/test','PercobaabController')->middleware(['can:admin']);
+	Route::resource('/banners','BannerController')->middleware(['can:admin']);
+	Route::resource('/events','EventController')->middleware(['can:admin']);
+	// Route::resource('/user', 'UserController')->middleware('can:admin,pengurus');
  
 	
 	//Route View
@@ -55,6 +65,17 @@ Route::group(['namespace' => 'Admin','middleware' => 'auth','prefix' => 'admin']
 	Route::view('/tables','admin.tables')->name('tables');
 	
 
+});
+
+Route::group(['namespace' => 'Pengurus','middleware' => 'auth' ,'prefix' => 'pengurus'],function(){
+	Route::get('/',[UserController::class,'index'])->name('pengurus');
+	Route::get('/profile',[ProfileController::class,'index'])->name('profile');
+	Route::patch('/profile/update/{pengurus}',[ProfileController::class,'update'])->name('profile.update');
+});
+Route::group(['namespace' => 'Anggota','middleware' => 'auth' ,'prefix' => 'anggota'],function(){
+	// Route::get('/',[UserController::class,'index'])->name('anggota');
+	// Route::get('/profile',[ProfileController::class,'index'])->name('profile');
+	// Route::patch('/profile/update/{anggota}',[ProfileController::class,'update'])->name('profile.update');
 });
 
 Route::group(['namespace' => 'Auth','middleware' => 'guest'],function(){

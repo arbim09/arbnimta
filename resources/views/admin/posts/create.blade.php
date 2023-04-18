@@ -18,7 +18,7 @@
         </div>
       </div>
     <div class="card-body">
-        <form class="row g-3" action="{{route('posts.store')}}" method="POST" id="posts" enctype="multipart/form-data">
+        <form class="row g-3" enctype="multipart/form-data" action="{{route('posts.store')}}" method="POST" id="posts">
             @csrf
             <div class="col-md-6">
                 <label for="input-title" class="col-sm-6 col-form-label">Judul Berita</label>
@@ -47,7 +47,7 @@
             </div>
             <div class="col-md-6">
                 <label for="input-image" class="col-sm-6 col-form-label">Gambar</label>
-                <input type="file" name="image" class="form-control col-sm-6" id="input-image" placeholder="image" value="{{ old('image') }}" >
+                <input type="file" id="image" name="image" class="form-control col-sm-6" id="input-image" placeholder="image" value="{{ old('image') }}" >
                 @error('image')
                 <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
@@ -86,11 +86,15 @@
     $(document).ready(function() {
         $('#posts').submit(function(e) {
             e.preventDefault();
+            var formData = new FormData(this);
             $.ajax({
                 url: '{{ route('posts.store') }}',
                 type: 'POST',
                 dataType: 'JSON',
-                data: $('#posts').serialize(),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
                 success: function(response) {
                     swal({
                         title: 'Data Berhasil Disimpan!',

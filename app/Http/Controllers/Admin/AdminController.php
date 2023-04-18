@@ -5,12 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Pekerjaan;
 use Yajra\Datatables\Datatables;
-use App\Http\Controllers\Admin\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (Gate::allows('admin')|| Gate::allows('pengurus')) {
+                return $next($request);
+            }
+
+            abort(403, "Maaf, Anda tidak memiliki izin untuk mengakses halaman ini.");
+        });
+    }
 
     public function dashboard()
     {
@@ -34,72 +45,107 @@ class AdminController extends Controller
                     ->rawColumns(['action'])
                     ->make(true);
         }
-        
         return view('admin.admin.index');
     }
 
     public function create()
     {
-        return view('admin.admin.create');
+        $kerja = Pekerjaan::all();
+        return view('admin.admin.create')->with(compact('kerja'));
     }
 
     public function store(Request $request)
     {
         // Validasi data yang diterima dari request
-    $request->validate([
-        'name'          => 'required|string|max:255',
-        'password'      => 'required|string|min:8|confirmed',
-        'password_confirmation' => 'required|string|min:8',
-    ]);
+        $request->validate([
+            'name'          => 'required|string|max:255',   
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tempat_lahir'  => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'alamat'        => 'required|string',
+            'password'      => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required|string|min:8',     
+        ]);
 
-    // Buat Anggota baru dengan data yang diterima dari request
-    $admin = new User;
-    $admin->name = $request->name;
-    $admin->email = $request->email;
-    $admin->password = Hash::make($request->password);
-    $admin->save();
+        // Buat Anggota baru dengan data yang diterima dari request
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->jenis_kelamin = $request->jenis_kelamin;
+        $user->tempat_lahir = $request->tempat_lahir;
+        $user->tanggal_lahir = $request->tanggal_lahir;
+        $user->umur = $request->umur;
+        $user->pendidikan = $request->pendidikan;
+        $user->pekerjaan_id = $request->pekerjaan_id;
+        $user->alamat = $request->alamat;
+        $user->role = $request->role;
+        $user->no_hp = $request->no_hp;
+        $user->password = Hash::make($request->password);
+        $user->save();
 
-    // Redirect ke halaman utama dengan pesan sukses
+        // Redirect ke halaman utama dengan pesan sukses
 
-    return redirect()->route('admin.index')->with('Success', 'Data Berhasil Disimpan!');
+        return redirect()->route('admin.index')->with('Success', 'Data Berhasil Disimpan!');
     }
 
     public function show($id)
     {
-        $admin = User::findOrFail($id);
-        return view('admin.admin.show')->with(compact('admin'));
+        $user = User::findOrFail($id);
+        return view('admin.admin.show')->with(compact('user'));
     }
 
     public function edit($id)
     {
-        $admin = User::findOrFail($id);
-        return view('admin.admin.edit')->with(compact('admin'));
+        $user = User::findOrFail($id);
+        $kerja = Pekerjaan::all();
+        return view('admin.admin.edit')->with(compact('user', 'kerja'));
     }
 
     public function update(Request $request, $id)
     {
-        $admin = User::findOrFail($id);
-
-        $rules = [
+        
+        $request->validate([
             'name'          => 'required|string|max:255',
-        ];
+            'email'         => "required|string|email|max:255|unique:users,email,{$id}",
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tempat_lahir'  => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'alamat'        => 'required|string',
+            'password'      => 'nullable|string|min:8|confirmed',
+        ]);
     
-        $validatedData = $request->validate($rules);
+        // Ambil data user dari database
+        $user = User::findOrFail($id);
+        
+        // Update data user dengan data baru dari request
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->jenis_kelamin = $request->jenis_kelamin;
+        $user->tempat_lahir = $request->tempat_lahir;
+        $user->tanggal_lahir = $request->tanggal_lahir;
+        $user->umur = $request->umur;
+        $user->pendidikan = $request->pendidikan;
+        $user->pekerjaan_id = $request->pekerjaan_id;
+        $user->alamat = $request->alamat;
+        $user->role = $request->role;
+        $user->no_hp = $request->no_hp;
     
-        $admin->name = $validatedData['name'];
-        $admin->email = $request->email;
-    
-        // Check if password field is present in request
+        // Update password jika password diisi pada form
         if (!empty($request->password)) {
-            $admin->password = Hash::make($request->password);
+            $user->password = Hash::make($request->password);
         }
     
-        $admin->save();
+        $user->save();
     
-        // Kembalikan respons sukses
-        return response()->json([
-            'message' => 'Data admin berhasil diupdate!'
-        ]);
+        // Kembalikan respons sukses jika request di-handle oleh ajax
+        if ($request->ajax()) {
+            return response()->json([
+                'message' => 'Data admin berhasil diupdate!'
+            ]);
+        }
+    
+        // Redirect ke halaman daftar user jika request tidak di-handle oleh ajax
+        return redirect()->route('admin.index')->with('success', 'Data admin berhasil diupdate!');
     }
     public function destroy($id)
     {

@@ -10,7 +10,7 @@
             <a href="{{ route('admin.index') }}" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Kembali ke Daftar Admin">
                 <i class="far fa-arrow-alt-circle-left mr-1"></i> Kembali
             </a>
-            <a href="{{ route('admin.edit', $admin->id) }}" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit Data Admin">
+            <a href="{{ route('admin.edit', $user->id) }}" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Edit Data Admin">
                 <i class="far fa-edit mr-1"></i> Edit
             </a>
         </div>
@@ -19,15 +19,47 @@
         <table class="table table-hover table-bordered">
             <tr>
                 <th>Nama Lengkap</th>
-                <td>{{ $admin->name }}</td>
+                <td>{{ $user->name }}</td>
             </tr>
             <tr>
                 <th>E-mail</th>
-                <td>{{ $admin->email ?? '-' }}</td>
+                <td>{{ $user->email ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>No Telepon</th>
+                <td>{{ $user->no_hp ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>Tempat Lahir</th>
+                <td>{{ $user->tempat_lahir ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>Tanggal Lahir</th>
+                <td>{{ $user->tanggal_lahir ? \Carbon\Carbon::parse($user->tanggal_lahir)->format('d/m/Y') : '-' }}</td>
+            </tr>
+            <tr>
+                <th>Agama</th>
+                <td>{{ $user->agama ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>Pendidikan</th>
+                <td>{{ $user->pendidikan ?? '-' }}</td>
+            </tr>
+            <tr>
+                <th>Pekerjaan</th>
+                <td>{{ $user->pekerjaan->nama }}</td>
+            </tr>
+            <tr>
+                <th>Umur</th>
+                <td>{{ $user->umur}}</td>
+            </tr>
+            <tr>
+                <th>Alamat</th>
+                <td>{{ $user->alamat ?? '-' }}</td>
             </tr>
             <tr>
                 <th>Password</th>
-                <td>{!! \Hash::check(env('PRIVATE_PASSWORD'), $admin->password) ? '<span class="badge badge-secondary">Default Password</span>' : '-' !!}</td>
+                <td>{!! \Hash::check(env('PRIVATE_PASSWORD'), $user->password) ? '<span class="badge badge-secondary">Default Password</span>' : '-' !!}</td>
             </tr>
         </table>
     </div>

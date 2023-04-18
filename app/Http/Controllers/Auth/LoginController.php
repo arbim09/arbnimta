@@ -5,19 +5,24 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 
 class LoginController extends Controller
 {
 	public function authenticate()
 	{
-		$credentials = request()->only(['email','password']);
-
+		$credentials = request()->only(['email', 'password']);
 		if (Auth::attempt($credentials)) {
-			return redirect()->route('admin.dashboard');
-		}else{
-			return back()->with('error','Login gagal');
+			$user = Auth::user();
+			if ($user->role == 'admin') {
+				return redirect()->intended('admin');
+			} elseif ($user->role == 'pengurus') {
+				return redirect()->intended('pengurus');
+			} elseif ($user->role == 'anggota') {
+				return redirect()->intended('anggota');
+			}
+		} else {
+			return back()->with('error', 'Login gagal');
 		}
 	}
 }
