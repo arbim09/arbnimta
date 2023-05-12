@@ -63,11 +63,15 @@
                 @can('admin')
                 <a class="collapse-item" href="{{ route('admin.index') }}">Admin</a>
                 <a class="collapse-item" href="{{ route('pengurus.index') }}">Pengurus</a>
-                @endcan
                 <a class="collapse-item" href="{{ route('anggota.index') }}">Anggota</a>
+                @endcan
+                @can('pengurus')
+                <a class="collapse-item" href="{{ route('anggotas.index') }}">Anggota</a>
+                @endcan
             </div>
         </div>
     </li>
+    @can('admin')
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
             aria-expanded="true" aria-controls="collapseTwo">
@@ -81,6 +85,8 @@
             </div>
         </div>
     </li>
+    @endcan
+
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
             aria-expanded="true" aria-controls="collapseThree">
@@ -89,30 +95,41 @@
         </a>
         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+                @can('admin')
                 <a class="collapse-item" href="{{ route('events.index') }}">Semua Event</a>
+                <a class="collapse-item" href="{{ route('pelatihan.event') }}">Pelatihan</a>
+                <a class="collapse-item" href="{{ route('acara.event') }}">Acara</a>
+                <a class="collapse-item" href="{{ route('kegiatan.event') }}">Kegiatan</a>
+                @endcan
+                @can('pengurus')
+                <a class="collapse-item" href="{{ route('event.index') }}">Semua Event</a>
+                @endcan
             </div>
         </div>
     </li>
-
-
-    <!-- Nav Item - Utilities Collapse Menu -->
+    @can('admin')
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-            aria-expanded="true" aria-controls="collapseUtilities">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAbsensi"
+            aria-expanded="true" aria-controls="collapseAbsensi">
             <i class="fas fa-fw fa-wrench"></i>
-            <span>Utilities</span>
+            <span>Absensi</span>
         </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+        <div id="collapseAbsensi" class="collapse" aria-labelledby="headingAbsensi"
             data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Custom Utilities:</h6>
-                <a class="collapse-item" href="{{ route('utilities-colors') }}">Colors</a>
-                <a class="collapse-item" href="{{ route('utilities-borders') }}">Borders</a>
-                <a class="collapse-item" href="{{ route('utilities-animations') }}">Animations</a>
-                <a class="collapse-item" href="{{ route('utilities-other') }}">Other</a>
+                <h6 class="collapse-header">Absensi Events:</h6>
+                @can('admin')
+                <a class="collapse-item" href="{{ route('absensi.index') }}">Data Absensi</a>
+                <a class="collapse-item" href="{{ route('pelatihan.absensi') }}">Pelatihan</a>
+                <a class="collapse-item" href="{{ route('acara.absensi') }}">Acara</a>
+                <a class="collapse-item" href="{{ route('kegiatan.absensi') }}">Kegiatan</a>
+                @endcan
             </div>
         </div>
     </li>
+    @endcan
+
+    @can('admin')
     <li class="nav-item">
         <a class="nav-link" href="{{ route('banners.index') }}">
             <i class="fas fa-fw fa-images"></i>
@@ -122,56 +139,74 @@
         <a class="nav-link" href="{{ route('contact.index') }}">
             <i class="fas fa-fw fa-envelope"></i>
             <span>Pesan</span></a>
-    </li>
+    </li>            
+    @endcan
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Addons
-    </div>
-
-    <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-            aria-expanded="true" aria-controls="collapsePages">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePendaftaran"
+            aria-expanded="true" aria-controls="collapsePendaftaran">
             <i class="fas fa-fw fa-folder"></i>
-            <span>Pages</span>
+            <span>Pendaftaran</span>
         </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapsePendaftaran" class="collapse" aria-labelledby="headingPendaftaran" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Login Screens:</h6>
-                <a class="collapse-item" href="{{ route('login') }}">Login</a>
-                <a class="collapse-item" href="{{ route('register') }}">Register</a>
-                <a class="collapse-item" href="{{ route('forgot-password') }}">Forgot Password</a>
-                <div class="collapse-divider"></div>
-                <h6 class="collapse-header">Other Pages:</h6>
-                <a class="collapse-item" href="{{ route('404-page') }}">404 Page</a>
-                <a class="collapse-item" href="{{ route('blank-page') }}">Blank Page</a>
+                <h6 class="collapse-header">Pendaftaran: </h6>
+                @can('admin')
+                <a class="collapse-item" href="{{ route('pelatihan.pendaftaran') }}">Pelatihan</a>
+                <a class="collapse-item" href="{{ route('acara.pendaftaran') }}">Acara</a>
+                <a class="collapse-item" href="{{ route('kegiatan.pendaftaran') }}">Kegiatan</a>
+                @elseCan('pengurus')
+                <a class="collapse-item" href="{{ route('login') }}">Pelatihan</a>
+                <a class="collapse-item" href="{{ route('register') }}">Acara</a>
+                <a class="collapse-item" href="{{ route('forgot-password') }}">Kegiatan</a>
+                @endcan
             </div>
         </div>
     </li>
 
-    <!-- Nav Item - Charts -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('chart') }}">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a>
-    </li>
+@can('admin')
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Pages</span>
+            </a>
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Login Screens:</h6>
+                    <a class="collapse-item" href="{{ route('login') }}">Login</a>
+                    <a class="collapse-item" href="{{ route('register') }}">Register</a>
+                    <a class="collapse-item" href="{{ route('forgot-password') }}">Forgot Password</a>
+                    <div class="collapse-divider"></div>
+                    <h6 class="collapse-header">Other Pages:</h6>
+                    <a class="collapse-item" href="{{ route('404-page') }}">404 Page</a>
+                    <a class="collapse-item" href="{{ route('blank-page') }}">Blank Page</a>
+                </div>
+            </div>
+        </li>
+    
+        <!-- Nav Item - Charts -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('chart') }}">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>Charts</span></a>
+        </li>
+    
+        <!-- Nav Item - Tables -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('tables') }}">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Tables</span></a>
+        </li>
+    
+        {{-- <li class="nav-item">
+            <a class="nav-link" href="{{ route('profile') }}">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Profile</span></a>
+        </li> --}}
+@endcan
 
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('tables') }}">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Tables</span></a>
-    </li>
-
-    {{-- <li class="nav-item">
-        <a class="nav-link" href="{{ route('profile') }}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Profile</span></a>
-    </li> --}}
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

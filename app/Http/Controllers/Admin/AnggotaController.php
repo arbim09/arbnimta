@@ -11,15 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class AnggotaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (Gate::allows('pengurus')|| Gate::allows('admin')) {
-                return $next($request);
-            }
-            abort(403);
-        });
-    }
     /**
      * Display a listing of the resource.
      *

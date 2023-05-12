@@ -12,16 +12,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (Gate::allows('admin')|| Gate::allows('pengurus')) {
-                return $next($request);
-            }
-
-            abort(403, "Maaf, Anda tidak memiliki izin untuk mengakses halaman ini.");
-        });
-    }
 
     public function dashboard()
     {
@@ -47,7 +37,7 @@ class AdminController extends Controller
         }
         return view('admin.admin.index');
     }
-
+                                                                                                                                  
     public function create()
     {
         $kerja = Pekerjaan::all();

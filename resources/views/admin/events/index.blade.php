@@ -28,7 +28,7 @@
                             <th>No</th>
                             <th>Nama Event</th>
                             <th>Kategori</th>
-                            <th>Keterangan</th>
+                            <th>status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -61,7 +61,7 @@
             {data: 'DT_RowIndex' , name: 'id', orderable: false },
             {data: 'name', name: 'name'},
             {data: 'category_name', name: 'category_name'},
-            {data: 'keterangan', name: 'keterangan',
+            {data: 'status', name: 'status',
                 render: function(data, type, full, meta){
                 return type === 'display' && data.length > 50 ? 
                         data.substr(0, 50)+'...' : 

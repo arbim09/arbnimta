@@ -52,6 +52,16 @@
             </div>
             @endif
         </div>
+        <div class="col-md-6">
+            <label for="input-is-show" class="col-sm-6 col-form-label">Status</label>
+            <select name="is_show" id="input-is-show" class="form-control @error('is_show') is-invalid @enderror" required>
+                <option value="1" {{ $event->is_show == 1 ? 'selected' : '' }}>Aktif</option>
+                <option value="0" {{ $event->is_show == 0 ? 'selected' : '' }}>Tidak Aktif</option>
+            </select>
+            @error('is_show')
+            <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
         <div class="col-md-12">
             <label for="input-keterangan" class="col-sm-6 col-form-label">Keterangan</label>
             <textarea class="form-control" id="keterangan" name="keterangan" rows="5" style="resize: vertical;" required>{{ $event->keterangan }}</textarea>

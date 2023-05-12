@@ -19,6 +19,7 @@ class CreateEventsTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->text('keterangan')->nullable();
             $table->string('image')->nullable();
+            $table->boolean('is_show')->default(false);
             $table->timestamps();
             
             $table->foreign('category_id')

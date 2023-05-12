@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 //Namespace User
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\AbsensiController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\PendaftaranEventsController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Pengurus\UserController;
 use App\Http\Controllers\Pengurus\ProfileController;
 
@@ -24,7 +28,13 @@ use App\Http\Controllers\Pengurus\ProfileController;
 |
 */
 
-Route::view('/','welcome');
+// Route::view('/','welcome');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/berita/{id}', [HomeController::class, 'berita'])->name('berita.show');
+Route::get('/menuBell', [HomeController::class, 'menubell'])->name('menuBell');
+Route::get('/menu-bell', function () {
+    return view('layout.anggotaLayouts.menuBell');
+})->name('menu.bell');
 
 
 //USER)_CONTACT
@@ -35,6 +45,10 @@ Route::get('/coba', 'ContactController@create')->name('show.form');
 
 route::get('/absensi/kegiatan', 'AbsensiController@kegiatan')->name('form-absensi.kegiatan');
 route::post('/absensi/kegiatan', 'AbsensiController@submitKegiatan')->name('absensi.kegiatan');
+route::get('/absensi/acara', 'AbsensiController@acara')->name('form-absensi.acara');
+route::post('/absensi/acara', 'AbsensiController@submitAcara')->name('absensi.acara');
+route::get('/absensi/pelatihan', 'AbsensiController@pelatihan')->name('form-absensi.pelatihan');
+route::post('/absensi/pelatihan', 'AbsensiController@submitPelatihan')->name('absensi.pelatihan');
 
 
 Route::group(['namespace' => 'Admin','middleware' => ['auth', 'can:admin'],'prefix' => 'admin'],function(){
@@ -48,6 +62,19 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth', 'can:admin'],'pref
 	Route::resource('/posts','PostsController')->middleware(['can:admin']);
 	Route::resource('/banners','BannerController')->middleware(['can:admin']);
 	Route::resource('/events','EventController')->middleware(['can:admin']);
+	Route::resource('/absensi','AbsensiController')->middleware(['can:admin']);
+	Route::resource('/pendaftaran','PendaftaranEventsController')->middleware(['can:admin']);
+
+	//datatable
+	Route::get('/acara', [EventController::class, 'acara'])->name('acara.event')->middleware(['can:admin']);
+	Route::get('/kegiatan', [EventController::class, 'kegiatan'])->name('kegiatan.event')->middleware(['can:admin']);
+	Route::get('/pelatihan', [EventController::class, 'pelatihan'])->name('pelatihan.event')->middleware(['can:admin']);
+	Route::get('/absen/kegiatan', [AbsensiController::class, 'kegiatan'])->name('kegiatan.absensi')->middleware(['can:admin']);
+	Route::get('/absen/acara', [AbsensiController::class, 'acara'])->name('acara.absensi')->middleware(['can:admin']);
+	Route::get('/absen/pelatihan', [AbsensiController::class, 'pelatihan'])->name('pelatihan.absensi')->middleware(['can:admin']);
+	Route::get('/daftar/kegiatan', [PendaftaranEventsController::class, 'kegiatan'])->name('kegiatan.pendaftaran')->middleware(['can:admin']);
+	Route::get('/daftar/acara', [PendaftaranEventsController::class, 'acara'])->name('acara.pendaftaran')->middleware(['can:admin']);
+	Route::get('/daftar/pelatihan', [PendaftaranEventsController::class, 'pelatihan'])->name('pelatihan.pendaftaran')->middleware(['can:admin']);
 	// Route::resource('/user', 'UserController')->middleware('can:admin,pengurus');
  
 	
@@ -68,10 +95,19 @@ Route::group(['namespace' => 'Admin','middleware' => ['auth', 'can:admin'],'pref
 });
 
 Route::group(['namespace' => 'Pengurus','middleware' => 'auth' ,'prefix' => 'pengurus'],function(){
+
+	//resource
+	Route::resource('/anggotas', 'AnggotaController')->middleware('can:pengurus');
+	Route::resource('/event','EventController')->middleware(['can:pengurus']);
+
 	Route::get('/',[UserController::class,'index'])->name('pengurus');
 	Route::get('/profile',[ProfileController::class,'index'])->name('profile');
 	Route::patch('/profile/update/{pengurus}',[ProfileController::class,'update'])->name('profile.update');
+
 });
+
+
+
 Route::group(['namespace' => 'Anggota','middleware' => 'auth' ,'prefix' => 'anggota'],function(){
 	// Route::get('/',[UserController::class,'index'])->name('anggota');
 	// Route::get('/profile',[ProfileController::class,'index'])->name('profile');

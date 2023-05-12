@@ -1,3 +1,4 @@
+{{-- 
 <!DOCTYPE html>
 <html>
 <head>
@@ -120,4 +121,57 @@
 <script type="text/javascript" src="{{ asset('plugins/bootstrap-4/js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('plugins/bootstrap-4/js/bootstrap.min.js') }}"></script>
 </body>
-</html>
+</html> --}}
+
+@extends('layout.anggotaLayouts.main')
+
+@push('css')
+  
+@endpush
+@section('content')
+{{-- masih belum jadi --}}
+{{-- <div>
+  <div class="splide single-slider slider-dots-under slider-boxed">
+    <div class="splide__track">
+      <div class="splide__list">
+        @foreach($banners as $banner)
+          <div class="splide__slide">
+            <div data-card-height="200" class="card bg-11 rounded-m shadow-l" >
+              <img src="{{ asset('/images/banners/'.$banner->image) }}" alt="{{ $banner->name }}" style="width: 100px; height: 100px;">
+            </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+</div> --}}
+@foreach($banners as $banner)
+  <div class="splide__slide">
+    <div data-card-height="200" class="card bg-11 rounded-m shadow-l">
+      <img src="{{ asset('/images/banners/'.$banner->image) }}" alt="{{ $banner->name }}" style="width: 700px; height: 100px;">
+      <div class="card-overlay rounded-m bg-gradient-fade opacity-90"></div>
+    </div>
+  </div>
+@endforeach
+
+
+<div class="divider mx-3 mt-5 mb-4"></div>
+
+<div class="card card-style">
+  <div class="content px-2 text-center">
+      <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase">Berita</h5>
+      <h2>Berita Terkini</h2>
+      <div class="row text-center row-cols-3 mb-n1">
+          @foreach($berita as $brt)
+              <a class="col p-1" data-gallery="gallery-1" href="{{ route('berita.show', $brt->id) }}" title="{{ $brt->title }}">
+                  <p>{{ substr($brt->title, 0, 30) }}...</p>
+                  <img src="{{ asset('/images/posts/'.$brt->image) }}" class="preload-img img-fluid rounded-m" alt="img">
+              </a>
+          @endforeach
+      </div>
+      <br>
+      <a href="#" class="btn-full btn gradient-blue">Lihat Lainya</a>
+  </div>
+</div>
+    
+@endsection

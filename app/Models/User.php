@@ -86,4 +86,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Pekerjaan::class);
     }
+
+    public function pendaftaranEvents()
+    {
+        return $this->hasMany(PendaftaranEvents::class);
+    }
 }

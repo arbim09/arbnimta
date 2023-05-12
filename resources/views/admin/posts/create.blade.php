@@ -54,12 +54,18 @@
             </div>
             <div class="col-md-12">
                 <label for="input-content" class="col-sm-6 col-form-label">Isi Berita</label>
-                <textarea class="form-control" id="content" name="content" rows="5" style="resize: vertical;" required></textarea>
+                <div id="editor"></div>
+                <input type="hidden" name="content">
+
                 @error('content')
                 <span class="invalid-feedback">{{ $message }}</span>
                 @enderror
             </div>
     </div>
+            <br>
+            <br>
+            <br>
+            <br>
             <!-- /.card-body -->
             <div class="card-footer">
                 <div class="btn-group float-right">
@@ -77,10 +83,22 @@
 
 @push('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2();
     });
+</script>
+<script>
+    var quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+    var form = document.querySelector('form');
+    form.onsubmit = function() {
+        var content = document.querySelector('input[name=content]');
+        content.value = quill.root.innerHTML;
+    };
 </script>
 <script>
     $(document).ready(function() {
