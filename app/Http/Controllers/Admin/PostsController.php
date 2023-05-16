@@ -22,25 +22,30 @@ class PostsController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Posts::select('*')->orderBy('created_at', 'desc');;
+            $data = Posts::select('*')->orderBy('created_at', 'desc'); // Ubah Posts menjadi Post, hapus titik koma di akhir
             return DataTables::of($data)
                     ->addIndexColumn()
                     ->addColumn('category_name', function($row){
                         return $row->category ? $row->category->name : '-';
                     })
                     ->addColumn('judul', function($q){
-                        $judul = "<div class='text-left'><a class='btn btn-link btn-sm text-primary' title='Detail' href='/admin/posts/" . $q->id . "/'>$q->title</a></div>";;
+                        $judul = "<div class='text-left'><a class='btn btn-link btn-sm text-primary' title='Detail' href='/admin/posts/" . $q->id . "/'>$q->title</a></div>";
                         return $judul;
                     })
                     ->addColumn('action', function($row){
                         $btn = '<div class="row">';
-                        // $btn .= '<a href="'.route('posts.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                        $btn .= '<a href="'.route('posts.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
                         $btn .= '<a href="'.route('posts.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
                         $btn .= '<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
                         $btn .= '</div>';
                         return $btn;
                     })
-                    ->rawColumns(['action', 'category_name', 'judul'])
+                    ->editColumn('content', function ($post) {
+                        $content = html_entity_decode($post->content);
+                        $content = Str::limit($content, 50);
+                        return $content;
+                    })
+                    ->rawColumns(['action', 'category_name', 'judul', 'content'])
                     ->make(true);
         }
         

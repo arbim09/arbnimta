@@ -17,23 +17,6 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
-        $categories = DB::table('categories')->pluck('id');
-        $faker = \Faker\Factory::create();
-
-        foreach ($categories as $categoryId) {
-            for ($i = 0; $i < 5; $i++) {
-                $title = $faker->sentence;
-                $content = $faker->paragraph;
-                $slug = Str::slug($title, '-');
-                DB::table('posts')->insert([
-                    'title' => $title,
-                    'content' => $content,
-                    'slug' => $slug,
-                    'category_id' => $categoryId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
+        
     }
 }

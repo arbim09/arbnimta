@@ -1,177 +1,90 @@
-{{-- 
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-4/css/bootstrap.min.css') }}">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="/">CHIKADMIN</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-      	@auth
-      		<a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
-          <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn btn-primary">Logout</button>
-        </form>
-      	@else
-      		<a class="nav-link" href="{{ route('login') }}">Login</a>
-          
-      	@endauth
-      </li>
-    </ul>
-    <span class="navbar-text">
-
-    </span>
-  </div>
-</nav>
-
-<div class="container-fluid mt-5">
-	
-	<div class="jumbotron">
-    @guest
-    <h1 class="display-4">Selamat Datang di CHIKADMIN</h1>
-    @endguest
-
-    @auth
-    <h1 class="display-4">Hello , {{ Auth::user()->name }}</h1>
-    @endauth
-    
-    <p class="lead">Chikadmin adalah simpel starter sb-admin-2 untuk laravel, keuntungannya adalah kita tidak harus mengintegrasikan sb-admin-2 dari awal.</p>
-	  <hr class="my-4">
-
-    <div class="row">
-      
-      <div class="col-lg-6 mb-3">
-        <div class="card">
-          <div class="card-header">
-            Email & Password Login
-          </div>
-
-          <div class="card-body">
-            <table class="table">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Password</th>
-                  <th scope="col">Level</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>admin@gmail.com</td>
-                  <td>password</td>
-                  <td>admin</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>ayane@gmail.com</td>
-                  <td>password</td>
-                  <td>admin</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>kotone@gmail.com</td>
-                  <td>password</td>
-                  <td>user</td>
-                </tr>
-                <tr>
-                  <th scope="row">4</th>
-                  <td>mapple@gmail.com</td>
-                  <td>password</td>
-                  <td>user</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-6">
-        <div class="card">
-          <div class="card-header">Beberapa Fitur Simpel</div>
-          <div class="card-body">
-            <ul>
-
-              <li>Autentikasi dengan Laravel Auth</li>
-              <li>Autorisasi dengan Laravel Gate</li>
-              <li>Yajra DataTable Serverside</li>
-              <li>Ajax crud dengan datatable serverside</li>
-            </ul>
-
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-</div>
-<script type="text/javascript" src="{{ asset('plugins/bootstrap-4/js/jquery.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('plugins/bootstrap-4/js/bootstrap.min.js') }}"></script>
-</body>
-</html> --}}
-
 @extends('layout.anggotaLayouts.main')
 
 @push('css')
-  
 @endpush
 @section('content')
-{{-- masih belum jadi --}}
-{{-- <div>
-  <div class="splide single-slider slider-dots-under slider-boxed">
-    <div class="splide__track">
-      <div class="splide__list">
-        @foreach($banners as $banner)
-          <div class="splide__slide">
-            <div data-card-height="200" class="card bg-11 rounded-m shadow-l" >
-              <img src="{{ asset('/images/banners/'.$banner->image) }}" alt="{{ $banner->name }}" style="width: 100px; height: 100px;">
-            </div>
-          </div>
-        @endforeach
-      </div>
-    </div>
-  </div>
-</div> --}}
-@foreach($banners as $banner)
-  <div class="splide__slide">
-    <div data-card-height="200" class="card bg-11 rounded-m shadow-l">
-      <img src="{{ asset('/images/banners/'.$banner->image) }}" alt="{{ $banner->name }}" style="width: 700px; height: 100px;">
-      <div class="card-overlay rounded-m bg-gradient-fade opacity-90"></div>
-    </div>
-  </div>
-@endforeach
 
-
-<div class="divider mx-3 mt-5 mb-4"></div>
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+  <div class="carousel-indicators">
+    @foreach($banners as $key => $banner)
+      @if($banner->is_show == true)
+        <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}" aria-current="{{ $key == 0 ? 'true' : 'false' }}" aria-label="Slide {{ $key+1 }}"></button>
+      @endif
+    @endforeach
+  </div>
+  <div class="carousel-inner">
+    @foreach($banners as $key => $banner)
+      @if($banner->is_show == true)
+        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+          <img class="d-block w-100" src="{{ asset('/images/banners/'.$banner->image) }}" alt="{{ $banner->name }}" style="width: 300px; height: 200px;">
+        </div>
+      @endif
+    @endforeach
+  </div>
+</div>
+<div class="divider mx-3 mt-2 mb-4"></div>
 
 <div class="card card-style">
   <div class="content px-2 text-center">
-      <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase">Berita</h5>
-      <h2>Berita Terkini</h2>
-      <div class="row text-center row-cols-3 mb-n1">
-          @foreach($berita as $brt)
-              <a class="col p-1" data-gallery="gallery-1" href="{{ route('berita.show', $brt->id) }}" title="{{ $brt->title }}">
-                  <p>{{ substr($brt->title, 0, 30) }}...</p>
-                  <img src="{{ asset('/images/posts/'.$brt->image) }}" class="preload-img img-fluid rounded-m" alt="img">
-              </a>
-          @endforeach
-      </div>
-      <br>
-      <a href="#" class="btn-full btn gradient-blue">Lihat Lainya</a>
+    <h5 class="mb-1 font-12 color-highlight font-700 text-uppercase">Berita</h5>
+    <h2>Berita Terkini</h2>
+    <br>
+    <div class="divider mx-3 mt-2 mb-4"></div>
+    <div id="beritaContainer" class="row text-center row-cols-3 mb-n1">
+      <!-- Konten berita awal -->
+      @foreach($berita as $brt)
+        <a class="col" data-gallery="gallery-1" href="{{ route('berita.show', $brt->slug) }}" title="{{ $brt->title }}">
+          <img src="{{ asset('/images/posts/'.$brt->image) }}" class="preload-img img-fluid rounded-m" alt="img">
+          <p>{{ substr($brt->title, 0, 10) }}...</p>
+        </a>
+      @endforeach
+    </div>
+    
+    <br>
+    
+    @if($berita->hasMorePages())
+    <div class="text-center">
+      <a href="{{ route('load-more-berita') }}" id="loadMoreButton" class="btn-full btn gradient-blue">Lihat Lainnya</a>
+    </div>
+    @else
+    <div class="text-center">
+      <p>Tidak ada berita lain yang tersedia.</p>
+      <script>
+        document.getElementById('loadMoreButton').style.display = 'none';
+      </script>
+    </div>
+    @endif
   </div>
 </div>
-    
 @endsection
+
+@push('js')
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+  var currentPage = 1;
+  var loadMoreButton = document.getElementById('loadMoreButton');
+  var beritaContainer = document.getElementById('beritaContainer');
+
+  loadMoreButton.addEventListener('click', function(e) {
+  e.preventDefault();
+  currentPage++;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', "{{ route('load-more-berita') }}" + "?page=" + currentPage, true);
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var response = xhr.responseText;
+      var parser = new DOMParser();
+      var newBerita = parser.parseFromString(response, 'text/html').querySelector('#beritaContainer');
+      beritaContainer.innerHTML += newBerita.innerHTML;
+    }
+  };
+
+  xhr.send();
+});
+</script>
+@endpush

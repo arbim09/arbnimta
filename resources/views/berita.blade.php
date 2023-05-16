@@ -12,11 +12,12 @@
                 <br>
                 <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3">
                     <img src="{{ asset('images/posts/'.$posts->image) }}" alt="{{ $posts->title }}" class="img-fluid" style="max-width: 100%; height: auto;">
+                    <p class=" text-center">Gambar {{ $posts->image }}</p>
                 </div>
-                <br>
                 <div class="divider mb-0 mx-3"></div>
                 <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3">
-                    <br>
+                    <p style="display: flex; justify-content: space-between; width: 100%;">Dibuat pada tanggal: {{ $posts->created_at->format('j F Y') }}<span>Oleh: {{ $posts->penulis }}</span></p>
+                    
                     {!! html_entity_decode($posts->content) !!}
                 </div>
             </div>

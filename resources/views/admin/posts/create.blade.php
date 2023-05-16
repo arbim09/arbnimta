@@ -47,7 +47,7 @@
             </div>
             <div class="col-md-6">
                 <label for="input-image" class="col-sm-6 col-form-label">Gambar</label>
-                <input type="file" id="image" name="image" class="form-control col-sm-6" id="input-image" placeholder="image" value="{{ old('image') }}" >
+                <input type="file" id="image" name="image" class="form-control col-sm-6" id="input-image" placeholder="image" value="{{ old('image') }}" required>
                 @error('image')
                 <span class="invalid-feedback">{{ $message }}</span>
                 @enderror

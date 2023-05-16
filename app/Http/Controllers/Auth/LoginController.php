@@ -19,7 +19,7 @@ class LoginController extends Controller
 			} elseif ($user->role == 'pengurus') {
 				return redirect()->intended('pengurus');
 			} elseif ($user->role == 'anggota') {
-				return redirect()->intended('anggota');
+				return redirect()->intended('/');
 			}
 		} else {
 			return back()->with('error', 'Login gagal');

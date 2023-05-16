@@ -1,28 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Anggota;
 
-use App\Models\Banners;
-use App\Models\Posts;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class HomeController extends Controller
+class AnggotaController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $banners = Banners::where('is_show', true)->get();
-        $berita = Posts::paginate(6);
-        if ($request->ajax()) {
-            $view = view('load_more_berita', compact('berita'))->render();
-    
-            return response()->json(['html' => $view]);
-        }
-        return view('welcome')->with(compact('banners', 'berita'));
+        //
     }
 
     /**
@@ -32,7 +25,7 @@ class HomeController extends Controller
      */
     public function create()
     {
-        return view('contact');
+        //
     }
 
     /**
@@ -54,8 +47,10 @@ class HomeController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view('profile')->with(compact('user'));
     }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -89,33 +84,5 @@ class HomeController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function berita($slug)
-    {
-        $posts = Posts::where('slug', $slug)->firstOrFail();
-        return view('berita')->with(compact('posts'));;
-    }
-
-    public function menubell()
-    {
-       return view('layout.anggotaLayouts.menuBell');
-    }
-
-    public function contact()
-    {
-        return view('contact');
-    }
-
-    public function loadMoreBerita(Request $request)
-    {
-        $page = $request->input('page');
-        $banners = Banners::where('is_show', true)->get();
-        $berita = Posts::paginate(6, ['*'], 'page', $page);
-    
-        if ($request->ajax()) {
-            return view('load_more_berita', compact('berita'));
-        }
-        return view('welcome', compact('berita', 'banners'));
     }
 }

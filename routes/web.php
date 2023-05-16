@@ -6,16 +6,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 //Namespace Admin
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfilController;
+//Namespace User
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
-//Namespace User
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\AbsensiController;
+use App\Http\Controllers\Admin\AnggotaController;
 use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\PendaftaranEventsController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Pengurus\UserController;
 use App\Http\Controllers\Pengurus\ProfileController;
+use App\Http\Controllers\Admin\PendaftaranEventsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,17 +32,24 @@ use App\Http\Controllers\Pengurus\ProfileController;
 
 // Route::view('/','welcome');
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/berita/{id}', [HomeController::class, 'berita'])->name('berita.show');
+Route::get('/berita/{slug}', [HomeController::class, 'berita'])->name('berita.show');
+Route::get('/load-more-berita', [HomeController::class, 'loadMoreBerita'])->name('load-more-berita');
 Route::get('/menuBell', [HomeController::class, 'menubell'])->name('menuBell');
 Route::get('/menu-bell', function () {
     return view('layout.anggotaLayouts.menuBell');
 })->name('menu.bell');
 
+Route::get('/form-contact', 'HomeController@create')->name('show.formContact');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index')->middleware('can:admin,pengurus,anggota');
+});
+
+
 
 //USER)_CONTACT
 Route::post('/contact', 'ContactController@sendMail')->name('contact.send');
 Route::post('/send-email', 'ContactController@store')->name('send.email');
-Route::get('/coba', 'ContactController@create')->name('show.form');
 
 
 route::get('/absensi/kegiatan', 'AbsensiController@kegiatan')->name('form-absensi.kegiatan');
@@ -109,13 +118,16 @@ Route::group(['namespace' => 'Pengurus','middleware' => 'auth' ,'prefix' => 'pen
 
 
 Route::group(['namespace' => 'Anggota','middleware' => 'auth' ,'prefix' => 'anggota'],function(){
+	// Route::resource('/profiles', 'AnggotaController')->middleware('can:anggota');
+	// Route::get('/profiles',[AnggotaController::class,'cek'])->name('cek.profile');
 	// Route::get('/',[UserController::class,'index'])->name('anggota');
 	// Route::get('/profile',[ProfileController::class,'index'])->name('profile');
 	// Route::patch('/profile/update/{anggota}',[ProfileController::class,'update'])->name('profile.update');
 });
 
 Route::group(['namespace' => 'Auth','middleware' => 'guest'],function(){
-	Route::view('/login','auth.login')->name('login');
+	Route::view('/login/admin','auth.login')->name('login.admin');
+	Route::view('/login','auth.loginAnggota')->name('login');
 	Route::post('/login',[LoginController::class,'authenticate'])->name('login.post');
 });
 
