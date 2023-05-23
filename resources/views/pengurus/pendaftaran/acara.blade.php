@@ -1,6 +1,6 @@
 @extends('layout.backend.app',[
-    'title' => 'Manage Events',
-    'pageTitle' =>'Manage Events',
+    'title' => 'Manage Data Pendaftaran Events',
+    'pageTitle' =>'Manage Data Pendaftaran Events',
 ])
 
 @push('css')
@@ -13,11 +13,11 @@
 
 <div class="card">
         <div class="card-header d-flex align-items-center">
-          <h5 class="card-title">Daftar Events</h5>
+          <h5 class="card-title">Data Pendaftaran Events</h5>
           <div class="card-tools ml-auto mr-0">
-              <a href="{{ route('events.create') }}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
+              {{-- <a href="{{ route('events.create') }}" class="btn btn-primary btn-sm" data-toggle="tooltip" title="Tambah Data">
                   <i class="fas fa-plus mr-1"></i> Tambah Baru
-              </a>
+              </a> --}}
           </div>
         </div>
         <div class="card-body">
@@ -26,9 +26,10 @@
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Nama</th>
+                            <th>Email</th>
                             <th>Nama Event</th>
-                            <th>Kategori</th>
-                            <th>status</th>
+                            <th>no_hp</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -54,15 +55,15 @@
         processing: true,
         serverSide: true,
         "ajax": {
-				"url": "{{route('pendaftaran.index')}}",
+				"url": "{{route('acara.pendaftarans')}}",
 				"type": "GET" //(untuk mendapatkan data)
 			},
         columns: [
             {data: 'DT_RowIndex' , name: 'id', orderable: false },
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
-            {data: 'event_id', name: 'event_id'
-            },
+            {data: 'events_name', name: 'events_name'},
+            {data: 'no_hp', name: 'no_hp'},
             {data: 'action', name: 'action', orderable: false, searchable: true},
         ]
     });
@@ -71,39 +72,36 @@
 </script>
 
 <script>
-    // Form hapus
-    function deleteData(id) {
-        swal({
-            title: "Anda yakin ingin menghapus data ini?",
-            type: "warning",
-            timer: 10000,
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Ya, hapus data!",
-            cancelButtonText: "Batal",
-            closeOnConfirm: false
-        }, function () {
-            $.ajax({
-                type: "DELETE",
-                url: "{{ route('pendaftaran.destroy', ':id') }}".replace(':id', id),
-                data: {
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function (data) {
-                    console.log(data);
-                    swal("Berhasil!", "Data telah dihapus.", "success");
-                    location.reload(); // Redirect ke halaman index setelah data berhasil dihapus
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText);
-                    swal("Oops!", "Terjadi kesalahan saat menghapus data: " + error, "error");
-                }
-            }).fail(function (xhr, status, error) {
-                console.log(xhr.responseText);
-                swal("Oops!", "Terjadi kesalahan saat menghapus data: " + error, "error");
-            });
-        });
-    }
-</script>
+    //form hapus
+  function deleteData(id) {
+      swal({
+          title: "Anda yakin ingin menghapus data ini?",
+          type: "warning",
+          timer: 10000,
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Ya, hapus data!",
+          cancelButtonText: "Batal",
+          closeOnConfirm: false
+      }, function () {
+          $.ajax({
+              type: "DELETE",
+              url: "{{ route('daftar.destroy', ':id') }}".replace(':id', id),
+              data: {
+                  "_token": "{{ csrf_token() }}"
+              },
+              success: function (data) {
+                  console.log(data);
+                  swal("Berhasil!", "Data telah dihapus.", "success");
+                  location.reload(); // Redirect ke halaman index setelah data berhasil dihapus
+              },
+              error: function (data) {
+                  console.log('Error:', data);
+                  swal("Oops!", "Terjadi kesalahan saat menghapus data.", "error");
+              }
+          });
+      });
+  }
+  </script>
 
 @endpush

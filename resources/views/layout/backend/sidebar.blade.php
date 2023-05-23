@@ -152,13 +152,14 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Pendaftaran: </h6>
                 @can('admin')
+                <a class="collapse-item" href="{{ route('pendaftaran.index') }}">Test</a>
                 <a class="collapse-item" href="{{ route('pelatihan.pendaftaran') }}">Pelatihan</a>
                 <a class="collapse-item" href="{{ route('acara.pendaftaran') }}">Acara</a>
                 <a class="collapse-item" href="{{ route('kegiatan.pendaftaran') }}">Kegiatan</a>
                 @elseCan('pengurus')
-                <a class="collapse-item" href="{{ route('login') }}">Pelatihan</a>
-                <a class="collapse-item" href="{{ route('register') }}">Acara</a>
-                <a class="collapse-item" href="{{ route('forgot-password') }}">Kegiatan</a>
+                <a class="collapse-item" href="{{ route('pelatihan.pendaftarans') }}">Pelatihan</a>
+                <a class="collapse-item" href="{{ route('acara.pendaftarans') }}">Acara</a>
+                <a class="collapse-item" href="{{ route('kegiatan.pendaftarans') }}">Kegiatan</a>
                 @endcan
             </div>
         </div>

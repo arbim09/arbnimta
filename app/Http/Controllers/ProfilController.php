@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfilController extends Controller
 {
@@ -20,11 +23,12 @@ class ProfilController extends Controller
    {
        $this->user = $user;
    }
-    public function index()
+
+   public function index()
     {
-        $users = $this->user->all();
+        $user = Auth::user();
         $kerja = Pekerjaan::all();
-        return view('profile', compact('users', 'kerja'));
+        return view('profile', compact('user', 'kerja'));
     }
 
     /**
@@ -79,7 +83,57 @@ class ProfilController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => "required|string|email|max:255|unique:users,email,{$id}",
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'alamat' => 'required|string',
+            'password' => 'nullable|string|min:8|confirmed',
+            'password_confirmation' => 'nullable|string|min:8', 
+        ]);
+
+        $user = User::findOrFail($id);
+
+        if ($request->hasFile('foto_profil')) {
+            // Mengunggah dan mengupdate foto profil
+            // ...
+        }
+
+        // Memperbarui data profil pengguna
+        $user->fill([
+            'name' => $request->name,
+            'email' => $request->email,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'tempat_lahir' => $request->tempat_lahir,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'umur' => Carbon::parse($request->tanggal_lahir)->age,
+            'pendidikan' => $request->pendidikan,
+            'pekerjaan_id' => $request->pekerjaan_id,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+        ]);
+
+        // Jika peran adalah admin, tidak memperbarui peran
+        if ($user->role === 'admin') {
+            $user->save();
+        } elseif($user->role === 'pengurus') {
+            $user->save();
+        }else{
+            // Jika peran bukan admin, memperbarui peran
+            $user->fill([
+                'role' => $request->role,
+            ])->save();
+        }
+
+        // Update password jika password diisi pada form
+        if (!empty($request->password)) {
+            $user->password = Hash::make($request->password);
+            $user->save();
+        }
+
+        return redirect()->route('profil.index')->with('success', 'Profil berhasil diperbarui!');
     }
 
     /**

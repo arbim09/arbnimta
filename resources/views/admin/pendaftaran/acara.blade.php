@@ -72,36 +72,39 @@
 </script>
 
 <script>
-    //form hapus
-  function deleteData(id) {
-      swal({
-          title: "Anda yakin ingin menghapus data ini?",
-          type: "warning",
-          timer: 10000,
-          showCancelButton: true,
-          confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Ya, hapus data!",
-          cancelButtonText: "Batal",
-          closeOnConfirm: false
-      }, function () {
-          $.ajax({
-              type: "DELETE",
-              url: "{{ route('pendaftaran.destroy', ':id') }}".replace(':id', id),
-              data: {
-                  "_token": "{{ csrf_token() }}"
-              },
-              success: function (data) {
-                  console.log(data);
-                  swal("Berhasil!", "Data telah dihapus.", "success");
-                  location.reload(); // Redirect ke halaman index setelah data berhasil dihapus
-              },
-              error: function (data) {
-                  console.log('Error:', data);
-                  swal("Oops!", "Terjadi kesalahan saat menghapus data.", "error");
-              }
-          });
-      });
-  }
-  </script>
+    // Form hapus
+    function deleteData(id) {
+        swal({
+            title: "Anda yakin ingin menghapus data ini?",
+            type: "warning",
+            timer: 10000,
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, hapus data!",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                type: "DELETE",
+                url: "{{ route('pendaftaran.destroy', ':id') }}".replace(':id', id),
+                data: {
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function (data) {
+                    console.log(data);
+                    swal("Berhasil!", "Data telah dihapus.", "success");
+                    location.reload(); // Redirect ke halaman index setelah data berhasil dihapus
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    swal("Oops!", "Terjadi kesalahan saat menghapus data: " + error, "error");
+                }
+            }).fail(function (xhr, status, error) {
+                console.log(xhr.responseText);
+                swal("Oops!", "Terjadi kesalahan saat menghapus data: " + error, "error");
+            });
+        });
+    }
+</script>
 
 @endpush

@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>Duo Mobile PWA Kit</title>
+<title>Login</title>
 <link rel="stylesheet" type="text/css" href="{{asset('/anggotatemplate/styles/bootstrap.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('/anggotatemplate/fonts/bootstrap-icons.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('/anggotatemplate/styles/style.css')}}">
@@ -22,10 +22,8 @@
 <!-- Your Page Content Goes Here-->
 <div id="page">
     <!-- Your Page Content Goes Here-->
-    <div class="page-content header-clear-medium">
-
-      <div class="card card-style">
-              <div class="content">
+    <div class="content header-clear-medium">
+      <div class="card card-style p-5">
                 <h1 class="text-center font-800 font-30 mb-2">Login</h1>
                 <p class="text-center font-13 mt-n2 mb-3">Enter your Credentials</p>
                 <form method="POST" action="{{ route('login.post') }}">
@@ -47,8 +45,7 @@
                     <a href="{{ route('register') }}" class="color-theme opacity-30 font-12">Daftar Sekarang</a>
                   </div>
                 </div>
-              </div>
-            </div>
+        </div>
       </div>
     <!-- End of Page Content-->
 </div>

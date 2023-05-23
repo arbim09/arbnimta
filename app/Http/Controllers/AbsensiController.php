@@ -8,6 +8,24 @@ use Illuminate\Support\Facades\DB;
 
 class AbsensiController extends Controller
 {
+
+    public function index()
+    {
+        return view('absensi');
+    }
+
+    public function scanQR(Request $request)
+    {
+        // Mendapatkan data hasil pemindaian QR dari request
+        $qrCodeData = $request->input('qrCodeData');
+
+        // Verifikasi keaslian kode QR dan proses pengabsenan sesuai kebutuhan
+        // ...
+
+        // Mengembalikan respons yang sesuai
+        return response()->json(['success' => true, 'message' => 'Absensi berhasil.']);
+    }
+
     public function kegiatan(){
         $id_category = 3; // ganti dengan id kategori yang ingin ditampilkan
         $events = DB::table('events')

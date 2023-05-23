@@ -33,12 +33,12 @@
                 <th style="width: 20%;">Foto</th>
                 <td style="width: 80%;"><img src="{{ asset('images/events/'.$events->image) }}" alt="{{ $events->name }}" class="img-fluid" width="350"></td>
             </tr>
-            @if($events->category->name == 'Pelatihan')
+            {{-- @if($events->category->name == 'Pelatihan') --}}
             <tr>
                 <th style="width: 20%;">QR Code</th>
-                <td style="width: 80%;"><a href="#"><img src="data:image/png;base64,{!! base64_encode(QrCode::format('png')->size(300)->generate('Ini adalah QR Code untuk kategori A')) !!}" alt="QR Code"></a></td>
+                <td style="width: 80%;"><img src="{{ $qrCodeDataUri }}" alt="QR Code"></td>
             </tr>
-            @elseif($events->category->name == 'Kegiatan')
+            {{-- @elseif($events->category->name == 'Kegiatan')
             <tr>
                 <th style="width: 20%;">QR Code</th>
                 <td style="width: 80%;"><a href="{{route('form-absensi.kegiatan')}}"><img src="data:image/png;base64,{!! base64_encode(QrCode::format('png')->size(300)->generate('Ini adalah QR Code untuk kategori B')) !!}" alt="QR Code"></a></td>
@@ -46,9 +46,9 @@
             @else
             <tr>
                 <th style="width: 20%;">QR Code</th>
-                <td style="width: 80%;"><a href="https://example.com/daftar-hadir"><img src="data:image/png;base64,{!! base64_encode(QrCode::format('png')->size(300)->generate('Ini adalah QR Code untuk kategori selain A dan B')) !!}" alt="QR Code"></a></td>
+                <td style="width: 80%;"><a href="https://example.com/daftar-hadir"><img src="data:image/png;base64,{!! base64_encode(QrCode::format('png')->size(300)->generate('$events->name')) !!}" alt="QR Code"></a></td>
             </tr>
-             @endif
+             @endif --}}
         </table>
     </div>
 </div>

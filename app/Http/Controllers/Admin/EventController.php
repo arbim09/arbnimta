@@ -112,10 +112,34 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // public function show($id)
+    // {
+    //     $events = Events::findOrFail($id);
+    //     return view('admin.events.show')->with(compact('events'));
+    // }
     public function show($id)
     {
-        $events = Events::findOrFail($id);
-        return view('admin.events.show')->with(compact('events'));
+        // Mendapatkan objek event berdasarkan ID
+        $events = Events::find($id);
+
+        // Memeriksa apakah event ditemukan
+        if (!$events) {
+            abort(404);
+        }
+
+        // Mendapatkan event name
+        $eventName = $events->name;
+
+        // Menghasilkan kode QR berdasarkan nama event
+        $qrCode = QrCode::format('png')->size(300)->generate($eventName);
+
+        // Mengubah kode QR menjadi data URI
+        $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
+
+        return view('admin.events.show', [
+            'events' => $events,
+            'qrCodeDataUri' => $qrCodeDataUri,
+        ]);
     }
 
     /**

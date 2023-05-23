@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Gate;
 use App\Models\Pekerjaan;
+use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -15,7 +16,7 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        return view ('admin.dashboard');
+        return view('admin.dashboard');
     }
 
     public function index(Request $request)
@@ -48,7 +49,7 @@ class AdminController extends Controller
     {
         // Validasi data yang diterima dari request
         $request->validate([
-            'name'          => 'required|string|max:255',   
+            'name'          => 'required|string|max:255',  
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tempat_lahir'  => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
@@ -59,6 +60,21 @@ class AdminController extends Controller
 
         // Buat Anggota baru dengan data yang diterima dari request
         $user = new User;
+
+        if ($request->hasFile('foto_profil')) {
+            $file = $request->file('foto_profil');
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
+            $filenameToStore = $filenameWithoutExt.'_'.time().'.'.$extension;
+            
+            if (!$file->move(public_path('/images/profil/'), $filenameToStore)) {
+                return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
+            }
+            $user->foto_profil = $filenameToStore;
+        } else {
+            $user->foto_profil = 'user.png'; // Gambar default jika tidak ada file yang diunggah
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->jenis_kelamin = $request->jenis_kelamin;

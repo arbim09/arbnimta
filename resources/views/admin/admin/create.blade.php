@@ -19,7 +19,7 @@
         <form class="row g-3" action="{{route('admin.store')}}" method="POST" id="admin">
             @csrf
             <div class="col-md-4">
-                <label for="input-name" class="col-sm-6 col-form-label text-danger">Nama Lengkap{!! printRequired() !!}</label>
+                <label for="input-name" class="col-sm-6 col-form-label text-danger">Nama Lengkp{!! printRequired() !!}</label>
                 <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="input-name" placeholder="Nama Lengkap" value="{{ old('name') }}" required>
                 @error('name')
                 <span class="invalid-feedback">{{ $message }}</span>
@@ -132,6 +132,13 @@
                 </div>
             </div>
             <div class="col-md-4">
+                <label for="input-foto_profil" class="col-sm-6 col-form-label">Foto Profil</label>
+                <input type="file" id="foto_profil" name="foto_profil" class="form-control" id="input-foto_profil" placeholder="foto_profil" value="{{ old('foto_profil') }}">
+                @error('foto_profil')
+                <span class="invalid-feedback">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="col-md-4">
                 <label for="input-password" class="col-sm-4 col-form-label text-danger">Password</label>
                 <div class="">
                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="input-password" placeholder="password" value="{{ old('password') }}">
@@ -178,41 +185,46 @@
     });
 </script>
 <script>
-    $(document).ready(function() {
-        $('#admin').submit(function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: '{{ route('admin.store') }}',
-                type: 'POST',
-                dataType: 'JSON',
-                data: $('#admin').serialize(),
-                success: function(response) {
-                    swal({
-                        title: 'Data Berhasil Disimpan!',
-                        text: response.message,
-                        icon: 'success',
-                        button: 'Ok'
-                    }).then(function() {
-                        location.href = "{{ route('admin.index') }}";
-                    });
-                },
-                error: function(response) {
-                    swal({
-                        title: 'Gagal!',
-                        text: response.responseJSON.message,
-                        icon: 'error',
-                        button: 'Ok'
-                    });
-                }
-            });
+$(document).ready(function() {
+    $('#admin').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this); // Buat objek FormData untuk menyimpan data form
+        
+        $.ajax({
+            url: '{{ route('admin.store') }}',
+            type: 'POST',
+            dataType: 'JSON',
+            data: formData,
+            processData: false, // Jangan memproses data secara otomatis
+            contentType: false, // Jangan mengatur tipe konten secara otomatis
+            success: function(response) {
+                swal({
+                    title: 'Data Berhasil Disimpan!',
+                    text: response.message,
+                    icon: 'success',
+                    button: 'Ok'
+                }).then(function() {
+                    location.href = "{{ route('admin.index') }}";
+                });
+            },
+            error: function(response) {
+                swal({
+                    title: 'Gagal!',
+                    text: response.responseJSON.message,
+                    icon: 'error',
+                    button: 'Ok'
+                });
+            }
         });
-        $('#input-tanggal_lahir').change(function() {
-                var dob = new Date($(this).val());
-                var today = new Date();
-                var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
-                $('#input-umur').val(age);
-            });
     });
+    
+    $('#input-tanggal_lahir').change(function() {
+        var dob = new Date($(this).val());
+        var today = new Date();
+        var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+        $('#input-umur').val(age);
+    });
+});
 </script>
-
 @endpush

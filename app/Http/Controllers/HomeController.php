@@ -16,7 +16,10 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $banners = Banners::where('is_show', true)->get();
-        $berita = Posts::paginate(6);
+        $berita = Posts::orderBy('created_at', 'desc')->paginate(6);
+        // $berita = Posts::paginate(6);
+        // $berita = Posts::orderBy('created_at', 'desc')->take(6)->get();
+
         if ($request->ajax()) {
             $view = view('load_more_berita', compact('berita'))->render();
     
@@ -109,13 +112,28 @@ class HomeController extends Controller
 
     public function loadMoreBerita(Request $request)
     {
-        $page = $request->input('page');
-        $banners = Banners::where('is_show', true)->get();
-        $berita = Posts::paginate(6, ['*'], 'page', $page);
+        $berita = Posts::orderBy('created_at', 'desc')->paginate(6);
     
         if ($request->ajax()) {
             return view('load_more_berita', compact('berita'));
         }
-        return view('welcome', compact('berita', 'banners'));
+    
+        $banners = Banners::where('is_show', true)->get();
+        return view('welcome', compact('banners', 'berita'));
     }
+
+    // public function loadMoreBerita(Request $request)
+    // {
+    //     $page = $request->input('page');
+    //     $perPage = 6;
+    //     $skip = ($page - 1) * $perPage;
+    
+    //     if ($request->ajax()) {
+    //         $beritaBaru = Posts::orderBy('created_at', 'desc')->skip($skip)->take($perPage)->get();
+    //         $beritaLama = Posts::orderBy('created_at', 'asc')->limit($skip)->get();
+    //         $berita = $beritaBaru->concat($beritaLama)->sortByDesc('created_at');
+    
+    //         return response()->json(['html' => view('load_more_berita', compact('berita'))->render()]);
+    //     }
+    // }
 }

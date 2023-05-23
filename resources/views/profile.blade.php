@@ -1,40 +1,56 @@
 @extends('layout.anggotaLayouts.main')
 
 @push('css')
+<style>
+    .file-data img {
+        width: 100%;
+        height: auto;
+    }
+</style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 @endpush
 
 @section('content')
+@if (session('success'))
+    <div class="alert bg-green-light shadow-bg shadow-bg-m alert-dismissible rounded-s fade show mb-0" role="alert">
+        <i class="bi bi-check-circle-fill pe-2"></i>
+        <strong>Selamat</strong> - {{ session('success') }}
+        <button type="button" class="btn-close opacity-10" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+<br>
         <!-- Your Page Content Goes Here-->
-        <div class="page-content header-clear-medium">
-
             <div class="card card-style">
-                <form>
                     <div class="content mb-0">
                         <h6 class="font-700 mb-n1 color-highlight">Pengaturan Akun</h6>
-                        <h1 class="pb-2">Profil</h1>  
+                        <h1 class="pb-2">Profil</h1>
+                <form action="{{ route('profil.update', $user->id) }}" method="POST" enctype="multipart/form-data" id="anggota">
+                    @method('PUT')
+                    @csrf 
+                    <input type="hidden" name="_method" value="PUT">
                         <div class="file-data">
-                            <img id="image-data" src="{{asset('anggotatemplate/images/pictures/23.jpg')}}" class="img-fluid rounded-s" alt="img">
+                            @php
+                                $foto_profil = auth()->user()->foto_profil ? asset('images/profil/') . '/' . auth()->user()->foto_profil : asset('images/profil/user.png');
+                            @endphp
+                            <img id="image-data"  class="img-fluid rounded-s" src="{{ $foto_profil }}" style="max-width: 100%;">
                             <span class="upload-file-name d-block text-center"
                                   data-text-before="<i class='bi bi-check-circle-fill color-green-dark pe-2'></i> Image:"
                                   data-text-after=" is ready.">
                             </span>
                             <div>
-                                <input type="file" class="upload-file" accept="image/*">
+                                <input type="file" class="upload-file" name="foto_profil" accept="image/*">
                                 <p class="btn btn-full btn-m text-uppercase font-700 font-11 rounded-s upload-file-text shadow-0 color-black">Ubah foto profil</p>
                             </div>
-                        </div>
-        
-                        <div class="divider"></div>
-        
+                        </div>        
+                        <div class="divider"></div>        
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-person-circle font-14"></i>
-                            <input type="text" class="form-control rounded-xs" id="c1" placeholder="Nama" value="{{ Auth::user()->name }}"/>
+                            <input type="text" class="form-control rounded-xs" id="c1" name="name" placeholder="Nama Lengkap" value="{{ Auth::user()->name }}"/>
                             <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Nama</label>
                         </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-at font-16"></i>
-                            <input type="email" class="form-control rounded-xs" id="c1" placeholder="Email" value="{{ Auth::user()->email }}"/>
+                            <input type="email" class="form-control rounded-xs" id="c1" name="email" placeholder="Email" value="{{ Auth::user()->email }}"/>
                             <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Email</label>
                             <span>(required)</span>
                         </div>
@@ -59,22 +75,22 @@
                                 @endforeach
                               </select>
                             <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Pekerjaan</label>
-                          </div>
+                        </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-phone font-16"></i>
-                            <input type="text" class="form-control rounded-xs" id="c1" placeholder="No Telephone" value="{{ Auth::user()->no_hp }}"/>
+                            <input type="text" class="form-control rounded-xs" id="c1" placeholder="No Telephone" name="no_hp" value="{{ Auth::user()->no_hp }}"/>
                             <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Phone</label>
                             <span>(required)</span>
                         </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-alt font-16"></i>
-                            <input type="text" class="form-control rounded-xs" id="c1" placeholder="Alamat" value="{{ Auth::user()->alamat }}"/>
+                            <input type="text" class="form-control rounded-xs" id="c1" placeholder="Alamat" name="alamat" value="{{ Auth::user()->alamat }}"/>
                             <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Address</label>
                             <span>(required)</span>
                         </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-person font-16"></i>
-                            <select class="form-control rounded-xs" name="gender" id="gender">
+                            <select class="form-control rounded-xs" name="jenis_kelamin" id="gender">
                                 <option value="">- Pilih Gender -</option>
                                 <option value="Laki-laki" {{ Auth::user()->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                                 <option value="Perempuan" {{ Auth::user()->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
@@ -84,14 +100,19 @@
                         </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-geo-alt font-16"></i>
-                            <input type="text" class="form-control rounded-xs" id="c1" placeholder="Tempat Lahir" value="{{ Auth::user()->tempat_lahir }}"/>
+                            <input type="text" class="form-control rounded-xs" id="c1" placeholder="Tempat Lahir" name="tempat_lahir" value="{{ Auth::user()->tempat_lahir }}"/>
                             <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Tempat Lahir</label>
                             <span>(required)</span>
                         </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-calendar2-event font-16"></i>
-                            <input type="date" class="form-control rounded-xs" id="c1" placeholder="Tanggal Lahir" value="{{ \Carbon\Carbon::parse(Auth::user()->tanggal_lahir)->format('Y-m-d') }}" />
-                            <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Tanggal Lahir</label>
+                            <input type="date" class="form-control rounded-xs" id="input-tanggal_lahir" placeholder="Tanggal Lahir" name="tanggal_lahir" value="{{ \Carbon\Carbon::parse(Auth::user()->tanggal_lahir)->format('Y-m-d') }}" />
+                            <label for="input-tanggal_lahir" class="color-theme form-label-always-active font-10 opacity-50">Tanggal Lahir</label>
+                        </div>
+                        <div class="form-custom form-label form-icon mb-3">
+                            <i class="bi bi-calendar2-event font-16"></i>
+                            <input type="input" class="form-control rounded-xs" id="input-umur" placeholder="Umur" name="umur" value="{{ Auth::user()->umur }} Tahun" readonly/>
+                            <label for="input-umur" class="color-theme form-label-always-active font-10 opacity-50">Umur</label>
                         </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-book font-16"></i>
@@ -111,25 +132,73 @@
                         </div>
                         <div class="form-custom form-label form-icon mb-3">
                             <i class="bi bi-at font-16"></i>
-                            <input type="password" class="form-control rounded-xs" id="c1" placeholder="********" value="{{ substr(Auth::user()->password, 0, 8) . '...' }}"/>
-                            <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Password</label>
-                            <span>(required)</span>
+                            <input type="password" name="password" class="form-control rounded-xs @error('password') is-invalid @enderror" id="input-password" placeholder="********" maxlength="8" size="8">
+                            <label for="input-password" class="color-theme form-label-always-active font-10 opacity-50">Password</label>
                         </div>
-                    </div>
-                    <a href="#" class="btn mx-3 mb-4 btn-full btn-margins gradient-blue shadow-bg shadow-bg-s rounded-s btn-m text-uppercase font-900">Save Information</a>
+                        
+                        <div class="form-custom form-label form-icon mb-3">
+                            <i class="bi bi-at font-16"></i>
+                            <input type="password" name="password_confirmation" class="form-control rounded-xs" id="input-password-confirmation" placeholder="********">
+                            <label for="input-password-confirmation" class="color-theme form-label-always-active font-10 opacity-50">Confirm Password</label>
+                        </div>
+                    <button type="submit" class='btn rounded-sm btn-m gradient-blue text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>Simpan Perubahan</button>
                 </form>
             </div>
-    
-        </div>
         <!-- End of Page Content-->
 @endsection
 @push('js')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-           $('.select2').select2();
-           placeholder: "Select a pekerjaan",
-            allowClear: true
+            $('#anggota').submit(function(e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+                $.ajax({
+                    url: '{{ route('profil.update', $user->id) }}',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: formData, // Menggunakan objek FormData sebagai data
+                    contentType: false, // Set contentType dan processData ke false
+                    processData: false,
+                    success: function(response) {
+                        swal({
+                            title: 'Profil Berhasil Dirubah!',
+                            text: response.message,
+                            icon: 'success',
+                            button: 'Ok'
+                        }).then(function() {
+                            location.href = "{{ route('profil.index') }}";
+                        });
+                    },
+                    error: function(response) {
+                        swal({
+                            title: 'Gagal!',
+                            text: response.responseJSON.message,
+                            icon: 'error',
+                            button: 'Ok'
+                        });
+                    }
+                });
+            });
+
+            updateAge();
+            $('#input-tanggal_lahir').change(function() {
+                updateAge();
+            });
+
+            function updateAge() {
+                var dob = new Date($('#input-tanggal_lahir').val());
+                var today = new Date();
+                var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+                $('#input-umur').val(age);
+            }
         });
-     </script>
+    </script>
+
+<script>
+    // Fungsi untuk menghilangkan notifikasi setelah 10 detik
+    setTimeout(function(){
+        $('.alert').alert('close');
+    }, 5000);
+</script>
 @endpush

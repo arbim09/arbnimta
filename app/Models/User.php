@@ -29,6 +29,8 @@ class User extends Authenticatable
         'agama',
         'pekerjaan_id',
         'pendidikan',
+        'foto_profil',
+        'point',
     ];
 
     /**
