@@ -24,30 +24,30 @@ class EventController extends Controller
         if ($request->ajax()) {
             $data = Events::select('*')->orderBy('created_at', 'desc');;
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('category_name', function($row){
-                        return $row->category ? $row->category->name : '-';
-                    })
-                    ->addColumn('status', function($q){
-                        if ($q->is_show == 1) {
-                            $status = '<span class="badge badge-success">Aktif</span>';
-                        } else {
-                            $status = '<span class="badge badge-danger">Tidak Aktif</span>';
-                        }
-                        return $status;
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<a href="'.route('events.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
-                        $btn .= '<a href="'.route('events.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
-                        $btn .= '<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'category_name', 'status'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('category_name', function ($row) {
+                    return $row->category ? $row->category->name : '-';
+                })
+                ->addColumn('status', function ($q) {
+                    if ($q->is_show == 1) {
+                        $status = '<span class="badge badge-success">Aktif</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Tidak Aktif</span>';
+                    }
+                    return $status;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '<a href="' . route('events.show', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                    $btn .= '<a href="' . route('events.edit', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
+                    $btn .= '<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'category_name', 'status'])
+                ->make(true);
         }
-        
+
         return view('admin.events.index');
     }
 
@@ -78,22 +78,22 @@ class EventController extends Controller
             'is_show' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
+
         // Membuat event baru dengan data yang diinputkan oleh user
         $event = new Events;
         $event->name = $validatedData['name'];
         $event->is_show = $validatedData['is_show'];
         $event->category_id = $validatedData['category_id'];
         $event->keterangan = $validatedData['keterangan'];
-    
+
         // Menyimpan gambar event (jika ada)
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-            $filenameToStore = $filenameWithoutExt.'_'.time().'.'.$extension;
-    
+            $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
+
             if (!$file->move(public_path('/images/events/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
@@ -101,7 +101,7 @@ class EventController extends Controller
         }
         // Menyimpan event ke dalam database
         $event->save();
-    
+
         // Kembali ke halaman utama dengan pesan sukses
         return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan.');
     }
@@ -127,11 +127,11 @@ class EventController extends Controller
             abort(404);
         }
 
-        // Mendapatkan event name
-        $eventName = $events->name;
+        // Mendapatkan event ID
+        $eventId = $id;
 
-        // Menghasilkan kode QR berdasarkan nama event
-        $qrCode = QrCode::format('png')->size(300)->generate($eventName);
+        // Menghasilkan kode QR berdasarkan event ID
+        $qrCode = QrCode::format('png')->size(300)->generate($eventId);
 
         // Mengubah kode QR menjadi data URI
         $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
@@ -171,49 +171,49 @@ class EventController extends Controller
             'keterangan' => 'nullable',
             'is_show' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
+        ]);
 
-            // Mengambil event yang akan diupdate
-            $event = Events::find($id);
-            if (!$event) {
-                return response()->json(['error' => 'Event tidak ditemukan.'], 404);
-            }
+        // Mengambil event yang akan diupdate
+        $event = Events::find($id);
+        if (!$event) {
+            return response()->json(['error' => 'Event tidak ditemukan.'], 404);
+        }
 
-            // Update data event dengan data yang diinputkan oleh user
-            $event->name = $validatedData['name'];
-            $event->is_show = $validatedData['is_show'];
-            $event->category_id = $validatedData['category_id'];
-            $event->keterangan = $validatedData['keterangan'];
+        // Update data event dengan data yang diinputkan oleh user
+        $event->name = $validatedData['name'];
+        $event->is_show = $validatedData['is_show'];
+        $event->category_id = $validatedData['category_id'];
+        $event->keterangan = $validatedData['keterangan'];
 
-            // Menghapus gambar lama jika ada gambar baru yang diunggah
-            if ($request->hasFile('image')) {
-                $oldImage = $event->image;
-                if ($oldImage) {
-                    if (file_exists(public_path('/images/events/'.$oldImage))) {
-                        unlink(public_path('/images/events/'.$oldImage));
-                    }
+        // Menghapus gambar lama jika ada gambar baru yang diunggah
+        if ($request->hasFile('image')) {
+            $oldImage = $event->image;
+            if ($oldImage) {
+                if (file_exists(public_path('/images/events/' . $oldImage))) {
+                    unlink(public_path('/images/events/' . $oldImage));
                 }
             }
+        }
 
-            // Menyimpan gambar event yang baru (jika ada)
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $filename = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-                $filenameToStore = $filenameWithoutExt.'_'.time().'.'.$extension;
+        // Menyimpan gambar event yang baru (jika ada)
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
+            $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
 
-                if (!$file->move(public_path('/images/events/'), $filenameToStore)) {
-                    return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
-                }
-                $event->image = $filenameToStore;
+            if (!$file->move(public_path('/images/events/'), $filenameToStore)) {
+                return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
+            $event->image = $filenameToStore;
+        }
 
-            // Menyimpan event ke dalam database
-            $event->save();
+        // Menyimpan event ke dalam database
+        $event->save();
 
-            // Kembali ke halaman utama dengan pesan sukses
-            return redirect()->route('events.index')->with('success', 'Event berhasil diupdate.');
+        // Kembali ke halaman utama dengan pesan sukses
+        return redirect()->route('events.index')->with('success', 'Event berhasil diupdate.');
     }
 
     /**
@@ -237,69 +237,69 @@ class EventController extends Controller
     {
         if ($request->ajax()) {
             $data = Events::select('*')
-            ->where('category_id', '=', '3')
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->where('category_id', '=', '3')
+                ->orderBy('created_at', 'desc')
+                ->get();
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('category_name', function($row){
-                        return $row->category ? $row->category->name : '-';
-                    })
-                    ->addColumn('status', function($q){
-                        if ($q->is_show == 1) {
-                            $status = '<span class="badge badge-success">Aktif</span>';
-                        } else {
-                            $status = '<span class="badge badge-danger">Tidak Aktif</span>';
-                        }
-                        return $status;
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<a href="'.route('events.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
-                        $btn .= '<a href="'.route('events.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
-                        $btn .= '<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'category_name',  'status'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('category_name', function ($row) {
+                    return $row->category ? $row->category->name : '-';
+                })
+                ->addColumn('status', function ($q) {
+                    if ($q->is_show == 1) {
+                        $status = '<span class="badge badge-success">Aktif</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Tidak Aktif</span>';
+                    }
+                    return $status;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '<a href="' . route('events.show', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                    $btn .= '<a href="' . route('events.edit', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
+                    $btn .= '<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'category_name',  'status'])
+                ->make(true);
         }
-        
+
         return view('admin.events.kegiatan');
     }
 
     public function acara(Request $request)
     {
         if ($request->ajax()) {
-            $data = Events::select('*') 
-            ->where('category_id', '=', '2')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            $data = Events::select('*')
+                ->where('category_id', '=', '2')
+                ->orderBy('created_at', 'desc')
+                ->get();
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('category_name', function($row){
-                        return $row->category ? $row->category->name : '-';
-                    })
-                    ->addColumn('status', function($q){
-                        if ($q->is_show == 1) {
-                            $status = '<span class="badge badge-success">Aktif</span>';
-                        } else {
-                            $status = '<span class="badge badge-danger">Tidak Aktif</span>';
-                        }
-                        return $status;
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<a href="'.route('events.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
-                        $btn .= '<a href="'.route('events.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
-                        $btn .= '<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'category_name', 'status'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('category_name', function ($row) {
+                    return $row->category ? $row->category->name : '-';
+                })
+                ->addColumn('status', function ($q) {
+                    if ($q->is_show == 1) {
+                        $status = '<span class="badge badge-success">Aktif</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Tidak Aktif</span>';
+                    }
+                    return $status;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '<a href="' . route('events.show', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                    $btn .= '<a href="' . route('events.edit', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
+                    $btn .= '<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'category_name', 'status'])
+                ->make(true);
         }
-        
+
         return view('admin.events.acara');
     }
 
@@ -307,34 +307,34 @@ class EventController extends Controller
     {
         if ($request->ajax()) {
             $data = Events::select('*')
-            ->where('category_id', '=', '1')
-            ->orderBy('created_at', 'desc')
-            ->get();
+                ->where('category_id', '=', '1')
+                ->orderBy('created_at', 'desc')
+                ->get();
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('category_name', function($row){
-                        return $row->category ? $row->category->name : '-';
-                    })
-                    ->addColumn('status', function($q){
-                        if ($q->is_show == 1) {
-                            $status = '<span class="badge badge-success">Aktif</span>';
-                        } else {
-                            $status = '<span class="badge badge-danger">Tidak Aktif</span>';
-                        }
-                        return $status;
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<a href="'.route('events.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
-                        $btn .= '<a href="'.route('events.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
-                        $btn .= '<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'category_name', 'status'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('category_name', function ($row) {
+                    return $row->category ? $row->category->name : '-';
+                })
+                ->addColumn('status', function ($q) {
+                    if ($q->is_show == 1) {
+                        $status = '<span class="badge badge-success">Aktif</span>';
+                    } else {
+                        $status = '<span class="badge badge-danger">Tidak Aktif</span>';
+                    }
+                    return $status;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '<a href="' . route('events.show', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                    $btn .= '<a href="' . route('events.edit', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
+                    $btn .= '<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'category_name', 'status'])
+                ->make(true);
         }
-        
+
         return view('admin.events.pelatihan');
     }
 }

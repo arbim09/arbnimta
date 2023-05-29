@@ -22,14 +22,14 @@ class CreateUsersTable extends Migration
             $table->datetime('tanggal_lahir');
             $table->integer('umur')->nullable();
             $table->text('alamat');
-            $table->enum('agama', ['Islam', 'Kristen', 'Katholik', 'Hindu','Budha', 'Khonghucu', 'Lainya']);
-            $table->enum('pendidikan', ['Tidak/Belum Sekolah', 'Belum Tamat SD/Sederajat', 'Tamat SD/Sederajat', 'SLTP/Sederajat','SLTA/Sederajat', 'Diploma I/II', 'Akademi/Diploma III/S. muda', 'Diploma IV/Strata I', 'Strata II', 'Strata III'])->nullable();
+            $table->enum('agama', ['Islam', 'Kristen', 'Katholik', 'Hindu', 'Budha', 'Khonghucu', 'Lainya']);
+            $table->enum('pendidikan', ['Tidak/Belum Sekolah', 'Belum Tamat SD/Sederajat', 'Tamat SD/Sederajat', 'SLTP/Sederajat', 'SLTA/Sederajat', 'Diploma I/II', 'Akademi/Diploma III/S. muda', 'Diploma IV/Strata I', 'Strata II', 'Strata III'])->nullable();
             $table->string('no_hp')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('pekerjaan_id')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->enum('role',['admin','pengurus','anggota'])->default('anggota')->nullable();
+            $table->enum('role', ['admin', 'pengurus', 'anggota'])->default('anggota');
             $table->timestamps();
         });
     }

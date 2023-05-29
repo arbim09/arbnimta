@@ -20,15 +20,15 @@
             <span class="menu-divider">NAVIGATION</span>
             <div class="menu-list">
                 <div class="card card-style rounded-m p-3 py-2 mb-0">
-                    <a href="{{route('profil.index')}}" id="nav-homes"><i class="gradient-blue shadow-bg shadow-bg-xs bi bi-person-fill"></i><span>Profil</span><i class="bi bi-chevron-right"></i></a>
-                    <a href="#" id="nav-comps"><i class="gradient-red shadow-bg shadow-bg-xs bi bi-gear-fill"></i><span>Absensi</span><i class="bi bi-chevron-right"></i></a>
+                    <a href="{{route('profil.index')}}" ><i class="gradient-blue shadow-bg shadow-bg-xs bi bi-person-fill"></i><span>Profil</span><i class="bi bi-chevron-right"></i></a>
+                    <a href="{{route('camera')}}" id="nav-comps"><i class="gradient-red shadow-bg shadow-bg-xs bi bi-clock-fill"></i><span>Absensi</span><i class="bi bi-chevron-right"></i></a>
                     <a href="#" id="nav-pages"><i class="gradient-green shadow-bg shadow-bg-xs bi bi-heart-fill"></i><span>Site Pages</span><i class="bi bi-chevron-right"></i></a>
                     <a href="#" id="nav-media"><i class="gradient-yellow shadow-bg shadow-bg-xs bi bi-image-fill"></i><span>Media Styles</span><i class="bi bi-chevron-right"></i></a>
                     <a href="#" id="nav-mails"><i class="gradient-magenta shadow-bg shadow-bg-xs bi bi-envelope-fill"></i><span>Contact</span><i class="bi bi-chevron-right"></i></a>
                     <form action="{{ route('logout') }}" method="POST" id="logoutForm">
                         @csrf
                         <button type="button" class="btn rounded-sm btn-m gradient-green text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                          <i class="gradient-magenta shadow-bg shadow-bg-xs bi bi-box-arrow-right"></i>
+                          <i class=" shadow-bg shadow-bg-xs bi bi-box-arrow-right"></i>
                           <span>Logout</span>
                         </button>
                       

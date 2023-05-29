@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class AnggotaController extends Controller
 {
@@ -26,7 +27,7 @@ class AnggotaController extends Controller
      */
     public function create()
     {
-       //
+        //
     }
 
     /**
@@ -39,12 +40,12 @@ class AnggotaController extends Controller
     {
         // Validasi data yang diterima dari request
         $request->validate([
-            'name'          => 'required|string|max:255',  
+            'name'          => 'required|string|max:255',
             'tempat_lahir'  => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'alamat'        => 'required|string',
             'password'      => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',     
+            'password_confirmation' => 'required|string|min:8',
         ]);
 
         // Buat Anggota baru dengan data yang diterima dari request
@@ -55,15 +56,22 @@ class AnggotaController extends Controller
             $filename = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-            $filenameToStore = $filenameWithoutExt.'_'.time().'.'.$extension;
-            
-            if (!$file->move(public_path('/images/profil/'), $filenameToStore)) {
-                return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
+            $filenameToStore = $filenameWithoutExt . '_' . date('Ymd') . '.' . $extension;
+
+            // Resize dan crop gambar menggunakan Intervention\Image
+            $image = Image::make($file);
+            $image->fit(200, 200); // Tentukan dimensi lebar dan tinggi yang diinginkan
+            $image->save(public_path('/images/profil/') . $filenameToStore);
+
+            // Hapus file gambar terdahulu jika ada dan jika pengunggahan file baru berhasil
+            if ($user->foto_profil && $user->foto_profil !== 'user.png' && file_exists(public_path('/images/profil/' . $user->foto_profil))) {
+                unlink(public_path('/images/profil/' . $user->foto_profil));
             }
             $user->foto_profil = $filenameToStore;
         } else {
             $user->foto_profil = 'user.png'; // Gambar default jika tidak ada file yang diunggah
         }
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->jenis_kelamin = $request->jenis_kelamin;
@@ -72,7 +80,7 @@ class AnggotaController extends Controller
         $user->tanggal_lahir = $request->tanggal_lahir;
         $tanggalLahir = Carbon::parse($request->tanggal_lahir);
         $umur = $tanggalLahir->age;
-        $user->umur = $umur; 
+        $user->umur = $umur;
         $user->pendidikan = $request->pendidikan;
         $user->pekerjaan_id = $request->pekerjaan_id;
         $user->alamat = $request->alamat;
@@ -84,6 +92,4 @@ class AnggotaController extends Controller
 
         return redirect()->route('register')->with('success', 'Selamat Anda Berhasil Mendaftar!');
     }
-
-
 }

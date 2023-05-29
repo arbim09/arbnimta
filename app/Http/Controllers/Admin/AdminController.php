@@ -20,25 +20,25 @@ class AdminController extends Controller
     }
 
     public function index(Request $request)
-    {          
+    {
         if ($request->ajax()) {
             $data = User::select('*');
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<a href="'.route('admin.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
-                        $btn .= '<a href="'.route('admin.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
-                        $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '<a href="' . route('admin.show', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                    $btn .= '<a href="' . route('admin.edit', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
+                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
         return view('admin.admin.index');
     }
-                                                                                                                                  
+
     public function create()
     {
         $kerja = Pekerjaan::all();
@@ -49,13 +49,13 @@ class AdminController extends Controller
     {
         // Validasi data yang diterima dari request
         $request->validate([
-            'name'          => 'required|string|max:255',  
+            'name'          => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tempat_lahir'  => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'alamat'        => 'required|string',
             'password'      => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',     
+            'password_confirmation' => 'required|string|min:8',
         ]);
 
         // Buat Anggota baru dengan data yang diterima dari request
@@ -66,14 +66,14 @@ class AdminController extends Controller
             $filename = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-            $filenameToStore = $filenameWithoutExt.'_'.time().'.'.$extension;
-            
+            $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
+
             if (!$file->move(public_path('/images/profil/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
             $user->foto_profil = $filenameToStore;
         } else {
-            $user->foto_profil = 'user.png'; // Gambar default jika tidak ada file yang diunggah
+            $user->foto_profil = '/images/profil/user.png';
         }
         $user->name = $request->name;
         $user->email = $request->email;
@@ -109,7 +109,7 @@ class AdminController extends Controller
 
     public function update(Request $request, $id)
     {
-        
+
         $request->validate([
             'name'          => 'required|string|max:255',
             'email'         => "required|string|email|max:255|unique:users,email,{$id}",
@@ -119,10 +119,10 @@ class AdminController extends Controller
             'alamat'        => 'required|string',
             'password'      => 'nullable|string|min:8|confirmed',
         ]);
-    
+
         // Ambil data user dari database
         $user = User::findOrFail($id);
-        
+
         // Update data user dengan data baru dari request
         $user->name = $request->name;
         $user->email = $request->email;
@@ -135,21 +135,21 @@ class AdminController extends Controller
         $user->alamat = $request->alamat;
         $user->role = $request->role;
         $user->no_hp = $request->no_hp;
-    
+
         // Update password jika password diisi pada form
         if (!empty($request->password)) {
             $user->password = Hash::make($request->password);
         }
-    
+
         $user->save();
-    
+
         // Kembalikan respons sukses jika request di-handle oleh ajax
         if ($request->ajax()) {
             return response()->json([
                 'message' => 'Data admin berhasil diupdate!'
             ]);
         }
-    
+
         // Redirect ke halaman daftar user jika request tidak di-handle oleh ajax
         return redirect()->route('admin.index')->with('success', 'Data admin berhasil diupdate!');
     }

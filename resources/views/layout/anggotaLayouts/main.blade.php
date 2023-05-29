@@ -43,8 +43,6 @@
     <!-- Your Page Content Goes Here-->
     <div class="page-content header-clear-medium">
 		@yield('content')
-
-		
     </div>
 	<!-- End of Page Content-->
 </div>

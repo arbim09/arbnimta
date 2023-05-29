@@ -22,9 +22,9 @@ class LoginController extends Controller
 			} elseif ($user->role == 'anggota') {
 				return redirect()->intended('/');
 			}
-		} else {
-			return back()->with('error', 'Login gagal');
 		}
+		// Jika autentikasi gagal, set pesan kesalahan ke session flash data
+		return back()->withErrors(['error' => 'Email atau password yang Anda masukkan tidak valid.']);
 	}
 
 	public function register()

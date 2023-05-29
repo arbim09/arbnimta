@@ -14,7 +14,7 @@ class AddFotoProfilAndPointToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('foto_profil')->default('images/user.png');
+            $table->string('foto_profil')->default('images/profil/user.png');
             $table->integer('point')->default(0);
         });
     }

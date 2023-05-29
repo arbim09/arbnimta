@@ -8,23 +8,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class ProfilController extends Controller
 {
-    
-   protected $user;
-    
+
+    protected $user;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function __construct(User $user)
-   {
-       $this->user = $user;
-   }
+    {
+        $this->user = $user;
+    }
 
-   public function index()
+    public function index()
     {
         $user = Auth::user();
         $kerja = Pekerjaan::all();
@@ -91,14 +92,31 @@ class ProfilController extends Controller
             'tanggal_lahir' => 'required|date',
             'alamat' => 'required|string',
             'password' => 'nullable|string|min:8|confirmed',
-            'password_confirmation' => 'nullable|string|min:8', 
+            'password_confirmation' => 'nullable|string|min:8',
         ]);
 
         $user = User::findOrFail($id);
 
+
         if ($request->hasFile('foto_profil')) {
-            // Mengunggah dan mengupdate foto profil
-            // ...
+            $file = $request->file('foto_profil');
+            $filename = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
+            $filenameToStore = $filenameWithoutExt . '_' . date('Ymd') . '.' . $extension;
+
+            // Resize dan crop gambar menggunakan Intervention\Image
+            $image = Image::make($file);
+            $image->fit(300, 300); // Tentukan dimensi lebar dan tinggi yang diinginkan
+            $image->save(public_path('/images/profil/') . $filenameToStore);
+
+            // Hapus file gambar terdahulu jika ada dan jika pengunggahan file baru berhasil
+            if ($user->foto_profil && $user->foto_profil !== 'user.png' && file_exists(public_path('/images/profil/' . $user->foto_profil))) {
+                unlink(public_path('/images/profil/' . $user->foto_profil));
+            }
+            $user->foto_profil = $filenameToStore;
+        } else {
+            $user->foto_profil = 'user.png'; // Gambar default jika tidak ada file yang diunggah
         }
 
         // Memperbarui data profil pengguna
@@ -118,9 +136,9 @@ class ProfilController extends Controller
         // Jika peran adalah admin, tidak memperbarui peran
         if ($user->role === 'admin') {
             $user->save();
-        } elseif($user->role === 'pengurus') {
+        } elseif ($user->role === 'pengurus') {
             $user->save();
-        }else{
+        } else {
             // Jika peran bukan admin, memperbarui peran
             $user->fill([
                 'role' => $request->role,
