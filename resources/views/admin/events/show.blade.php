@@ -34,7 +34,7 @@
                 <tr>
                     <th style="width: 20%;">Foto</th>
                     <td style="width: 80%;"><img src="{{ asset('images/events/' . $events->image) }}"
-                            alt="{{ $events->name }}" class="img-fluid" width="350"></td>
+                            alt="{{ $events->name }}" class="img-fluid" style="max-width: 200px; max-height: 200px;"></td>
                 </tr>
                 {{-- @if ($events->category->name == 'Pelatihan') --}}
                 <tr>

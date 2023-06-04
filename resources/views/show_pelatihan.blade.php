@@ -1,6 +1,6 @@
 @extends('layout.anggotaLayouts.main')
 @section('title')
-    <title>Kegiatan</title>
+    <title>Pelatihan</title>
 @endsection
 @section('content')
     <div id="page">

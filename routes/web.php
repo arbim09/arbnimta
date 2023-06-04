@@ -38,14 +38,15 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/berita/{slug}', [HomeController::class, 'berita'])->name('berita.show');
 Route::get('/load-more-berita', [HomeController::class, 'loadMoreBerita'])->name('load-more-berita');
 Route::get('/load-more-kegiatan', [HomeController::class, 'loadMoreKegiatan'])->name('load-more-kegiatan');
+Route::get('/load-more-pelatihan', [HomeController::class, 'loadMorePelatihan'])->name('load-more-pelatihan');
 Route::get('/form-contact', 'HomeController@create')->name('show.formContact');
 Route::post('/register/anggota', [ControllersAnggotaController::class, 'store'])->name('anggota.register');
 Route::get('/kegiatan', [HomeController::class, 'kegiatan'])->name('kegiatan.anggota');
 Route::get('/kegiatan/{id}', [HomeController::class, 'showKegiatan'])->name('show.kegiatan');
+Route::get('/pelatihan', [HomeController::class, 'pelatihan'])->name('pelatihan.anggota');
+Route::get('/pelatihan/{id}', [HomeController::class, 'showPelatihan'])->name('show.pelatihan');
 
 //resource anggota
-
-
 Route::middleware(['auth'])->group(function () {
 	Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
 	Route::post('/profil/{id}', [ProfilController::class, 'update'])->name('profil.update');

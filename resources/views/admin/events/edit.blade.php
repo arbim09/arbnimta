@@ -55,7 +55,7 @@
                     @if ($event->image)
                         <div class="mt-2">
                             <img src="{{ asset('images/events/' . $event->image) }}" alt="{{ $event->name }}"
-                                width="400">
+                                style="max-width: 200px; max-height: 200px;">
                         </div>
                     @endif
                 </div>

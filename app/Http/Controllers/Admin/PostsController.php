@@ -88,29 +88,21 @@ class PostsController extends Controller
             $extension = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
             $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
-
-            // Simpan gambar awal tanpa memotongnya
             if (!$file->move(public_path('/images/posts/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
-
-            // Resize dan crop gambar menggunakan Intervention\Image
             $image = Image::make(public_path('/images/posts/') . $filenameToStore);
-            $image->fit(400, 400); // Tentukan dimensi lebar dan tinggi yang diinginkan
+            $image->fit(400, 400);
             $image->save(public_path('/images/posts/') . $filenameToStore);
 
             $posts->image = $filenameToStore;
         }
-
-        // Simpan data berita ke database
 
         $posts->title = $validatedData['title'];
         $posts->slug = Str::slug($validatedData['title'], '-');
         $posts->content = $validatedData['content'];
         $posts->category_id = $validatedData['category_id'];
         $posts->penulis = Auth::user()->name;
-
-        // Simpan data ke database
         $posts->save();
         // Redirect ke halaman index berita
         return redirect()->route('posts.index')->with('success', 'Berita berhasil disimpan.');
@@ -166,18 +158,12 @@ class PostsController extends Controller
             $extension = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
             $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
-
-            // Simpan gambar awal tanpa memotongnya
             if (!$file->move(public_path('/images/posts/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
-
-            // Resize dan crop gambar menggunakan Intervention\Image
             $image = Image::make(public_path('/images/posts/') . $filenameToStore);
-            $image->fit(400, 400); // Tentukan dimensi lebar dan tinggi yang diinginkan
+            $image->fit(400, 400);
             $image->save();
-
-            // Hapus file gambar terdahulu jika ada dan jika pengunggahan file baru berhasil
             if ($posts->image && File::exists(public_path('/images/posts/' . $posts->image))) {
                 File::delete(public_path('/images/posts/' . $posts->image));
             }

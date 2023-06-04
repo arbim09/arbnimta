@@ -1,17 +1,22 @@
 @extends('layout.anggotaLayouts.main')
 @section('title')
-    <title>Kegiatan</title>
+    <title>Pelatihan</title>
 @endsection
-
+@push('css')
+    <style>
+        text-transform: none;
+        /* Menonaktifkan transformasi huruf kapital */
+    </style>
+@endpush
 @section('content')
     <div class="page">
         <div class="card card-style">
             <div class="content mb-0">
-                <h1 class="pb-2">List Kegiatan</h1>
-                <div class="kegiatanContainer" id="kegiatanContainer">
+                <h1 class="">List Pelatihan</h1>
+                <div class="pelatihanContainer" id="pelatihanContainer">
                     @foreach ($events as $event)
                         <br>
-                        <a href="{{ route('show.kegiatan', $event->id) }}">
+                        <a href="{{ route('show.pelatihan', $event->id) }}">
                             <div class="d-flex mb-3">
                                 <div class="align-self-center me-auto">
                                     <h5 class="font-500 font-15 pb-1">{{ substr($event->name, 0, 30) }}...</h5>
@@ -27,26 +32,28 @@
                         <br>
                         <div class="divider mb-3"></div>
                     @endforeach
+
                 </div>
                 @if ($events->hasMorePages())
                     <div class="text-center">
-                        <a href="{{ route('load-more-kegiatan') }}" id="loadMoreButton"
-                            class="btn-full btn btn-block bg-blue-dark">Lihat Lainnya</a>
+                        <a href="{{ route('load-more-pelatihan') }}" id="loadMoreButton"
+                            class="btn-full btn btn-block bg-blue-dark">Lihat
+                            Lainnya</a>
+                        <br>
                     </div>
                 @else
                     <div class="text-center">
                         <p>Tidak ada pelatihan lain yang tersedia.</p>
                         <script>
-                            var loadMoreButton = document.getElementById('loadMoreButton');
-                            if (loadMoreButton) {
-                                loadMoreButton.style.display = 'none';
-                            }
+                            document.getElementById('loadMoreButton').style.display = 'none';
                         </script>
                     </div>
                 @endif
                 <br>
             </div>
         </div>
+
+
     </div>
 @endsection
 
@@ -62,52 +69,23 @@
     <script>
         var currentPage = 1;
         var loadMoreButton = document.getElementById('loadMoreButton');
-        var kegiatanContainer = document.getElementById('kegiatanContainer');
-
+        var pelatihanContainer = document.getElementById('pelatihanContainer');
         loadMoreButton.addEventListener('click', function(e) {
             e.preventDefault();
             currentPage++;
-
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', "{{ route('load-more-kegiatan') }}" + "?page=" + currentPage, true);
-
+            xhr.open('GET', "{{ route('load-more-pelatihan') }}" + "?page=" + currentPage, true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = xhr.responseText;
                     var parser = new DOMParser();
-                    var newKegiatan = parser.parseFromString(response, 'text/html').querySelector(
-                        '#kegiatanContainer');
-                    kegiatanContainer.innerHTML += newKegiatan.innerHTML;
+                    var newPelatihan = parser.parseFromString(response, 'text/html').querySelector(
+                        '#pelatihanContainer');
+                    pelatihanContainer.innerHTML += newPelatihan.innerHTML;
                 }
             };
+
             xhr.send();
         });
     </script>
-    {{-- <script>
-        var currentPage = 1;
-        var loadMoreButton = document.getElementById('loadMoreButton');
-        var kegiatanContainer = document.getElementById('kegiatanContainer');
-
-        loadMoreButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentPage++;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', "{{ route('load-more-kegiatan') }}" + "?page=" + currentPage, true);
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var newKegiatan = response.html;
-                    kegiatanContainer.innerHTML += newKegiatan;
-
-                    if (!response.hasMorePages) {
-                        loadMoreButton.style.display = 'none';
-                    }
-                }
-            };
-
-            xhr.send();
-        });
-    </script> --}}
 @endpush

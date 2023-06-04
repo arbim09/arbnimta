@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'name'      => 'Rahmat Hidayatullah',
+                'name'      => 'Arya Bima Fajar Nugraha',
                 'email'     => 'admin@gmail.com',
                 'jenis_kelamin' => 'Laki-laki',
                 'tempat_lahir' => 'Jakarta',

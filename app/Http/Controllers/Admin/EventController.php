@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Auth\Access\Gate;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -97,8 +98,12 @@ class EventController extends Controller
             if (!$file->move(public_path('/images/events/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
+            $image = Image::make(public_path('/images/events/') . $filenameToStore);
+            $image->fit(400, 400);
+            $image->save(public_path('/images/events/') . $filenameToStore);
             $event->image = $filenameToStore;
         }
+
         // Menyimpan event ke dalam database
         $event->save();
 
@@ -206,6 +211,9 @@ class EventController extends Controller
             if (!$file->move(public_path('/images/events/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
+            $image = Image::make(public_path('/images/events/') . $filenameToStore);
+            $image->fit(400, 400);
+            $image->save(public_path('/images/events/') . $filenameToStore);
             $event->image = $filenameToStore;
         }
 

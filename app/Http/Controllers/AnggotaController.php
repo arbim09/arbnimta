@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Session;
 
 class AnggotaController extends Controller
 {
@@ -47,6 +48,17 @@ class AnggotaController extends Controller
             'password'      => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|string|min:8',
         ]);
+        if ($request->password !== $request->password_confirmation) {
+            Session::flash('password_tidaksama', true);
+            return back()->with('error', 'Password tidak cocok. Silakan coba lagi.')->withInput();
+        }
+
+        // Cek keberadaan email
+        $existingUser = User::where('email', $request->email)->first();
+        if ($existingUser) {
+            Session::flash('email_exists', true);
+            return redirect()->route('register')->withInput();
+        }
 
         // Buat Anggota baru dengan data yang diterima dari request
         $user = new User;
@@ -72,6 +84,7 @@ class AnggotaController extends Controller
             $user->foto_profil = 'user.png'; // Gambar default jika tidak ada file yang diunggah
         }
 
+
         $user->name = $request->name;
         $user->email = $request->email;
         $user->jenis_kelamin = $request->jenis_kelamin;
@@ -87,7 +100,6 @@ class AnggotaController extends Controller
         $user->no_hp = $request->no_hp;
         $user->password = Hash::make($request->password);
         $user->save();
-
         // Redirect ke halaman utama dengan pesan sukses
 
         return redirect()->route('register')->with('success', 'Selamat Anda Berhasil Mendaftar!');

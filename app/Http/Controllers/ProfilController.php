@@ -104,22 +104,16 @@ class ProfilController extends Controller
             $extension = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
             $filenameToStore = $filenameWithoutExt . '_' . date('Ymd') . '.' . $extension;
-
-            // Resize dan crop gambar menggunakan Intervention\Image
             $image = Image::make($file);
-            $image->fit(300, 300); // Tentukan dimensi lebar dan tinggi yang diinginkan
+            $image->fit(300, 300);
             $image->save(public_path('/images/profil/') . $filenameToStore);
-
-            // Hapus file gambar terdahulu jika ada dan jika pengunggahan file baru berhasil
             if ($user->foto_profil && $user->foto_profil !== 'user.png' && file_exists(public_path('/images/profil/' . $user->foto_profil))) {
                 unlink(public_path('/images/profil/' . $user->foto_profil));
             }
             $user->foto_profil = $filenameToStore;
-        } else {
-            $user->foto_profil = 'user.png'; // Gambar default jika tidak ada file yang diunggah
+        } elseif (!$user->foto_profil || $user->foto_profil === 'user.png') {
+            $user->foto_profil = null;
         }
-
-        // Memperbarui data profil pengguna
         $user->fill([
             'name' => $request->name,
             'email' => $request->email,
@@ -132,20 +126,15 @@ class ProfilController extends Controller
             'alamat' => $request->alamat,
             'no_hp' => $request->no_hp,
         ]);
-
-        // Jika peran adalah admin, tidak memperbarui peran
         if ($user->role === 'admin') {
             $user->save();
         } elseif ($user->role === 'pengurus') {
             $user->save();
         } else {
-            // Jika peran bukan admin, memperbarui peran
             $user->fill([
                 'role' => $request->role,
             ])->save();
         }
-
-        // Update password jika password diisi pada form
         if (!empty($request->password)) {
             $user->password = Hash::make($request->password);
             $user->save();

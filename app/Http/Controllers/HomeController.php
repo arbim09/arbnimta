@@ -73,6 +73,7 @@ class HomeController extends Controller
             ->where('categories.id', '=', $id_category)
             ->where('events.is_show', true)
             ->select('events.*', 'categories.name as category_name')
+            ->orderByDesc('events.created_at')
             ->paginate(6);
 
         if ($request->ajax()) {
@@ -94,6 +95,7 @@ class HomeController extends Controller
             ->where('categories.id', '=', $id_category)
             ->where('events.is_show', true)
             ->select('events.*', 'categories.name as category_name')
+            ->orderByDesc('events.created_at')
             ->paginate(6);
 
         if ($request->ajax()) {
@@ -106,5 +108,50 @@ class HomeController extends Controller
     {
         $events = Events::find($id);
         return view('show_kegiatan', compact('events'));
+    }
+
+    public function pelatihan(Request $request)
+    {
+        $id_category = 1;
+        $events = DB::table('events')
+            ->join('categories', 'events.category_id', '=', 'categories.id')
+            ->where('categories.id', '=', $id_category)
+            ->where('events.is_show', true)
+            ->select('events.*', 'categories.name as category_name')
+            ->orderByDesc('events.created_at')
+            ->paginate(6);
+
+        if ($request->ajax()) {
+            $view = view('load_more_pelatihan', compact('events'))->render();
+
+            return response()->json(['html' => $view]);
+        }
+
+        return view('pelatihan', ['events' => $events]);
+    }
+
+    public function loadMorePelatihan(Request $request)
+    {
+        $id_category = 1; // Ganti dengan id kategori yang ingin ditampilkan
+        $currentPage = $request->query('page');
+
+        $events = DB::table('events')
+            ->join('categories', 'events.category_id', '=', 'categories.id')
+            ->where('categories.id', '=', $id_category)
+            ->where('events.is_show', true)
+            ->select('events.*', 'categories.name as category_name')
+            ->orderByDesc('events.created_at')
+            ->paginate(6);
+
+        if ($request->ajax()) {
+            return view('load_more_pelatihan', compact('events'));
+        }
+        return view('pelatihan', compact('events'));
+    }
+
+    public function showPelatihan($id)
+    {
+        $events = Events::find($id);
+        return view('show_pelatihan', compact('events'));
     }
 }
