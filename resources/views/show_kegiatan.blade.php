@@ -8,7 +8,7 @@
         <div class="content">
             <div class="card card-style">
                 <div class="card-body px-0 py-0">
-                    <h5 class="font-700 px-3 mb-3 mt-3 text-center">{{ $events->title }}</h5>
+                    <h5 class="font-700 px-3 mb-3 mt-3 text-center">{{ $events->name }}</h5>
                     <div class="divider mb-0 mx-3"></div>
                     <br>
                     <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3"

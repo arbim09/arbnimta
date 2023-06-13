@@ -14,11 +14,29 @@
                 <div class="ps-2 align-self-center">
                     @if (auth()->check())
                         <h5 class="ps-1 mb-0 line-height-xs pt-1 mb-1">{{ auth()->user()->name }}</h5>
-                        <p class="ps-1 mb-0 font-400 opacity-100">Total Point: {{ auth()->user()->point }}</p>
+                        <p class="ps-1 mb-0 font-400 opacity-100" style="position: right;">
+                            Total Point: {{ auth()->user()->point }}
+                            @if (auth()->user()->badge)
+                                @if (auth()->user()->badge === 'Gold Badge')
+                                    <img src="{{ asset('/images/badge/medalGold.png') }}" alt="Gold Badge"
+                                        class="badge-image"
+                                        style="width: 40px; height: 40px; position: absolute; top: 25px; right: 30px;">
+                                @elseif (auth()->user()->badge === 'Silver Badge')
+                                    <img src="{{ asset('images/badge/medalSilver.png') }}" alt="Silver Badge"
+                                        class="badge-image"
+                                        style="width: 40px; height: 40px; position: absolute; top: 25px; right: 30px;">
+                                @elseif (auth()->user()->badge === 'Bronze Badge')
+                                    <img src="{{ asset('images/badge/medalBronze.png') }}" alt="Bronze Badge"
+                                        class="badge-image"
+                                        style="width: 40px; height: 40px; position: absolute; top: 25px; right: 30px;">
+                                @endif
+                            @endif
+                        </p>
                     @else
                         <h5 class="ps-1 mb-0 line-height-xs pt-1">Login Terlebih Dahulu</h5>
                     @endif
                 </div>
+
             </div>
         </div>
 
