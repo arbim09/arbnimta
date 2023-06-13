@@ -24,7 +24,6 @@ class HomeController extends Controller
 
         if ($request->ajax()) {
             $view = view('load_more_berita', compact('berita'))->render();
-
             return response()->json(['html' => $view]);
         }
         return view('welcome')->with(compact('banners', 'berita'));
@@ -153,5 +152,49 @@ class HomeController extends Controller
     {
         $events = Events::find($id);
         return view('show_pelatihan', compact('events'));
+    }
+    public function acara(Request $request)
+    {
+        $id_category = 2;
+        $events = DB::table('events')
+            ->join('categories', 'events.category_id', '=', 'categories.id')
+            ->where('categories.id', '=', $id_category)
+            ->where('events.is_show', true)
+            ->select('events.*', 'categories.name as category_name')
+            ->orderByDesc('events.created_at')
+            ->paginate(6);
+
+        if ($request->ajax()) {
+            $view = view('load_more_acara', compact('events'))->render();
+
+            return response()->json(['html' => $view]);
+        }
+
+        return view('acara', ['events' => $events]);
+    }
+
+    public function loadMoreAcara(Request $request)
+    {
+        $id_category = 2; // Ganti dengan id kategori yang ingin ditampilkan
+        $currentPage = $request->query('page');
+
+        $events = DB::table('events')
+            ->join('categories', 'events.category_id', '=', 'categories.id')
+            ->where('categories.id', '=', $id_category)
+            ->where('events.is_show', true)
+            ->select('events.*', 'categories.name as category_name')
+            ->orderByDesc('events.created_at')
+            ->paginate(6);
+
+        if ($request->ajax()) {
+            return view('load_more_acara', compact('events'));
+        }
+        return view('acara', compact('events'));
+    }
+
+    public function showAcara($id)
+    {
+        $events = Events::find($id);
+        return view('show_acara', compact('events'));
     }
 }

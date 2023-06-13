@@ -31,7 +31,7 @@
                 <a href="{{ route('camera') }}" id="nav-comps"><i
                         class="gradient-red shadow-bg shadow-bg-xs bi bi-clock-fill"></i><span>Absensi</span><i
                         class="bi bi-chevron-right"></i></a>
-                <a href="{{ route('camera') }}" id="nav-comps"><i
+                <a href="{{ route('form-pendaftaran') }}" id="nav-comps"><i
                         class="gradient-green shadow-bg shadow-bg-xs bi bi-person-plus"></i><span>Pendaftaran
                         Event</span></a>
                 <br>

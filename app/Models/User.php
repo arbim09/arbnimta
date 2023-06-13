@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Notifications\Notifiable;
+use App\Notifications\VerifyEmailWithCode;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -18,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','role','alamat',
+        'name', 'email', 'password', 'role', 'alamat', 'verification_code',
         'no_hp',
         'password',
         'email',
@@ -56,7 +58,7 @@ class User extends Authenticatable
         $type = DB::select(DB::raw("SHOW COLUMNS FROM $users WHERE Field = '$role'"))[0]->Type;
         preg_match('/^enum\((.*)\)$/', $type, $matches);
         $enum = array();
-        foreach(explode(',', $matches[1]) as $value){
+        foreach (explode(',', $matches[1]) as $value) {
             $enum[] = trim($value, "'");
         }
         return $enum;
@@ -67,7 +69,7 @@ class User extends Authenticatable
         $type = DB::select(DB::raw("SHOW COLUMNS FROM $users WHERE Field = '$agama'"))[0]->Type;
         preg_match('/^enum\((.*)\)$/', $type, $matches);
         $enum = array();
-        foreach(explode(',', $matches[1]) as $value){
+        foreach (explode(',', $matches[1]) as $value) {
             $enum[] = trim($value, "'");
         }
         return $enum;
@@ -78,7 +80,7 @@ class User extends Authenticatable
         $type = DB::select(DB::raw("SHOW COLUMNS FROM $users WHERE Field = '$pendidikan'"))[0]->Type;
         preg_match('/^enum\((.*)\)$/', $type, $matches);
         $enum = array();
-        foreach(explode(',', $matches[1]) as $value){
+        foreach (explode(',', $matches[1]) as $value) {
             $enum[] = trim($value, "'");
         }
         return $enum;
@@ -92,5 +94,21 @@ class User extends Authenticatable
     public function pendaftaranEvents()
     {
         return $this->hasMany(PendaftaranEvents::class);
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60), // Waktu kedaluwarsa tautan verifikasi dalam menit
+            ['id' => $this->id, 'hash' => sha1($this->email)]
+        );
+
+        $verificationCode = mt_rand(100000, 999999); // Menghasilkan angka acak 6 digit
+
+        $this->verification_code = $verificationCode;
+        $this->save();
+
+        $this->notify(new VerifyEmailWithCode($verificationUrl, $verificationCode));
     }
 }

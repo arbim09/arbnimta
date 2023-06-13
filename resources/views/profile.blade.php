@@ -62,6 +62,13 @@
                     <label for="c1" class="color-theme form-label-always-active font-10 opacity-50">Email</label>
                     <span>(required)</span>
                 </div>
+
+                @if (Auth::user()->hasVerifiedEmail())
+                    <p class="text-success">Email has been verified.</p>
+                @else
+                    <p class="text-warning">Email is not verified. Please check your inbox for the verification email.</p>
+                    <a href="{{ route('verification.code') }}" class="btn btn-primary">Verify Email</a>
+                @endif
                 <div class="form-custom form-label form-icon mb-3">
                     <i class="bi bi-star font-16"></i>
                     <select class="form-select rounded-xs" id="c1" name="agama">

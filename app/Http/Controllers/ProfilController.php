@@ -130,6 +130,8 @@ class ProfilController extends Controller
             $user->save();
         } elseif ($user->role === 'pengurus') {
             $user->save();
+        } elseif ($user->role === 'anggota') {
+            $user->save();
         } else {
             $user->fill([
                 'role' => $request->role,

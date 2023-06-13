@@ -1,5 +1,6 @@
 <div id="footer-bar" class="footer-bar footer-bar-detached">
-    <a href="index-pages.html"><i class="bi bi-heart-fill font-15"></i><span>Pages</span></a>
+    <a href="{{ route('acara.anggota') }}" class="{{ Request::is('acara') ? 'active-nav' : '' }}"><i
+            class="bi bi-heart-fill font-15"></i><span>Acara</span></a>
     <a href="{{ route('pelatihan.anggota') }}" class="{{ Request::is('pelatihan') ? 'active-nav' : '' }}"><i
             class="bi bi-cup-fill"></i><span>Pelatihan</span></a>
     <a href="{{ route('home') }}" class="{{ Request::is('/') ? 'active-nav' : '' }}"><i

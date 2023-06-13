@@ -17,7 +17,9 @@
         rel="stylesheet">
     <link rel="manifest" href="{{ asset('/anggotatemplate/_manifest.json') }}">
     <meta id="theme-check" name="theme-color" content="#FFFFFF">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('images/backend/logo-rtik.ico') }}" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @stack('css')
 
 <body class="theme-light">
@@ -34,14 +36,14 @@
         @include('layout.anggotaLayouts.sidebar')
 
         <!-- Main Sidebar-->
-        <div id="menu-main" data-menu-active="nav-homes" data-menu-load="menu-main.html" style="width:280px;"
+        <div id="menu-main" data-menu-active="nav-homes" data-menu-load="#" style="width:280px;"
             class="offcanvas offcanvas-start offcanvas-detached rounded-m">
         </div>
 
         <!-- Menu Highlights-->
-        <div id="menu-color" data-menu-load="menu-highlights.html" style="height:340px"
+        {{-- <div id="menu-color" data-menu-load="menu-highlights.html" style="height:340px"
             class="offcanvas offcanvas-bottom offcanvas-detached rounded-m">
-        </div>
+        </div> --}}
 
 
         <!-- Your Page Content Goes Here-->
