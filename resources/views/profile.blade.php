@@ -67,7 +67,7 @@
                     <p class="text-success">Email has been verified.</p>
                 @else
                     <p class="text-warning">Email is not verified. Please check your inbox for the verification email.</p>
-                    <a href="{{ route('verification.code') }}" class="btn btn-primary">Verify Email</a>
+                    <a href="{{ route('verification.code') }}">Verify Email</a>
                 @endif
                 <div class="form-custom form-label form-icon mb-3">
                     <i class="bi bi-star font-16"></i>

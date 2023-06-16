@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use App\Mail\VerifyEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\VerificationCode;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -31,37 +34,24 @@ class EmailVerificationController extends Controller
      */
     public function verify(EmailVerificationRequest $request)
     {
-        if ($request->user()->verification_code === $request->code) {
-            if ($request->fulfill()) {
-                return redirect()->route('profil.index')->with('success', 'Email Anda telah terverifikasi.');
-            }
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->intended('/'); // Ganti dengan rute halaman utama Anda
         }
 
-        return redirect()->route('verification.notice')->with('error', 'Kode verifikasi tidak valid atau sudah kedaluwarsa.');
+        if ($request->user()->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+        }
+
+        return redirect()->route('verification.notice')->with('success', 'Email Anda telah terverifikasi.');
     }
 
-    /**
-     * Mengirim ulang email verifikasi.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function resend(Request $request)
     {
-        $user = $request->user();
-
-        if ($user->hasVerifiedEmail()) {
-            return redirect()->route('home'); // Ganti dengan rute halaman utama Anda
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->intended('/'); // Ganti dengan rute halaman utama Anda
         }
 
-        $verificationCode = Str::random(6); // Menghasilkan kode verifikasi acak dengan 6 karakter
-
-        $user->verification_code = $verificationCode;
-        $user->save();
-
-        // Kirim email verifikasi dengan kode
-        Mail::to($user->email)->send(new VerificationCode($verificationCode));
-
+        $request->user()->sendEmailVerificationNotification();
 
         return back()->with('success', 'Email verifikasi telah dikirim ulang.');
     }
@@ -69,20 +59,5 @@ class EmailVerificationController extends Controller
     public function show()
     {
         return view('auth.verify-email');
-    }
-
-    public function sendVerificationCodeEmail()
-    {
-        $verificationCode = mt_rand(100000, 999999);
-
-        // Simpan verification code ke dalam database (jika diperlukan)
-
-        $user = Auth::user(); // Ganti dengan logika untuk mendapatkan user yang sedang login
-
-        Mail::to($user->email)->send(new VerificationCode($verificationCode));
-
-
-        // Tampilkan pesan sukses atau redirect ke halaman lain
-        // ...
     }
 }

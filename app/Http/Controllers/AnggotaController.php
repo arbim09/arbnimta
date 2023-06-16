@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Notifications\VerifyEmailWithCode;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Session;
 
 class AnggotaController extends Controller
@@ -90,6 +93,7 @@ class AnggotaController extends Controller
         $user->jenis_kelamin = $request->jenis_kelamin;
         $user->tempat_lahir = $request->tempat_lahir;
         $user->tanggal_lahir = $request->tanggal_lahir;
+        $user->agama = $request->agama;
         $user->tanggal_lahir = $request->tanggal_lahir;
         $tanggalLahir = Carbon::parse($request->tanggal_lahir);
         $umur = $tanggalLahir->age;
@@ -100,6 +104,7 @@ class AnggotaController extends Controller
         $user->no_hp = $request->no_hp;
         $user->password = Hash::make($request->password);
         $user->save();
+        Notification::send($user, new VerifyEmailWithCode($user));
         // Redirect ke halaman utama dengan pesan sukses
 
         return redirect()->route('register')->with('success', 'Selamat Anda Berhasil Mendaftar!');

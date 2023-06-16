@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Posts;
+use App\Models\Events;
+use App\Models\Contact;
 use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -16,7 +20,51 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $pesanTerbaca = Contact::where('is_read', true)->count();
+        $pesanBelumTerbaca = Contact::where('is_read', false)->count();
+        $berita = Posts::count();
+        $anggota = User::count();
+        $eventsAktif = Events::where('is_show', true)->count();
+        $eventsTidakAktif = Events::where('is_show', false)->count();
+        $jenisKelamin = User::select('jenis_kelamin', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('jenis_kelamin')
+            ->get();
+        $agama = User::select('agama', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('agama')
+            ->get();
+        $pendidikan = User::select('pendidikan', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('pendidikan')
+            ->get();
+        $pekerjaan = User::with('pekerjaan')
+            ->select('pekerjaan_id', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('pekerjaan_id')
+            ->get();
+        $umur = User::select(
+            DB::raw("CASE
+                    WHEN umur >= 0 AND umur <= 17 THEN 'Anak-Anak (0-17 Tahun)'
+                    WHEN umur >= 18 AND umur <= 25 THEN 'Remaja (18-25 Tahun)'
+                    WHEN umur >= 26 AND umur <= 55 THEN 'Dewasa (26-55 Tahun)'
+                    WHEN umur >= 56 AND umur <= 80 THEN 'Lanjut Usia (56-80 Tahun)'
+                    WHEN umur >= 81 AND umur <= 120 THEN 'Sepuh (81-120 Tahun)'
+                    ELSE 'Tidak Diketahui'
+                END AS label"),
+            DB::raw('COUNT(*) as jumlah')
+        )
+            ->groupBy('label')
+            ->get();
+        return view('admin.dashboard', compact(
+            'pesanTerbaca',
+            'pesanBelumTerbaca',
+            'umur',
+            'berita',
+            'anggota',
+            'eventsAktif',
+            'jenisKelamin',
+            'eventsTidakAktif',
+            'pendidikan',
+            'pekerjaan',
+            'agama'
+        ));
     }
 
     public function index(Request $request)

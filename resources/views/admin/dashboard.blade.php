@@ -1,323 +1,537 @@
-@extends('layout.backend.app',[
+@extends('layout.backend.app', [
     'title' => 'Dashboard',
-    'pageTitle' => 'Dashboard'
+    'pageTitle' => 'Dashboard',
 ])
 @section('content')
-<!-- Content Row -->
-<div class="row">
+    <!-- Content Row -->
+    <div class="row">
 
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Earnings (Monthly)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Earnings (Annual)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Earnings (Monthly) Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Jumlah Anggota: </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $anggota }}</div>
+                            <a href="{{ route('admin.index') }}" style="mb-0">Lihat selengkapnya</a>
                         </div>
-                        <div class="row no-gutters align-items-center">
-                            <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                        <div class="col-auto">
+                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Berita: </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $berita }}</div>
+                            <a href="{{ route('posts.index') }}" style="mb-0">Lihat selengkapnya</a>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-newspaper fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings (Monthly) Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Jumlah Events:
                             </div>
-                            <div class="col">
-                                <div class="progress progress-sm mr-2">
-                                    <div class="progress-bar bg-info" role="progressbar"
-                                        style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                        aria-valuemax="100"></div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h7 mb-0 mr-3 font-weight-bold text-gray-800">Aktif: {{ $eventsAktif }}
+                                    </div>
+                                    <div class="h7 mb-0 mr-3 font-weight-bold text-gray-800">Tidak Aktif:
+                                        {{ $eventsTidakAktif }}</div>
+                                    <a href="{{ route('events.index') }}" style="mb-0">Lihat selengkapnya</a>
                                 </div>
+
                             </div>
                         </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
                     </div>
-                    <div class="col-auto">
-                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Pesan:</div>
+                            <div class="h7 mb-0 font-weight-bold text-gray-800">Sudah dibaca: {{ $pesanTerbaca }}</div>
+                            <div class="h7 mb-0 font-weight-bold text-gray-800">Belum sudah dibaca: {{ $pesanBelumTerbaca }}
+                            </div>
+                            <a href="{{ route('contact.index') }}" style="mb-0">Lihat selengkapnya</a>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Pending Requests Card Example -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Pending Requests</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col">
+            <div class="d-flex">
+                <div class="mr-2">Pilih Jenis Sortir:</div>
+                <a class="btn btn-link" href="#" onclick="getDataByJenisKelamin()">Jenis Kelamin</a>
+                <a class="btn btn-link" href="#" onclick="getDataByAgama()">Agama</a>
+                <a class="btn btn-link" href="#" onclick="getDataByPekerjaan()">Pekerjaan</a>
+                <a class="btn btn-link" href="#" onclick="getDataByPendidikan()">Pendidikan</a>
+                <a class="btn btn-link" href="#" onclick="getDataByUmur()">Umur</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Bar Chart -->
+        <div class="col-xl- col-lg-7">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary" id="chartTitle">Users</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="barChart"></canvas>
                     </div>
-                    <div class="col-auto">
-                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary" id="chartTitle">Users</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-pie">
+                        <canvas id="pieChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Content Row -->
-
-<div class="row">
-
-    <!-- Area Chart -->
-    <div class="col-xl-8 col-lg-7">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pie Chart -->
-    <div class="col-xl-4 col-lg-5">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div
-                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
-                </div>
-                <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-primary"></i> Direct
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-success"></i> Social
-                    </span>
-                    <span class="mr-2">
-                        <i class="fas fa-circle text-info"></i> Referral
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Content Row -->
-<div class="row">
-
-    <!-- Content Column -->
-    <div class="col-lg-6 mb-4">
-
-        <!-- Project Card Example -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-            </div>
-            <div class="card-body">
-                <h4 class="small font-weight-bold">Server Migration <span
-                        class="float-right">20%</span></h4>
-                <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                        aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <h4 class="small font-weight-bold">Sales Tracking <span
-                        class="float-right">40%</span></h4>
-                <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <h4 class="small font-weight-bold">Customer Database <span
-                        class="float-right">60%</span></h4>
-                <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 60%"
-                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <h4 class="small font-weight-bold">Payout Details <span
-                        class="float-right">80%</span></h4>
-                <div class="progress mb-4">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <h4 class="small font-weight-bold">Account Setup <span
-                        class="float-right">Complete!</span></h4>
-                <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Color System -->
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-primary text-white shadow">
-                    <div class="card-body">
-                        Primary
-                        <div class="text-white-50 small">#4e73df</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-success text-white shadow">
-                    <div class="card-body">
-                        Success
-                        <div class="text-white-50 small">#1cc88a</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-info text-white shadow">
-                    <div class="card-body">
-                        Info
-                        <div class="text-white-50 small">#36b9cc</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-warning text-white shadow">
-                    <div class="card-body">
-                        Warning
-                        <div class="text-white-50 small">#f6c23e</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-danger text-white shadow">
-                    <div class="card-body">
-                        Danger
-                        <div class="text-white-50 small">#e74a3b</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-secondary text-white shadow">
-                    <div class="card-body">
-                        Secondary
-                        <div class="text-white-50 small">#858796</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-light text-black shadow">
-                    <div class="card-body">
-                        Light
-                        <div class="text-black-50 small">#f8f9fc</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card bg-dark text-white shadow">
-                    <div class="card-body">
-                        Dark
-                        <div class="text-white-50 small">#5a5c69</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="col-lg-6 mb-4">
-
-        <!-- Illustrations -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                        src="{{ asset('template/backend/sb-admin-2') }}/img/undraw_posting_photo.svg" alt="">
-                </div>
-                <p>Add some quality, svg illustrations to your project courtesy of <a
-                        target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                    constantly updated collection of beautiful svg images that you can use
-                    completely free and without attribution!</p>
-                <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                    unDraw &rarr;</a>
-            </div>
-        </div>
-
-        <!-- Approach -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-            </div>
-            <div class="card-body">
-                <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                    CSS bloat and poor page performance. Custom CSS classes are used to create
-                    custom components and custom utility classes.</p>
-                <p class="mb-0">Before working with this theme, you should become familiar with the
-                    Bootstrap framework, especially the utility classes.</p>
-            </div>
-        </div>
-
-    </div>
-</div>
 @stop
+@push('js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function generateColors(numColors) {
+            var colors = [];
+            var opacity = 0.2; // Opacity value for background colors
+
+            for (var i = 0; i < numColors; i++) {
+                var hue = (i * (360 / numColors)).toFixed(0);
+                var color = 'hsla(' + hue + ', 100%, 50%, ' + opacity + ')';
+                colors.push(color);
+            }
+
+            return colors;
+        }
+    </script>
+    <script>
+        var barChart, pieChart;
+
+        function getDataByJenisKelamin() {
+            // Hapus grafik yang ada sebelumnya (jika ada)
+            destroyCharts();
+
+            // Ambil data jenis kelamin dari server (misalnya dengan AJAX)
+            // dan siapkan data baru untuk grafik bar dan pie
+
+            // Data jenis kelamin untuk grafik bar
+            var barData = {
+                labels: {!! $jenisKelamin->pluck('jenis_kelamin') !!},
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $jenisKelamin->pluck('jumlah') !!},
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.2)', // Warna kuning
+                        'rgba(54, 162, 235, 0.2)' // Warna biru
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)', // Warna kuning
+                        'rgba(54, 162, 235, 1)' // Warna biru
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik bar baru
+            var barCtx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: barData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }
+                }
+            });
+
+            // Data jenis kelamin untuk grafik pie
+            var pieData = {
+                labels: {!! $jenisKelamin->pluck('jenis_kelamin') !!},
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $jenisKelamin->pluck('jumlah') !!},
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.2)', // Warna kuning
+                        'rgba(54, 162, 235, 0.2)' // Warna biru
+                    ],
+                    borderColor: [
+                        'rgba(255, 206, 86, 1)', // Warna kuning
+                        'rgba(54, 162, 235, 1)' // Warna biru
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik pie baru
+            var pieCtx = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: pieData.labels,
+                    datasets: [{
+                        label: pieData.datasets[0].label,
+                        data: pieData.datasets[0].data,
+                        backgroundColor: pieData.datasets[0].backgroundColor,
+                        borderColor: pieData.datasets[0].borderColor,
+                        borderWidth: pieData.datasets[0].borderWidth
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+
+        function getDataByAgama() {
+            // Hapus grafik yang ada sebelumnya (jika ada)
+            destroyCharts();
+
+            // Ambil data agama dari server (misalnya dengan AJAX)
+            // dan siapkan data baru untuk grafik bar dan pie
+
+            // Data agama untuk grafik bar
+            var barData = {
+                labels: {!! $agama->pluck('agama') !!},
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $agama->pluck('jumlah') !!},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)', // Warna merah (Islam)
+                        'rgba(54, 162, 235, 0.2)', // Warna biru (Kristen)
+                        'rgba(255, 206, 86, 0.2)', // Warna kuning (Katolik)
+                        'rgba(75, 192, 192, 0.2)', // Warna hijau (Hindu)
+                        'rgba(153, 102, 255, 0.2)', // Warna ungu (Budha)
+                        'rgba(255, 159, 64, 0.2)', // Warna oranye (Khonghucu)
+                        'rgba(128, 128, 128, 0.2)' // Warna abu-abu (Lainnya)
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', // Warna merah (Islam)
+                        'rgba(54, 162, 235, 1)', // Warna biru (Kristen)
+                        'rgba(255, 206, 86, 1)', // Warna kuning (Katolik)
+                        'rgba(75, 192, 192, 1)', // Warna hijau (Hindu)
+                        'rgba(153, 102, 255, 1)', // Warna ungu (Budha)
+                        'rgba(255, 159, 64, 1)', // Warna oranye (Khonghucu)
+                        'rgba(128, 128, 128, 1)' // Warna abu-abu (Lainnya)
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik bar baru
+            var barCtx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: barData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }
+                }
+            });
+
+            // Data agama untuk grafik pie
+            var pieData = {
+                labels: {!! $agama->pluck('agama') !!},
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $agama->pluck('jumlah') !!},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)', // Warna merah (Islam)
+                        'rgba(54, 162, 235, 0.2)', // Warna biru (Kristen)
+                        'rgba(255, 206, 86, 0.2)', // Warna kuning (Katolik)
+                        'rgba(75, 192, 192, 0.2)', // Warna hijau (Hindu)
+                        'rgba(153, 102, 255, 0.2)', // Warna ungu (Budha)
+                        'rgba(255, 159, 64, 0.2)', // Warna oranye (Khonghucu)
+                        'rgba(128, 128, 128, 0.2)' // Warna abu-abu (Lainnya)
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', // Warna merah (Islam)
+                        'rgba(54, 162, 235, 1)', // Warna biru (Kristen)
+                        'rgba(255, 206, 86, 1)', // Warna kuning (Katolik)
+                        'rgba(75, 192, 192, 1)', // Warna hijau (Hindu)
+                        'rgba(153, 102, 255, 1)', // Warna ungu (Budha)
+                        'rgba(255, 159, 64, 1)', // Warna oranye (Khonghucu)
+                        'rgba(128, 128, 128, 1)' // Warna abu-abu (Lainnya)
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik pie baru
+            var pieCtx = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: pieData,
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        function getDataByPendidikan() {
+            // Hapus grafik yang ada sebelumnya (jika ada)
+            destroyCharts();
+
+            // Ambil data pendidikan dari server (misalnya dengan AJAX)
+            // dan siapkan data baru untuk grafik bar dan pie
+
+            // Data pendidikan untuk grafik bar
+            var barData = {
+                labels: {!! $pendidikan->pluck('pendidikan') !!},
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $pendidikan->pluck('jumlah') !!},
+                    backgroundColor: generateColors({!! $pendidikan->count() !!}),
+                    borderColor: generateColors({!! $pendidikan->count() !!}).map(color => color.replace('0.2)',
+                        '1)')),
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik bar baru
+            var barCtx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: barData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }
+                }
+            });
+
+            // Data pendidikan untuk grafik pie
+            var pieData = {
+                labels: {!! $pendidikan->pluck('pendidikan') !!},
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $pendidikan->pluck('jumlah') !!},
+                    backgroundColor: generateColors({!! $pendidikan->count() !!}),
+                    borderColor: generateColors({!! $pendidikan->count() !!}).map(color => color.replace('0.2)',
+                        '1)')),
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik pie baru
+            var pieCtx = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: pieData,
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        function getDataByPekerjaan() {
+            // Hapus grafik yang ada sebelumnya (jika ada)
+            destroyCharts();
+
+            // Ambil data pekerjaan dari server (misalnya dengan AJAX)
+            // dan siapkan data baru untuk grafik bar dan pie
+
+            // Ambil kolom 'nama' dari objek koleksi $pekerjaan
+            var pekerjaanNames = {!! $pekerjaan->pluck('pekerjaan.nama') !!};
+            // Data pekerjaan untuk grafik bar
+            var barData = {
+                labels: pekerjaanNames,
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $pekerjaan->pluck('jumlah') !!},
+                    backgroundColor: generateColors({!! $pekerjaan->count() !!}),
+                    borderColor: generateColors({!! $pekerjaan->count() !!}).map(color => color.replace('0.2)',
+                        '1)')),
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik bar baru
+            var barCtx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: barData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }
+                }
+            });
+
+            // Data pekerjaan untuk grafik pie
+            var pieData = {
+                labels: pekerjaanNames,
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $pekerjaan->pluck('jumlah') !!},
+                    backgroundColor: generateColors({!! $pekerjaan->count() !!}),
+                    borderColor: generateColors({!! $pekerjaan->count() !!}).map(color => color.replace('0.2)',
+                        '1)')),
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik pie baru
+            var pieCtx = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: pieData,
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        function getDataByUmur() {
+            // Hapus grafik yang ada sebelumnya (jika ada)
+            destroyCharts();
+
+            // Ambil data umur dari server (misalnya dengan AJAX)
+            // dan siapkan data baru untuk grafik bar dan pie
+
+            // Ambil kolom 'label' dari objek koleksi $umur
+            var umurLabels = {!! $umur->pluck('label') !!};
+
+            // Data umur untuk grafik bar
+            var barData = {
+                labels: umurLabels,
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $umur->pluck('jumlah') !!},
+                    backgroundColor: generateColors({!! $umur->count() !!}),
+                    borderColor: generateColors({!! $umur->count() !!}).map(color => color.replace('0.2)',
+                        '1)')),
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik bar baru
+            var barCtx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: barData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }
+                }
+            });
+
+            // Data umur untuk grafik pie
+            var pieData = {
+                labels: umurLabels,
+                datasets: [{
+                    label: 'Jumlah',
+                    data: {!! $umur->pluck('jumlah') !!},
+                    backgroundColor: generateColors({!! $umur->count() !!}),
+                    borderColor: generateColors({!! $umur->count() !!}).map(color => color.replace('0.2)',
+                        '1)')),
+                    borderWidth: 1
+                }]
+            };
+
+            // Menginisialisasi grafik pie baru
+            var pieCtx = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: pieData,
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+
+
+
+        function destroyCharts() {
+            // Hapus grafik yang ada sebelumnya (jika ada)
+            if (barChart) {
+                barChart.destroy();
+                barChart = null;
+            }
+            if (pieChart) {
+                pieChart.destroy();
+                pieChart = null;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            getDataByAgama();
+        });
+    </script>
+@endpush

@@ -105,24 +105,6 @@ class AbsensiController extends Controller
         return view('absensi', compact('user', 'events'));
     }
 
-    // public function storeScanData(Request $request)
-    // {
-    //     $user = Auth::user();
-    //     $email = $user->email;
-    //     $eventId = $request->input('event_id');
-
-    //     // Menyimpan data scan ke database
-    //     $scanData = [
-    //         'name' => $user->name,
-    //         'user_id' => $user->id,
-    //         'event_id' => $eventId,
-    //         'email' => $email,
-    //         // Tambahkan data lain yang perlu disimpan
-    //     ];
-
-    //     Absensi::create($scanData);
-    //     return response()->json(['success' => true, 'message' => 'Data scan berhasil disimpan.']);
-    // }
 
     public function storeScanData(Request $request)
     {

@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\Route;
 //Namespace Admin
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfilController;
-use App\Http\Controllers\PendaftaranController as DaftarControllers;
-//Namespace User
 use App\Http\Controllers\Auth\LoginController;
+//Namespace User
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\AbsensiController;
@@ -19,8 +18,10 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Pengurus\UserController;
 use App\Http\Controllers\Pengurus\ProfileController;
 use App\Http\Controllers\Pengurus\PendaftaranController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Admin\PendaftaranEventsController;
+use App\Http\Controllers\PendaftaranController as DaftarControllers;
 use App\Http\Controllers\AbsensiController as ControllersAbsensiController;
 use App\Http\Controllers\AnggotaController as ControllersAnggotaController;
 
@@ -51,6 +52,7 @@ Route::get('/pelatihan/{id}', [HomeController::class, 'showPelatihan'])->name('s
 Route::get('/acara', [HomeController::class, 'acara'])->name('acara.anggota');
 Route::get('/acara/{id}', [HomeController::class, 'showAcara'])->name('show.acara');
 
+
 //resource anggota
 Route::middleware(['auth'])->group(function () {
 	Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
@@ -58,7 +60,9 @@ Route::middleware(['auth'])->group(function () {
 	route::get('/absen', [ControllersAbsensiController::class, 'camera'])->name('camera');
 	route::post('/absen', [ControllersAbsensiController::class, 'storeScanData'])->name('store.absensi');
 	Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice')->middleware('auth');
-	Route::post('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+	Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+		->middleware(['signed', 'throttle:6,1'])
+		->name('verification.verify');
 	Route::get('/email/resend', [EmailVerificationController::class, 'resend'])->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
 	Route::get('/verify-code', [EmailVerificationController::class, 'show'])->name('verification.code');
 	Route::get('/form-pendaftaran', [DaftarControllers::class, 'index'])->name('form-pendaftaran');

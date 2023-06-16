@@ -89,7 +89,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function pekerjaan()
     {
-        return $this->belongsTo(Pekerjaan::class);
+        return $this->belongsTo(Pekerjaan::class, 'pekerjaan_id');
     }
 
     public function pendaftaranEvents()
@@ -97,19 +97,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PendaftaranEvents::class);
     }
 
-    public function sendEmailVerificationNotification()
-    {
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60), // Waktu kedaluwarsa tautan verifikasi dalam menit
-            ['id' => $this->id, 'hash' => sha1($this->email)]
-        );
+    // public function sendEmailVerificationNotification()
+    // {
+    //     $verificationUrl = URL::temporarySignedRoute(
+    //         'verification.verify',
+    //         now()->addMinutes(60), // Waktu kedaluwarsa tautan verifikasi dalam menit
+    //         ['id' => $this->id, 'hash' => sha1($this->email)]
+    //     );
 
-        $verificationCode = mt_rand(100000, 999999); // Menghasilkan angka acak 6 digit
+    //     $verificationCode = mt_rand(100000, 999999); // Menghasilkan angka acak 6 digit
 
-        $this->verification_code = $verificationCode;
-        $this->save();
+    //     $this->verification_code = $verificationCode;
+    //     $this->save();
 
-        $this->notify(new VerifyEmailWithCode($verificationUrl, $verificationCode));
-    }
+    //     $this->notify(new VerifyEmailWithCode($verificationUrl, $verificationCode));
+    // }
 }
