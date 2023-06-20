@@ -1,5 +1,5 @@
 @extends('layout.auth.app', [
-    'title' => 'Forgot Password',
+    'title' => 'Buat Password Baru',
 ])
 
 @push('css')
@@ -15,21 +15,25 @@
                     <div class="row">
                         <div class="col-lg">
                             <div class="p-5">
-                                @if (session('message'))
-                                    <div class="alert alert-success mb-4" role="alert">
-                                        {{ session('message') }}
-                                    </div>
-                                @endif
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-2">Lupa Password Anda?</h1>
-                                    <p class="mb-4">Masukkan Email yang sudah terverifikasi dengan akun Anda!</p>
+                                    <h1 class="h4 text-gray-900 mb-2">Silahkan ganti password anda</h1>
                                 </div>
-                                <form class="user" method="POST" action="{{ route('password.email') }}">
+                                <form class="user" method="POST" action="{{ route('password.update') }}">
                                     @csrf
+                                    <input type="hidden" name="token" value="{{ $token }}">
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user" name="email"
                                             id="email" aria-describedby="emailHelp" placeholder="Enter Email Address..."
                                             required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password" class="form-control form-control-user"
+                                            id="password" aria-describedby="passwordHelp" placeholder="Password Baru">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="password_confirmation"
+                                            class="form-control form-control-user" id="password_confirmation"
+                                            aria-describedby="passwordHelp" placeholder="Konfirmasi Password Baru">
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-user btn-block">
                                         Reset Password

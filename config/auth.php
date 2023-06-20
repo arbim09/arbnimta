@@ -82,6 +82,10 @@ return [
         // ],
     ],
 
+    'features' => [
+        'email_verification' => true,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords

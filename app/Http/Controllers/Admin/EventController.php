@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Events;
+use App\Models\Absensi;
 use App\Models\Category;
+use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
@@ -126,24 +129,22 @@ class EventController extends Controller
     {
         // Mendapatkan objek event berdasarkan ID
         $events = Events::find($id);
-
         // Memeriksa apakah event ditemukan
         if (!$events) {
             abort(404);
         }
-
         // Mendapatkan event ID
         $eventId = $id;
-
         // Menghasilkan kode QR berdasarkan event ID
         $qrCode = QrCode::format('png')->size(300)->generate($eventId);
-
         // Mengubah kode QR menjadi data URI
         $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
+
 
         return view('admin.events.show', [
             'events' => $events,
             'qrCodeDataUri' => $qrCodeDataUri,
+            'eventsId' => $id
         ]);
     }
 
@@ -344,5 +345,72 @@ class EventController extends Controller
         }
 
         return view('admin.events.pelatihan');
+    }
+
+    // function dataAbsensi(Request $request, $id)
+    // {
+    //     $id = Events::findOrFail($id);
+    //     if ($request->ajax()) {
+    //         $data = Absensi::select('event_id')->where('event_id', $id->id)->get();
+    //         return DataTables::of($data)
+    //             ->addIndexColumn()
+    //             ->addColumn('name', function ($row) {
+    //                 // Ambil informasi pengguna berdasarkan event_id
+    //                 $name = User::where('event_id', $row->event_id)->first();
+    //                 // Kembalikan nama pengguna
+    //                 return $name->name;
+    //             })
+    //             ->addColumn('email', function ($row) {
+    //                 // Ambil informasi pengguna berdasarkan event_id
+    //                 $email = User::where('event_id', $row->event_id)->first();
+
+    //                 // Kembalikan email pengguna
+    //                 return $email->email;
+    //             })
+    //             ->addColumn('pekerjaan', function ($row) {
+    //                 // Ambil informasi pengguna berdasarkan event_id
+    //                 $pekerjaan = User::where('event_id', $row->event_id)->first();
+    //                 $kerja = Pekerjaan::find($pekerjaan->pekerjaan_id);
+    //                 // Kembalikan pekerjaan pengguna
+    //                 return $kerja->name;
+    //             })
+    //             ->addColumn('jenis_kelamin', function ($row) {
+    //                 // Ambil informasi pengguna berdasarkan event_id
+    //                 $jenis_kelamin = User::where('event_id', $row->event_id)->first();
+    //                 // Kembalikan jenis_kelamin pengguna
+    //                 return $jenis_kelamin->jenis_kelamin;
+    //             })
+    //             ->rawColumns(['name'])
+    //             ->make(true);
+    //     }
+    // }
+
+    function dataAbsensi($id)
+    {
+        $event = Events::findOrFail($id);
+
+        $data = Absensi::where('event_id', $event->id)
+            ->with('user') // Mengambil relasi user
+            ->get();
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('name', function ($row) {
+                return $row->user->name;
+            })
+            ->addColumn('email', function ($row) {
+                return $row->user->email;
+            })
+            ->addColumn('jenis_kelamin', function ($row) {
+                return $row->user->jenis_kelamin;
+            })
+            ->addColumn('pendidikan', function ($row) {
+                return $row->user->pendidikan;
+            })
+            ->addColumn('pekerjaan', function ($row) {
+                return $row->user->pekerjaan ? $row->user->pekerjaan->nama : '-';
+            })
+            ->rawColumns(['name'])
+            ->make(true);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\VerifyEmailWithCode;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -19,6 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
+    protected $dates = ['email_verified_at'];
     protected $fillable = [
         'name', 'email', 'password', 'role', 'alamat', 'verification_code',
         'no_hp',
@@ -96,20 +98,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(PendaftaranEvents::class);
     }
-
-    // public function sendEmailVerificationNotification()
-    // {
-    //     $verificationUrl = URL::temporarySignedRoute(
-    //         'verification.verify',
-    //         now()->addMinutes(60), // Waktu kedaluwarsa tautan verifikasi dalam menit
-    //         ['id' => $this->id, 'hash' => sha1($this->email)]
-    //     );
-
-    //     $verificationCode = mt_rand(100000, 999999); // Menghasilkan angka acak 6 digit
-
-    //     $this->verification_code = $verificationCode;
-    //     $this->save();
-
-    //     $this->notify(new VerifyEmailWithCode($verificationUrl, $verificationCode));
-    // }
 }

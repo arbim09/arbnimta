@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
@@ -86,7 +87,13 @@ class ProfilController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => "required|string|email|max:255|unique:users,email,{$id}",
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($id),
+            ],
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
@@ -112,7 +119,7 @@ class ProfilController extends Controller
             }
             $user->foto_profil = $filenameToStore;
         } elseif (!$user->foto_profil || $user->foto_profil === 'user.png') {
-            $user->foto_profil = null;
+            $user->foto_profil = 'user.png';
         }
         $user->fill([
             'name' => $request->name,
@@ -126,6 +133,13 @@ class ProfilController extends Controller
             'alamat' => $request->alamat,
             'no_hp' => $request->no_hp,
         ]);
+        if ($user->email !== $request->email) {
+            // Jika alamat email berubah, atur verified_at menjadi null
+            $user->email_verified_at = null;
+            // Juga pastikan untuk menghapus token verifikasi yang lama (jika ada)
+            $user->email_verification_token = null;
+            $user->sendEmailVerificationNotification();
+        }
         if ($user->role === 'admin') {
             $user->save();
         } elseif ($user->role === 'pengurus') {

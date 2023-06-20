@@ -136,15 +136,15 @@ class AbsensiController extends Controller
             Absensi::create($scanData);
             $user = User::find($user->id);
             $badge = '';
-            if ($user->point >= 5000) {
+            if ($user->point >= 10000) {
                 $badge = 'Gold Badge';
-            } elseif ($user->point >= 2000) {
+            } elseif ($user->point >= 5000) {
                 $badge = 'Silver Badge';
             } elseif ($user->point >= 1000) {
                 $badge = 'Bronze Badge';
             }
             $user->update([
-                'point' => $user->point + 1000,
+                'point' => $user->point + 100,
                 'badge' => $badge
             ]);
             return response()->json(['success' => true, 'message' => 'Data scan berhasil disimpan.']);

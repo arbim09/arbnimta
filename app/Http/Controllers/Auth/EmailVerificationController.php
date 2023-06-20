@@ -23,7 +23,8 @@ class EmailVerificationController extends Controller
     // }
     public function notice()
     {
-        return view('auth.verify-email');
+        $user = Auth::user();
+        return view('auth.verify-email', compact('user'));
     }
 
     /**
@@ -58,6 +59,7 @@ class EmailVerificationController extends Controller
 
     public function show()
     {
-        return view('auth.verify-email');
+        $user = Auth::user();
+        return view('auth.verify-email', compact('user'));
     }
 }

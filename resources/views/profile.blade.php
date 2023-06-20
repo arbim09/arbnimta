@@ -66,8 +66,8 @@
                 @if (Auth::user()->hasVerifiedEmail())
                     <p class="text-success">Email has been verified.</p>
                 @else
-                    <p class="text-warning">Email is not verified. Please check your inbox for the verification email.</p>
-                    <a href="{{ route('verification.code') }}">Verify Email</a>
+                    <p class="text-warning-red">Email belum terverifikasi. <a href="{{ route('verification.code') }}">Verify
+                            Email</a></p>
                 @endif
                 <div class="form-custom form-label form-icon mb-3">
                     <i class="bi bi-star font-16"></i>

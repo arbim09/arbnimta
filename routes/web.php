@@ -1,24 +1,27 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 //Namespace Auth
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 //Namespace Admin
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+//Namespace User
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\Auth\LoginController;
-//Namespace User
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\AbsensiController;
-use App\Http\Controllers\Admin\AnggotaController;
-use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Pengurus\UserController;
 use App\Http\Controllers\Pengurus\ProfileController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Pengurus\PendaftaranController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Admin\PendaftaranEventsController;
 use App\Http\Controllers\PendaftaranController as DaftarControllers;
@@ -70,6 +73,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/getEvents/{id}', [DaftarControllers::class, 'getEventsByCategory']);
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+	// Rute yang memerlukan verifikasi email
+});
+
 
 
 //USER)_CONTACT
@@ -103,6 +110,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	Route::get('/acara', [EventController::class, 'acara'])->name('acara.event')->middleware(['can:admin']);
 	Route::get('/kegiatan', [EventController::class, 'kegiatan'])->name('kegiatan.event')->middleware(['can:admin']);
 	Route::get('/pelatihan', [EventController::class, 'pelatihan'])->name('pelatihan.event')->middleware(['can:admin']);
+	Route::get('/data-absensi/{id}', [EventController::class, 'dataAbsensi'])->name('dataAbsensi.event')->middleware(['can:admin']);
 	Route::get('/absen/kegiatan', [AbsensiController::class, 'kegiatan'])->name('kegiatan.absensi')->middleware(['can:admin']);
 	Route::get('/absen/acara', [AbsensiController::class, 'acara'])->name('acara.absensi')->middleware(['can:admin']);
 	Route::get('/absen/pelatihan', [AbsensiController::class, 'pelatihan'])->name('pelatihan.absensi')->middleware(['can:admin']);
@@ -167,3 +175,9 @@ Route::view('/forgot-password', 'auth.forgot-password')->name('forgot-password')
 Route::post('/logout', function () {
 	return redirect()->to('/login')->with(Auth::logout());
 })->name('logout');
+
+
+Route::get('/forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('password.request');
+Route::post('/forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('password.email');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('password.update');

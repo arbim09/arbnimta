@@ -101,11 +101,11 @@ class AnggotaController extends Controller
         $user->pendidikan = $request->pendidikan;
         $user->pekerjaan_id = $request->pekerjaan_id;
         $user->alamat = $request->alamat;
+        $user->foto_profil = 'user.png';
         $user->no_hp = $request->no_hp;
         $user->password = Hash::make($request->password);
         $user->save();
-        Notification::send($user, new VerifyEmailWithCode($user));
-        // Redirect ke halaman utama dengan pesan sukses
+        // Notification::send($user, new VerifyEmailWithCode($user));
 
         return redirect()->route('register')->with('success', 'Selamat Anda Berhasil Mendaftar!');
     }

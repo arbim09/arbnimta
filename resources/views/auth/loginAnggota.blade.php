@@ -19,6 +19,7 @@
     <meta id="theme-check" name="theme-color" content="#FFFFFF">
     <link rel="shortcut icon" href="{{ asset('images/backend/logo-rtik.ico') }}" />
     @stack('css')
+</head>
 
 <body class="theme-light">
 
@@ -27,6 +28,11 @@
     <div id="page">
         <!-- Your Page Content Goes Here-->
         <div class="content header-clear-medium">
+            @if (session('message'))
+                <div class="alert alert-success mb-4" role="alert">
+                    {{ session('message') }}
+                </div>
+            @endif
             <div class="card card-style p-5">
                 <h1 class="text-center font-800 font-30 mb-2">Login</h1>
                 <p class="text-center font-13 mt-n2 mb-3">Enter your Credentials</p>
@@ -53,10 +59,22 @@
                         class="btn rounded-sm btn-m gradient-green text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s">Sign
                         In</button>
                 </form>
+                {{-- <div class="d-flex">
+                    <div class="ms-auto">
+                        <a href="{{ route('password.request') }}" class="color-theme opacity-30 font-12">Lupa
+                            password?</a>
+                    </div>
+                </div>
                 <div class="d-flex">
                     <div class="ms-auto">
                         <a href="{{ route('register') }}" class="color-theme opacity-30 font-12">Daftar Sekarang</a>
                     </div>
+                </div> --}}
+                <div class="text-center">
+                    <a class="color-theme font-12" href="{{ route('register') }}">Buat Akun!</a>
+                </div>
+                <div class="text-center">
+                    <a class="color-theme font-12" href="{{ route('password.request') }}">Lupa Password!</a>
                 </div>
             </div>
         </div>
