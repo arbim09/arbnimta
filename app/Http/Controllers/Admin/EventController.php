@@ -8,8 +8,11 @@ use App\Models\Absensi;
 use App\Models\Category;
 use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
+use App\Exports\AbsensiExport;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Auth\Access\Gate;
@@ -81,6 +84,10 @@ class EventController extends Controller
             'keterangan' => 'nullable',
             'is_show' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'waktu_mulai' => 'required',
+            'jam' => 'required',
+            'pilih_keterangan' => 'required',
+            'ondar' => 'required',
         ]);
 
         // Membuat event baru dengan data yang diinputkan oleh user
@@ -89,6 +96,10 @@ class EventController extends Controller
         $event->is_show = $validatedData['is_show'];
         $event->category_id = $validatedData['category_id'];
         $event->keterangan = $validatedData['keterangan'];
+        $event->waktu_mulai = $validatedData['waktu_mulai'];
+        $event->jam = $validatedData['jam'];
+        $event->pilih_keterangan = $validatedData['pilih_keterangan'];
+        $event->ondar = $validatedData['ondar'];
 
         // Menyimpan gambar event (jika ada)
         if ($request->hasFile('image')) {
@@ -102,7 +113,6 @@ class EventController extends Controller
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
             $image = Image::make(public_path('/images/events/') . $filenameToStore);
-            $image->fit(400, 400);
             $image->save(public_path('/images/events/') . $filenameToStore);
             $event->image = $filenameToStore;
         }
@@ -129,22 +139,60 @@ class EventController extends Controller
     {
         // Mendapatkan objek event berdasarkan ID
         $events = Events::find($id);
-        // Memeriksa apakah event ditemukan
         if (!$events) {
             abort(404);
         }
-        // Mendapatkan event ID
         $eventId = $id;
-        // Menghasilkan kode QR berdasarkan event ID
         $qrCode = QrCode::format('png')->size(300)->generate($eventId);
-        // Mengubah kode QR menjadi data URI
         $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
 
+        $jenisKelamin = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+            ->where('absensis.event_id', $eventId)
+            ->select('users.jenis_kelamin', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('users.jenis_kelamin')
+            ->get();
+        $agama = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+            ->where('absensis.event_id', $eventId)
+            ->select('users.agama', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('users.agama')
+            ->get();
+        $pendidikan = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+            ->where('absensis.event_id', $eventId)
+            ->select('users.pendidikan', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('users.pendidikan')
+            ->get();
+        $pekerjaan = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+            ->join('pekerjaan', 'users.pekerjaan_id', '=', 'pekerjaan.id')
+            ->where('absensis.event_id', $eventId)
+            ->select('users.pekerjaan_id', 'pekerjaan.nama', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('users.pekerjaan_id', 'pekerjaan.nama')
+            ->get();
+
+        $umur = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+            ->where('absensis.event_id', $eventId)
+            ->select(
+                DB::raw("CASE
+                    WHEN users.umur >= 0 AND users.umur <= 17 THEN 'Anak-Anak (0-17 Tahun)'
+                    WHEN users.umur >= 18 AND users.umur <= 25 THEN 'Remaja (18-25 Tahun)'
+                    WHEN users.umur >= 26 AND users.umur <= 55 THEN 'Dewasa (26-55 Tahun)'
+                    WHEN users.umur >= 56 AND users.umur <= 80 THEN 'Lanjut Usia (56-80 Tahun)'
+                    WHEN users.umur >= 81 AND users.umur <= 120 THEN 'Sepuh (81-120 Tahun)'
+                    ELSE 'Tidak Diketahui'
+                END AS label"),
+                DB::raw('COUNT(*) as jumlah')
+            )
+            ->groupBy('label')
+            ->get();
 
         return view('admin.events.show', [
             'events' => $events,
             'qrCodeDataUri' => $qrCodeDataUri,
-            'eventsId' => $id
+            'eventsId' => $id,
+            'jenisKelamin' => $jenisKelamin,
+            'umur'  => $umur,
+            'pendidikan'  => $pendidikan,
+            'pekerjaan' => $pekerjaan,
+            'agama'  => $agama
         ]);
     }
 
@@ -177,6 +225,10 @@ class EventController extends Controller
             'keterangan' => 'nullable',
             'is_show' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'waktu_mulai' => 'required',
+            'jam' => 'required',
+            'pilih_keterangan' => 'required',
+            'ondar' => 'required',
         ]);
 
         // Mengambil event yang akan diupdate
@@ -190,6 +242,10 @@ class EventController extends Controller
         $event->is_show = $validatedData['is_show'];
         $event->category_id = $validatedData['category_id'];
         $event->keterangan = $validatedData['keterangan'];
+        $event->waktu_mulai = $validatedData['waktu_mulai'];
+        $event->jam = $validatedData['jam'];
+        $event->pilih_keterangan = $validatedData['pilih_keterangan'];
+        $event->ondar = $validatedData['ondar'];
 
         // Menghapus gambar lama jika ada gambar baru yang diunggah
         if ($request->hasFile('image')) {
@@ -213,7 +269,7 @@ class EventController extends Controller
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
             $image = Image::make(public_path('/images/events/') . $filenameToStore);
-            $image->fit(400, 400);
+            // $image->fit(400, 400);
             $image->save(public_path('/images/events/') . $filenameToStore);
             $event->image = $filenameToStore;
         }
@@ -412,5 +468,10 @@ class EventController extends Controller
             })
             ->rawColumns(['name'])
             ->make(true);
+    }
+
+    public function exportToExcel($id)
+    {
+        return Excel::download(new AbsensiExport($id), 'data.xlsx');
     }
 }

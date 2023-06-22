@@ -11,7 +11,7 @@ class Events extends Model
 {
     use HasFactory;
     protected $table = 'events';
-    protected $fillable = ['name', 'category_id', 'keterangan',  'image','is_show',];
+    protected $fillable = ['name', 'category_id', 'keterangan',  'image', 'is_show', 'waktu_mulai', 'jam', 'pilih_keterangan', 'ondar'];
 
 
 

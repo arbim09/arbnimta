@@ -42,7 +42,8 @@
                         <select class="form-select select2" id="events" name="event_id" required>
                             <option value="">Pilih Events</option>
                             @foreach ($events as $ev)
-                                <option value="{{ $ev->id }}">{{ $ev->name }}</option>
+                                <option value="{{ $ev->id }}">{{ substr($ev->name, 0, 65) }}...</option>
+                                {{-- <option value="{{ $ev->id }}">{{ $ev->name }}</option> --}}
                             @endforeach
                         </select>
                         <label for="events" class="color-theme form-label-always-active font-10 opacity-50">Events</label>

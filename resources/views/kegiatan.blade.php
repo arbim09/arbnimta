@@ -6,6 +6,7 @@
 @section('content')
     <div class="page">
         <div class="card card-style">
+
             <div class="content mb-0">
                 <h1 class="pb-2">List Kegiatan</h1>
                 <div class="kegiatanContainer" id="kegiatanContainer">
@@ -14,9 +15,14 @@
                         <a href="{{ route('show.kegiatan', $event->id) }}">
                             <div class="d-flex mb-3">
                                 <div class="align-self-center me-auto">
-                                    <h5 class="font-500 font-15 pb-1">{{ substr($event->name, 0, 30) }}...</h5>
-                                    <span
-                                        class="color-theme font-10 ps-2 opacity-50">{{ date('j F Y', strtotime($event->created_at)) }}</span>
+                                    <h5 class="font-500 font-15 pb-1">{{ $event->name }}</h5>
+                                    <span class="color-theme font-15 ps-2 opacity-50"><i class="bi bi-calendar font-16"></i>
+                                        Waktu:
+                                        {{ date('j F Y', strtotime($event->waktu_mulai)) }}</span>
+                                    <div>
+                                        <span class="color-theme font-15 ps-2 opacity-50"><i
+                                                class="bi bi-clock font-16"></i> Pukul: {{ $event->jam }}</span>
+                                    </div>
                                 </div>
                                 <div class="align-self-start ms-auto">
                                     <img src="{{ asset('images/events/' . $event->image) }}" class="rounded-m ms-3"

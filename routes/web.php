@@ -111,6 +111,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	Route::get('/kegiatan', [EventController::class, 'kegiatan'])->name('kegiatan.event')->middleware(['can:admin']);
 	Route::get('/pelatihan', [EventController::class, 'pelatihan'])->name('pelatihan.event')->middleware(['can:admin']);
 	Route::get('/data-absensi/{id}', [EventController::class, 'dataAbsensi'])->name('dataAbsensi.event')->middleware(['can:admin']);
+	Route::get('/export/data-absensi/{id}', [EventController::class, 'exportToExcel'])->name('dataAbsensiExport.event')->middleware(['can:admin']);
 	Route::get('/absen/kegiatan', [AbsensiController::class, 'kegiatan'])->name('kegiatan.absensi')->middleware(['can:admin']);
 	Route::get('/absen/acara', [AbsensiController::class, 'acara'])->name('acara.absensi')->middleware(['can:admin']);
 	Route::get('/absen/pelatihan', [AbsensiController::class, 'pelatihan'])->name('pelatihan.absensi')->middleware(['can:admin']);

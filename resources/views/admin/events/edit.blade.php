@@ -34,11 +34,50 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
+                    <label for="input-waktu_mulai" class="col-sm-6 col-form-label">Waktu Events</label>
+                    <input type="date" name="waktu_mulai" class="form-control @error('waktu_mulai') is-invalid @enderror"
+                        id="input-waktu_mulai" placeholder="Nama Events"
+                        value="{{ \Carbon\Carbon::parse($event->waktu_mulai)->format('Y-m-d') }}" required>
+                    @error('waktu_mulai')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="input-is-show" class="col-sm-6 col-form-label">Daring/Luring</label>
+                    <select name="ondar" id="input-is-show" class="form-control @error('ondar') is-invalid @enderror"
+                        required>
+                        <option value="">Pilih</option>
+                        <option value="Luring" {{ $event->ondar == 'Luring' ? 'selected' : '' }}>Luring</option>
+                        <option value="Daring" {{ $event->ondar == 'Daring' ? 'selected' : '' }}>Daring</option>
+                    </select>
+                    @error('ondar')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="input-jam" class="col-sm-6 col-form-label">Jam Mulai</label>
+                    <input type="time" name="jam" class="form-control @error('jam') is-invalid @enderror"
+                        id="input-jam" placeholder="Nama Events" value="{{ $event->jam }}" required>
+                    @error('jam')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="input-pilih_keterangan" class="col-sm-6 col-form-label">Keterangan Daring/Luring</label>
+                    <input type="text" name="pilih_keterangan"
+                        class="form-control @error('pilih_keterangan') is-invalid @enderror" id="input-pilih_keterangan"
+                        placeholder="Masukan Link Zoom/Nama Jalan" value="{{ $event->pilih_keterangan }}" required>
+                    @error('pilih_keterangan')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-6">
                     <label for="input-category" class="col-sm-6 col-form-label">Kategori</label>
                     <select class="form-control select2" id="category" name="category_id">
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}"
-                                {{ $event->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                {{ $event->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}
+                            </option>
                         @endforeach
                     </select>
                     @error('category_id')
