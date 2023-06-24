@@ -26,7 +26,7 @@ class PendaftaranController extends Controller
 
     public function index(Request $request)
     {
-        $events = Events::where('is_show', true)->get();
+        $events = Events::where('status', true)->get();
         $category = Category::all();
         return view('pendaftaran', compact('category', 'events'));
     }

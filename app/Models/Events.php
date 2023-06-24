@@ -24,4 +24,9 @@ class Events extends Model
     {
         return $this->hasMany(PendaftaranEvents::class);
     }
+
+    public function dokumentasi()
+    {
+        return $this->hasOne(Dokumentasi::class, 'event_id');
+    }
 }

@@ -99,13 +99,24 @@
                     @endif
                 </div>
                 <div class="col-md-6">
-                    <label for="input-is-show" class="col-sm-6 col-form-label">Status</label>
+                    <label for="input-is-show" class="col-sm-6 col-form-label">Tampilkan event</label>
                     <select name="is_show" id="input-is-show" class="form-control @error('is_show') is-invalid @enderror"
                         required>
                         <option value="1" {{ $event->is_show == 1 ? 'selected' : '' }}>Aktif</option>
                         <option value="0" {{ $event->is_show == 0 ? 'selected' : '' }}>Tidak Aktif</option>
                     </select>
                     @error('is_show')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="input-status" class="col-sm-6 col-form-label">Status Event</label>
+                    <select name="status" id="input-status" class="form-control @error('status') is-invalid @enderror"
+                        required>
+                        <option value="1" {{ $event->status == 1 ? 'selected' : '' }}>Berjalan</option>
+                        <option value="0" {{ $event->status == 0 ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                    @error('status')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>

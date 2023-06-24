@@ -88,13 +88,24 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label for="input-is-show" class="col-sm-6 col-form-label">Status</label>
+                    <label for="input-is-show" class="col-sm-6 col-form-label">Tampilkan Event</label>
                     <select name="is_show" id="input-is-show" class="form-control @error('is_show') is-invalid @enderror"
                         required>
                         <option value="1" {{ old('is_show') == 1 ? 'selected' : '' }}>Aktif</option>
                         <option value="0" {{ old('is_show') == 0 ? 'selected' : '' }}>Tidak Aktif</option>
                     </select>
                     @error('is_show')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="col-md-6">
+                    <label for="input-is-show" class="col-sm-6 col-form-label">Status Event</label>
+                    <select name="status" id="input-is-show" class="form-control @error('status') is-invalid @enderror"
+                        required>
+                        <option value="1" {{ old('status') == 1 ? 'selected' : '' }}>Berjalan</option>
+                        <option value="0" {{ old('status') == 0 ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                    @error('status')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>

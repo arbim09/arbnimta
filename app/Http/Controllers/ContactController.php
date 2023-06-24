@@ -58,5 +58,33 @@ class ContactController extends Controller
         return redirect()->back()->with('success', 'Pesan Anda berhasil terkirim!');
     }
 
-   
+    /**
+     * Send an email using Mailtrap.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sendMail(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email',
+            'no_hp' => 'required',
+            'subject' => 'required',
+            'message' => 'required'
+        ]);
+
+        $data = array(
+            'name' => $request->name,
+            'email' => $request->email,
+            'no_hp' => $request->no_hp,
+            'subject' => $request->subject,
+            'message' => $request->message
+        );
+
+        // Send email using Mailtrap
+        Mail::to('contohpunyaarya123@gmail.com')->send(new ContactFormMail($data));
+
+        return response()->json(['message' => 'Email sent successfully!']);
+    }
 }

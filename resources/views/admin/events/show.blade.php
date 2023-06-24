@@ -41,6 +41,10 @@
                     <td style="width: 80%;">{{ $events->ondar }}</td>
                 </tr>
                 <tr>
+                    <th style="width: 20%;">Status Event</th>
+                    <td style="width: 80%;">{{ $events->status ? 'Berjalan' : 'Selesai' }}</td>
+                </tr>
+                <tr>
                     <th style="width: 20%;">Keterangan</th>
                     <td style="width: 80%;">{!! html_entity_decode($events->keterangan) !!}</td>
                 </tr>
@@ -138,6 +142,67 @@
         </div>
     </div>
     <br>
+    @if ($events->status == false)
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title">Dokumentasi Event</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-bordered">
+                    <tbody>
+                        <!-- Baris tabel untuk tombol unggah gambar -->
+                        <tr>
+                            <td>
+                                <form action="{{ route('dokumentasi.store') }}" method="POST" id="dokumentasi"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="event_id" value="{{ $events->id }}">
+                                    <input type="file" name="photo[]" multiple>
+                                    <button type="submit" class="btn btn-primary">Unggah Gambar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <!-- Akhir baris tombol unggah gambar -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="btn-group">
+                    <a href="{{ route('events.index') }}" class="btn btn-sm btn-secondary" data-toggle="tooltip"
+                        title="Kembali ke Daftar Event">
+                        <i class="far fa-arrow-alt-circle-left mr-1"></i> Kembali
+                    </a>
+                    <a href="{{ route('events.edit', $events->id) }}" class="btn btn-sm btn-warning"
+                        data-toggle="tooltip" title="Edit Data Event">
+                        <i class="far fa-edit mr-1"></i> Edit
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-bordered">
+                    <div class="card-body">
+                        @if ($events->dokumentasi && $events->dokumentasi->count() > 0)
+                            <table class="table table-hover table-bordered">
+                                @foreach ($events->dokumentasi as $dokumentasi)
+                                    <tr>
+                                        <th style="width: 20%;">Gambar Dokumentasi</th>
+                                        <td style="width: 80%;">
+                                            <img src="{{ asset('storage/' . $dokumentasi->photo) }}"
+                                                alt="Gambar Dokumentasi">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        @else
+                            <p>Tidak ada gambar dokumentasi untuk event ini.</p>
+                        @endif
+                    </div>
+                </table>
+            </div>
+        </div>
+    @endif
 @endsection
 
 @push('js')
@@ -146,6 +211,7 @@
     <script src="{{ asset('template/backend/sb-admin-2') }}/js/demo/datatables-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    {{-- Datatable --}}
     <script type="text/javascript">
         $(function() {
 
@@ -574,6 +640,39 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             getDataByAgama();
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#dokumentasi').submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: '{{ route('dokumentasi.store') }}',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        swal({
+                            title: 'Data Berhasil Disimpan!',
+                            text: response.message,
+                            icon: 'success',
+                            button: 'Ok'
+                        })
+                    },
+                    error: function(response) {
+                        swal({
+                            title: 'Gagal!',
+                            text: response.responseJSON.message,
+                            icon: 'error',
+                            button: 'Ok'
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endpush

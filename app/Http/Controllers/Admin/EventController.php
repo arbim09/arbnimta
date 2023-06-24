@@ -88,6 +88,7 @@ class EventController extends Controller
             'jam' => 'required',
             'pilih_keterangan' => 'required',
             'ondar' => 'required',
+            'status' => 'required'
         ]);
 
         // Membuat event baru dengan data yang diinputkan oleh user
@@ -100,6 +101,7 @@ class EventController extends Controller
         $event->jam = $validatedData['jam'];
         $event->pilih_keterangan = $validatedData['pilih_keterangan'];
         $event->ondar = $validatedData['ondar'];
+        $event->status = $validatedData['status'];
 
         // Menyimpan gambar event (jika ada)
         if ($request->hasFile('image')) {
@@ -229,6 +231,7 @@ class EventController extends Controller
             'jam' => 'required',
             'pilih_keterangan' => 'required',
             'ondar' => 'required',
+            'status' => 'required'
         ]);
 
         // Mengambil event yang akan diupdate
@@ -246,6 +249,7 @@ class EventController extends Controller
         $event->jam = $validatedData['jam'];
         $event->pilih_keterangan = $validatedData['pilih_keterangan'];
         $event->ondar = $validatedData['ondar'];
+        $event->status = $validatedData['status'];
 
         // Menghapus gambar lama jika ada gambar baru yang diunggah
         if ($request->hasFile('image')) {

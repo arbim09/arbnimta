@@ -56,7 +56,7 @@ Route::get('/acara', [HomeController::class, 'acara'])->name('acara.anggota');
 Route::get('/acara/{id}', [HomeController::class, 'showAcara'])->name('show.acara');
 
 
-//resource anggota
+//route anggota
 Route::middleware(['auth'])->group(function () {
 	Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
 	Route::post('/profil/{id}', [ProfilController::class, 'update'])->name('profil.update');
@@ -73,24 +73,12 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/getEvents/{id}', [DaftarControllers::class, 'getEventsByCategory']);
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-	// Rute yang memerlukan verifikasi email
-});
 
 
 
 //USER)_CONTACT
 Route::post('/contact', 'ContactController@sendMail')->name('contact.send');
 Route::post('/send-email', 'ContactController@store')->name('send.email');
-
-
-route::get('/absensi/kegiatan', 'AbsensiController@kegiatan')->name('form-absensi.kegiatan');
-route::post('/absensi/kegiatan', 'AbsensiController@submitKegiatan')->name('absensi.kegiatan');
-route::get('/absensi/acara', 'AbsensiController@acara')->name('form-absensi.acara');
-route::post('/absensi/acara', 'AbsensiController@submitAcara')->name('absensi.acara');
-route::get('/absensi/pelatihan', 'AbsensiController@pelatihan')->name('form-absensi.pelatihan');
-route::post('/absensi/pelatihan', 'AbsensiController@submitPelatihan')->name('absensi.pelatihan');
-
 
 Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'prefix' => 'admin'], function () {
 
@@ -104,6 +92,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	Route::resource('/banners', 'BannerController')->middleware(['can:admin']);
 	Route::resource('/events', 'EventController')->middleware(['can:admin']);
 	Route::resource('/absensi', 'AbsensiController')->middleware(['can:admin']);
+	Route::resource('/dokumentasi', 'DokumentasiController')->middleware(['can:admin']);
 	Route::resource('/pendaftaran', 'PendaftaranEventsController')->middleware(['can:admin']);
 
 	//datatable
