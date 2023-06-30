@@ -17,6 +17,8 @@ use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Pengurus\EventController as PengurusEventController;
+use App\Http\Controllers\Pengurus\DokumentasiController as PengurusDokumentasiController;
 use App\Http\Controllers\Admin\AbsensiController;
 use App\Http\Controllers\Pengurus\UserController;
 use App\Http\Controllers\Pengurus\ProfileController;
@@ -26,6 +28,7 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Admin\PendaftaranEventsController;
 use App\Http\Controllers\PendaftaranController as DaftarControllers;
 use App\Http\Controllers\AbsensiController as ControllersAbsensiController;
+use App\Http\Controllers\Admin\DokumentasiController;
 use App\Http\Controllers\AnggotaController as ControllersAnggotaController;
 
 /*
@@ -80,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/contact', 'ContactController@sendMail')->name('contact.send');
 Route::post('/send-email', 'ContactController@store')->name('send.email');
 
+
 Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'prefix' => 'admin'], function () {
 
 	Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware(['can:admin']);
@@ -94,6 +98,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	Route::resource('/absensi', 'AbsensiController')->middleware(['can:admin']);
 	Route::resource('/dokumentasi', 'DokumentasiController')->middleware(['can:admin']);
 	Route::resource('/pendaftaran', 'PendaftaranEventsController')->middleware(['can:admin']);
+	// Route::post('/dokumentasi/{id}', [DokumentasiController::class, 'store'])->name('dokumentasi.store');
 
 	//datatable
 	Route::get('/acara', [EventController::class, 'acara'])->name('acara.event')->middleware(['can:admin']);
@@ -109,6 +114,13 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	Route::get('/daftar/pelatihan', [PendaftaranEventsController::class, 'pelatihan'])->name('pelatihan.pendaftaran')->middleware(['can:admin']);
 	// Route::resource('/user', 'UserController')->middleware('can:admin,pengurus');
 
+	//Dokumentasi
+
+	Route::delete('dokumentasi/{id}/delete-gambar1', 'DokumentasiController@deleteGambar1')->name('dokumentasi.delete-gambar1');
+	Route::delete('dokumentasi/{id}/delete-gambar2', 'DokumentasiController@deleteGambar2')->name('dokumentasi.delete-gambar2');
+	Route::delete('dokumentasi/{id}/delete-gambar3', 'DokumentasiController@deleteGambar3')->name('dokumentasi.delete-gambar3');
+	Route::delete('dokumentasi/{id}/delete-gambar4', 'DokumentasiController@deleteGambar4')->name('dokumentasi.delete-gambar4');
+	Route::delete('dokumentasi/{id}/delete-gambar5', 'DokumentasiController@deleteGambar5')->name('dokumentasi.delete-gambar5');
 
 	//Route View
 
@@ -129,14 +141,28 @@ Route::group(['namespace' => 'Pengurus', 'middleware' => 'auth', 'prefix' => 'pe
 	//resource
 	Route::resource('/anggotas', 'AnggotaController')->middleware('can:pengurus');
 	Route::resource('/event', 'EventController')->middleware(['can:pengurus']);
+	// Route::resource('/dokumen', 'DokumentasiController')->middleware(['can:pengurus']);
+	route::get('/dokumen/create', [PengurusDokumentasiController::class, 'create'])->name('dokumen.create')->middleware('can:pengurus');
+	route::post('/dokumen/create', [PengurusDokumentasiController::class, 'store'])->name('dokumen.store')->middleware('can:pengurus');
+	route::get('/dokumen/edit/{id}', [PengurusDokumentasiController::class, 'edit'])->name('dokumen.edit')->middleware('can:pengurus');
+	Route::post('/dokumen/edit/{id}', [PengurusDokumentasiController::class, 'update'])->name('dokumen.update')->middleware('can:pengurus');
 
 	//delete
 	Route::delete('/daftar/{id}', 'PendaftaranController@destroy')->name('daftar.destroy');
+
+	//delete dokumentasi
+	Route::delete('dokumentasi/pengurus/{id}/delete-gambar1', [PengurusDokumentasiController::class, 'deleteGambar1'])->name('dokumentasi.pengurus.delete-gambar1');
+	Route::delete('dokumentasi/pengurus/{id}/delete-gambar2', [PengurusDokumentasiController::class, 'deleteGambar2'])->name('dokumentasi.pengurus.delete-gambar2');
+	Route::delete('dokumentasi/pengurus/{id}/delete-gambar3', [PengurusDokumentasiController::class, 'deleteGambar3'])->name('dokumentasi.pengurus.delete-gambar3');
+	Route::delete('dokumentasi/pengurus/{id}/delete-gambar4', [PengurusDokumentasiController::class, 'deleteGambar4'])->name('dokumentasi.pengurus.delete-gambar4');
+	Route::delete('dokumentasi/pengurus/{id}/delete-gambar5', [PengurusDokumentasiController::class, 'deleteGambar5'])->name('dokumentasi.pengurus.delete-gambar5');
 
 	//datatable
 	Route::get('/pendaftar/kegiatan', [PendaftaranController::class, 'kegiatan'])->name('kegiatan.pendaftarans')->middleware(['can:pengurus']);
 	Route::get('/pendaftar/acara', [PendaftaranController::class, 'acara'])->name('acara.pendaftarans')->middleware(['can:pengurus']);
 	Route::get('/pendaftar/pelatihans', [PendaftaranController::class, 'pelatihan'])->name('pelatihan.pendaftarans')->middleware(['can:pengurus']);
+	Route::get('/data-absensi/{id}', [PengurusEventController::class, 'dataAbsensi'])->name('pengurus.dataAbsensi.event')->middleware(['can:pengurus']);
+	Route::get('/export/data-absensi/{id}', [PengurusEventController::class, 'exportToExcel'])->name('pengurus.dataAbsensiExport.event')->middleware(['can:pengurus']);
 
 	Route::get('/', [UserController::class, 'index'])->name('pengurus');
 	Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -144,14 +170,6 @@ Route::group(['namespace' => 'Pengurus', 'middleware' => 'auth', 'prefix' => 'pe
 });
 
 
-
-Route::group(['namespace' => 'Anggota', 'middleware' => 'auth', 'prefix' => 'anggota'], function () {
-	// Route::resource('/profiles', 'AnggotaController')->middleware('can:anggota');
-	// Route::get('/profiles',[AnggotaController::class,'cek'])->name('cek.profile');
-	// Route::get('/',[UserController::class,'index'])->name('anggota');
-	// Route::get('/profile',[ProfileController::class,'index'])->name('profile');
-	// Route::patch('/profile/update/{anggota}',[ProfileController::class,'update'])->name('profile.update');
-});
 
 Route::group(['namespace' => 'Auth', 'middleware' => 'guest'], function () {
 	Route::view('/login/admin', 'auth.login')->name('login.admin');
@@ -166,7 +184,7 @@ Route::post('/logout', function () {
 	return redirect()->to('/login')->with(Auth::logout());
 })->name('logout');
 
-
+//reset password
 Route::get('/forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('password.request');
 Route::post('/forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');

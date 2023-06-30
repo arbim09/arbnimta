@@ -8,7 +8,15 @@
             <div class="card card-style">
                 <div class="card-body px-0 py-0">
                     <div class="divider mb-0 mx-3"></div>
-                    <h5 class="font-700 px-3 mb-3 mt-3 text-center">{{ $events->name }}</h5>
+                    <h5 class="font-700 px-3 mb-3 mt-3 text-center">
+                        {{ $events->name }}
+                        @if ($events->status)
+                            <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Sedang Berjalan</span>
+                        @else
+                            <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Telah Selesai</span>
+                        @endif
+                    </h5>
+
                     <div class="divider mb-0 mx-3"></div>
                     <div class="divider mb-0 mx-3"></div>
                     <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3"
@@ -41,6 +49,43 @@
                     </div>
                 </div>
             </div>
+            @if ($events->status == 0)
+                <div class="card card-style">
+                    <div class="content mb-0">
+                        <h3 class="font-18 mb-1">Dokumentasi {{ $events->name }}</h3>
+                        <div class="row text-center row-cols-3 mb-0">
+                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
+                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar1) }}"
+                                    class="preload-img img-fluid rounded-xs" alt="img"
+                                    style="max-width: 400px; max-height: 400px; ">
+                            </a>
+                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
+                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar2) }}"
+                                    class="preload-img img-fluid rounded-xs" alt="img"
+                                    style="max-width: 400px; max-height: 400px; ">
+                            </a>
+                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
+                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar3) }}"
+                                    class="preload-img img-fluid rounded-xs" alt="img"
+                                    style="max-width: 400px; max-height: 400px; ">
+                            </a>
+                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
+                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar4) }}"
+                                    class="preload-img img-fluid rounded-xs" alt="img"
+                                    style="max-width: 400px; max-height: 400px; ">
+                            </a>
+                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
+                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar5) }}"
+                                    class="preload-img img-fluid rounded-xs" alt="img"
+                                    style="max-width: 400px; max-height: 400px; ">
+                            </a>
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            @endif
+
 
         </div>
         <!-- End of Page Content-->

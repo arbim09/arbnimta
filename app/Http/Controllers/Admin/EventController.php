@@ -12,11 +12,13 @@ use App\Exports\AbsensiExport;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Dokumentasi;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Auth\Access\Gate;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EventController extends Controller
 {
@@ -36,12 +38,20 @@ class EventController extends Controller
                     return $row->category ? $row->category->name : '-';
                 })
                 ->addColumn('status', function ($q) {
-                    if ($q->is_show == 1) {
-                        $status = '<span class="badge badge-success">Aktif</span>';
+                    if ($q->status == 1) {
+                        $status = '<span class="badge badge-success" style="text-center">Berjalan</span>';
                     } else {
-                        $status = '<span class="badge badge-danger">Tidak Aktif</span>';
+                        $status = '<span class="badge badge-danger">Sudah Selesai</span>';
                     }
                     return $status;
+                })
+                ->addColumn('halaman', function ($q) {
+                    if ($q->is_show == 1) {
+                        $halaman = '<span class="badge badge-success" style="text-center">Ditampilkan</span>';
+                    } else {
+                        $halaman = '<span class="badge badge-danger">Tidak ditampilkan</span>';
+                    }
+                    return $halaman;
                 })
                 ->addColumn('action', function ($row) {
                     $btn = '<div class="row">';
@@ -51,7 +61,7 @@ class EventController extends Controller
                     $btn .= '</div>';
                     return $btn;
                 })
-                ->rawColumns(['action', 'category_name', 'status'])
+                ->rawColumns(['action', 'category_name', 'status', 'halaman'])
                 ->make(true);
         }
 
@@ -132,19 +142,13 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function show($id)
-    // {
-    //     $events = Events::findOrFail($id);
-    //     return view('admin.events.show')->with(compact('events'));
-    // }
+
     public function show($id)
     {
         // Mendapatkan objek event berdasarkan ID
-        $events = Events::find($id);
-        if (!$events) {
-            abort(404);
-        }
+        $events = Events::findOrFail($id);
         $eventId = $id;
+        $dokumentasi = Dokumentasi::where('event_id', $eventId)->first();
         $qrCode = QrCode::format('png')->size(300)->generate($eventId);
         $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
 
@@ -194,9 +198,12 @@ class EventController extends Controller
             'umur'  => $umur,
             'pendidikan'  => $pendidikan,
             'pekerjaan' => $pekerjaan,
+            'dokumentasi' => $dokumentasi,
             'agama'  => $agama
         ]);
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -273,7 +280,6 @@ class EventController extends Controller
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
             $image = Image::make(public_path('/images/events/') . $filenameToStore);
-            // $image->fit(400, 400);
             $image->save(public_path('/images/events/') . $filenameToStore);
             $event->image = $filenameToStore;
         }
@@ -294,7 +300,9 @@ class EventController extends Controller
     public function destroy($id)
     {
         $events = Events::find($id);
-
+        if (file_exists(public_path('/images/events/' . $events->image))) {
+            unlink(public_path('/images/events/' . $events->image));
+        }
         if (!$events) {
             return response()->json(['message' => 'events tidak ditemukan'], 404);
         }
@@ -407,43 +415,6 @@ class EventController extends Controller
         return view('admin.events.pelatihan');
     }
 
-    // function dataAbsensi(Request $request, $id)
-    // {
-    //     $id = Events::findOrFail($id);
-    //     if ($request->ajax()) {
-    //         $data = Absensi::select('event_id')->where('event_id', $id->id)->get();
-    //         return DataTables::of($data)
-    //             ->addIndexColumn()
-    //             ->addColumn('name', function ($row) {
-    //                 // Ambil informasi pengguna berdasarkan event_id
-    //                 $name = User::where('event_id', $row->event_id)->first();
-    //                 // Kembalikan nama pengguna
-    //                 return $name->name;
-    //             })
-    //             ->addColumn('email', function ($row) {
-    //                 // Ambil informasi pengguna berdasarkan event_id
-    //                 $email = User::where('event_id', $row->event_id)->first();
-
-    //                 // Kembalikan email pengguna
-    //                 return $email->email;
-    //             })
-    //             ->addColumn('pekerjaan', function ($row) {
-    //                 // Ambil informasi pengguna berdasarkan event_id
-    //                 $pekerjaan = User::where('event_id', $row->event_id)->first();
-    //                 $kerja = Pekerjaan::find($pekerjaan->pekerjaan_id);
-    //                 // Kembalikan pekerjaan pengguna
-    //                 return $kerja->name;
-    //             })
-    //             ->addColumn('jenis_kelamin', function ($row) {
-    //                 // Ambil informasi pengguna berdasarkan event_id
-    //                 $jenis_kelamin = User::where('event_id', $row->event_id)->first();
-    //                 // Kembalikan jenis_kelamin pengguna
-    //                 return $jenis_kelamin->jenis_kelamin;
-    //             })
-    //             ->rawColumns(['name'])
-    //             ->make(true);
-    //     }
-    // }
 
     function dataAbsensi($id)
     {

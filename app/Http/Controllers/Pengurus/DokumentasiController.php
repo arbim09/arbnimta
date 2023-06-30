@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Pengurus;
 
 use App\Models\Events;
 use App\Models\Dokumentasi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 
 class DokumentasiController extends Controller
 {
@@ -28,7 +27,7 @@ class DokumentasiController extends Controller
     public function create()
     {
         $events = Events::where('status', false)->get();
-        return view('admin.dokumentasi.create', compact('events'));
+        return view('pengurus.dokumentasi.create', compact('events'));
     }
 
     /**
@@ -100,7 +99,7 @@ class DokumentasiController extends Controller
         }
         $dokumentasi->save();
 
-        return redirect()->route('events.index')->with('error', 'Tidak ada gambar yang diunggah.');
+        return redirect()->route('event.index')->with('error', 'Tidak ada gambar yang diunggah.');
     }
 
     /**
@@ -122,10 +121,9 @@ class DokumentasiController extends Controller
      */
     public function edit($id)
     {
-
         $dokumentasi = Dokumentasi::findOrfail($id);
         $events = Events::where('status', false)->get();
-        return view('admin.dokumentasi.edit', compact('dokumentasi', 'events'));
+        return view('pengurus.dokumentasi.edit', compact('dokumentasi', 'events'));
     }
 
     /**
@@ -193,15 +191,18 @@ class DokumentasiController extends Controller
 
         $dokumentasi->save();
 
-        return redirect()->route('events.index')->with('success', 'Dokumentasi berhasil diperbarui.');
+        return redirect()->route('event.index')->with('success', 'Dokumentasi berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    private function deleteImage($imagePath)
+    {
+        $fullImagePath = public_path($imagePath);
+        if (file_exists($fullImagePath)) {
+            unlink($fullImagePath);
+        }
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -210,32 +211,7 @@ class DokumentasiController extends Controller
      */
     public function destroy($id)
     {
-        // Temukan entri dokumentasi berdasarkan ID
-        $dokumentasi = Dokumentasi::findOrFail($id);
-
-        // Hapus file gambar terkait dari sistem file server
-        $gambarPath = 'images/dokumentasi/';
-        if ($dokumentasi->gambar1) {
-            Storage::delete($gambarPath . $dokumentasi->gambar1);
-        }
-        if ($dokumentasi->gambar2) {
-            Storage::delete($gambarPath . $dokumentasi->gambar2);
-        }
-        if ($dokumentasi->gambar3) {
-            Storage::delete($gambarPath . $dokumentasi->gambar3);
-        }
-        if ($dokumentasi->gambar4) {
-            Storage::delete($gambarPath . $dokumentasi->gambar4);
-        }
-        if ($dokumentasi->gambar5) {
-            Storage::delete($gambarPath . $dokumentasi->gambar5);
-        }
-
-        // Hapus entri dokumentasi dari database
-        $dokumentasi->delete();
-
-        // Redirect pengguna ke halaman yang sesuai, misalnya halaman daftar dokumentasi
-        return redirect()->route('events.index')->with('success', 'Dokumentasi berhasil dihapus.');
+        //
     }
 
     public function deleteGambar1($id)

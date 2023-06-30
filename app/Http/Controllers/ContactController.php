@@ -85,6 +85,7 @@ class ContactController extends Controller
         // Send email using Mailtrap
         Mail::to('contohpunyaarya123@gmail.com')->send(new ContactFormMail($data));
 
-        return response()->json(['message' => 'Email sent successfully!']);
+        // return response()->json(['message' => 'Email sent successfully!']);
+        return redirect()->back()->with('success', 'Pesan Anda berhasil terkirim!');
     }
 }

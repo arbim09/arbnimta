@@ -88,7 +88,7 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label for="input-is-show" class="col-sm-6 col-form-label">Tampilkan Event</label>
+                    <label for="input-is-show" class="col-sm-6 col-form-label">Tampilkan di Halaman Event</label>
                     <select name="is_show" id="input-is-show" class="form-control @error('is_show') is-invalid @enderror"
                         required>
                         <option value="1" {{ old('is_show') == 1 ? 'selected' : '' }}>Aktif</option>

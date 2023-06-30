@@ -9,7 +9,7 @@ class Dokumentasi extends Model
 {
     use HasFactory;
     protected $table = 'dokumentasi';
-    protected $fillable = ['event_id', 'photo'];
+    protected $fillable = ['event_id', 'gambar1', 'gambar2', 'gambar3', 'gambar4', 'gambar5'];
 
     public function event()
     {

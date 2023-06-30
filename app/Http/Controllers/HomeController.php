@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Posts;
 use App\Models\Events;
 use App\Models\Banners;
+use App\Models\Dokumentasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -106,7 +107,9 @@ class HomeController extends Controller
     public function showKegiatan($id)
     {
         $events = Events::find($id);
-        return view('show_kegiatan', compact('events'));
+        $eventId = $id;
+        $dokumentasi = Dokumentasi::where('event_id', $eventId)->first();
+        return view('show_kegiatan', compact('events', 'dokumentasi'));
     }
 
     public function pelatihan(Request $request)

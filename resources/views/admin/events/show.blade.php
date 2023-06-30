@@ -3,6 +3,11 @@
     'pageTitle' => 'Detail Event',
 ])
 @push('css')
+    <style>
+        .delete-button {
+            float: right;
+        }
+    </style>
     <link href="{{ asset('template/backend/sb-admin-2') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 @endpush
 
@@ -145,62 +150,136 @@
     @if ($events->status == false)
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title">Dokumentasi Event</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-hover table-bordered">
-                    <tbody>
-                        <!-- Baris tabel untuk tombol unggah gambar -->
-                        <tr>
-                            <td>
-                                <form action="{{ route('dokumentasi.store') }}" method="POST" id="dokumentasi"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <input type="hidden" name="event_id" value="{{ $events->id }}">
-                                    <input type="file" name="photo[]" multiple>
-                                    <button type="submit" class="btn btn-primary">Unggah Gambar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <!-- Akhir baris tombol unggah gambar -->
-                    </tbody>
-                </table>
+                <h5 class="card-title">Upload Dokumentasi:</h5>
+                <div class="card-tools ml-auto mr-0">
+                    @if ($dokumentasi)
+                        <a href="{{ route('dokumentasi.edit', $dokumentasi->id) }}" class="btn btn-primary btn-sm"
+                            data-toggle="tooltip" title="#">
+                            <i class="fas fa-edit  mr-1"></i> Edit
+                        </a>
+                    @else
+                        <a href="{{ route('dokumentasi.create') }}" class="btn btn-primary btn-sm" data-toggle="tooltip"
+                            title="#">
+                            <i class="fas fa-upload  mr-1"></i> Upload
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
         <div class="card">
-            <div class="card-header">
-                <div class="btn-group">
-                    <a href="{{ route('events.index') }}" class="btn btn-sm btn-secondary" data-toggle="tooltip"
-                        title="Kembali ke Daftar Event">
-                        <i class="far fa-arrow-alt-circle-left mr-1"></i> Kembali
-                    </a>
-                    <a href="{{ route('events.edit', $events->id) }}" class="btn btn-sm btn-warning"
-                        data-toggle="tooltip" title="Edit Data Event">
-                        <i class="far fa-edit mr-1"></i> Edit
-                    </a>
-                </div>
-            </div>
             <div class="card-body">
                 <table class="table table-hover table-bordered">
-                    <div class="card-body">
-                        @if ($events->dokumentasi && $events->dokumentasi->count() > 0)
-                            <table class="table table-hover table-bordered">
-                                @foreach ($events->dokumentasi as $dokumentasi)
-                                    <tr>
-                                        <th style="width: 20%;">Gambar Dokumentasi</th>
-                                        <td style="width: 80%;">
-                                            <img src="{{ asset('storage/' . $dokumentasi->photo) }}"
-                                                alt="Gambar Dokumentasi">
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                        @else
-                            <p>Tidak ada gambar dokumentasi untuk event ini.</p>
-                        @endif
-                    </div>
+                    <tbody>
+                        <tr>
+                            <th style="width: 20%;">Gambar 1</th>
+                            <td style="width: 80%;">
+                                @if ($dokumentasi && $dokumentasi->gambar1)
+                                    <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar1) }}" alt="testing"
+                                        class="img-fluid" style="max-width: 400px; max-height: 400px;">
+                                @else
+                                    Tidak ada gambar dokumentasi
+                                @endif
+                            </td>
+                            <td>
+                                @if ($dokumentasi && $dokumentasi->gambar1)
+                                    <form action="{{ route('dokumentasi.delete-gambar1', $dokumentasi->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger delete-button">Hapus5</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">Gambar 2</th>
+                            <td style="width: 80%;">
+                                @if ($dokumentasi && $dokumentasi->gambar2)
+                                    <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar2) }}" alt="testing"
+                                        class="img-fluid" style="max-width: 400px; max-height: 400px;">
+                                @else
+                                    Tidak ada gambar dokumentasi
+                                @endif
+                            </td>
+                            <td>
+                                @if ($dokumentasi && $dokumentasi->gambar2)
+                                    <form action="{{ route('dokumentasi.delete-gambar2', $dokumentasi->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger delete-button">Hapus2</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">Gambar 3</th>
+                            <td style="width: 80%;">
+                                @if ($dokumentasi && $dokumentasi->gambar3)
+                                    <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar3) }}" alt="testing"
+                                        class="img-fluid" style="max-width: 400px; max-height: 400px;">
+                                @else
+                                    Tidak ada gambar dokumentasi
+                                @endif
+                            </td>
+                            <td>
+                                @if ($dokumentasi && $dokumentasi->gambar3)
+                                    <form action="{{ route('dokumentasi.delete-gambar3', $dokumentasi->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger delete-button">Hapus3</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">Gambar 4</th>
+                            <td style="width: 80%;">
+                                @if ($dokumentasi && $dokumentasi->gambar4)
+                                    <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar4) }}" alt="testing"
+                                        class="img-fluid" style="max-width: 400px; max-height: 400px;">
+                                @else
+                                    Tidak ada gambar dokumentasi
+                                @endif
+                            </td>
+                            <td>
+                                @if ($dokumentasi && $dokumentasi->gambar4)
+                                    <form action="{{ route('dokumentasi.delete-gambar4', $dokumentasi->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger delete-button">Hapus4</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%;">Gambar 5</th>
+                            <td style="width: 80%;">
+                                @if ($dokumentasi && $dokumentasi->gambar5)
+                                    <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar5) }}" alt="testing"
+                                        class="img-fluid" style="max-width: 400px; max-height: 400px;">
+                                @else
+                                    Tidak ada gambar dokumentasi
+                                @endif
+                            </td>
+                            <td>
+                                @if ($dokumentasi && $dokumentasi->gambar5)
+                                    <form action="{{ route('dokumentasi.delete-gambar5', $dokumentasi->id) }}"
+                                        method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger delete-button">Hapus5</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
+
+
         </div>
     @endif
 @endsection
@@ -640,39 +719,6 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             getDataByAgama();
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#dokumentasi').submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                $.ajax({
-                    url: '{{ route('dokumentasi.store') }}',
-                    type: 'POST',
-                    dataType: 'JSON',
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        swal({
-                            title: 'Data Berhasil Disimpan!',
-                            text: response.message,
-                            icon: 'success',
-                            button: 'Ok'
-                        })
-                    },
-                    error: function(response) {
-                        swal({
-                            title: 'Gagal!',
-                            text: response.responseJSON.message,
-                            icon: 'error',
-                            button: 'Ok'
-                        });
-                    }
-                });
-            });
         });
     </script>
 @endpush
