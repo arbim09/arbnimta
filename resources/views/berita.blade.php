@@ -29,8 +29,9 @@
                     <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3">
                         <p style="display: flex; justify-content: space-between; width: 100%;">Dibuat pada tanggal:
                             {{ $posts->created_at->format('j F Y') }}<span>Oleh: {{ $posts->penulis }}</span></p>
-                        {!! html_entity_decode($posts->content) !!}
+                        <p style="margin-bottom: 0;">{!! html_entity_decode($posts->content) !!}</p>
                     </div>
+
                 </div>
             </div>
 

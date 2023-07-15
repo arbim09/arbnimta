@@ -54,9 +54,9 @@
                             </div>
                             <div class="row no-gutters align-items-center">
                                 <div class="col-auto">
-                                    <div class="h7 mb-0 mr-3 font-weight-bold text-gray-800">Aktif: {{ $eventsAktif }}
+                                    <div class="h7 mb-0 mr-3 font-weight-bold text-gray-800">Berjalan: {{ $eventsAktif }}
                                     </div>
-                                    <div class="h7 mb-0 mr-3 font-weight-bold text-gray-800">Tidak Aktif:
+                                    <div class="h7 mb-0 mr-3 font-weight-bold text-gray-800">Selesai:
                                         {{ $eventsTidakAktif }}</div>
                                     <a href="{{ route('events.index') }}" style="mb-0">Lihat selengkapnya</a>
                                 </div>

@@ -27,10 +27,20 @@
                                         <span class="color-theme font-15 ps-2 opacity-50"><i
                                                 class="bi bi-clock font-16"></i> Pukul: {{ $event->jam }}</span>
                                     </div>
+                                    <div>
+                                        @if ($event->status)
+                                            <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Sedang
+                                                Berjalan</span>
+                                        @else
+                                            <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Telah Selesai</span>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="align-self-start ms-auto">
-                                    <img src="{{ asset('images/events/' . $event->image) }}" class="rounded-m ms-3"
-                                        width="90">
+                                    <div style="max-width: 300px; max-height: 400px;">
+                                        <img src="{{ asset('images/events/' . $event->image) }}" class="rounded-m ms-3"
+                                            style="width: 100%; height: 100%;">
+                                    </div>
                                 </div>
                             </div>
                         </a>

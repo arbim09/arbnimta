@@ -154,7 +154,9 @@ class HomeController extends Controller
     public function showPelatihan($id)
     {
         $events = Events::find($id);
-        return view('show_pelatihan', compact('events'));
+        $eventId = $id;
+        $dokumentasi = Dokumentasi::where('event_id', $eventId)->first();
+        return view('show_pelatihan', compact('events', 'dokumentasi'));
     }
     public function acara(Request $request)
     {
@@ -198,6 +200,8 @@ class HomeController extends Controller
     public function showAcara($id)
     {
         $events = Events::find($id);
-        return view('show_acara', compact('events'));
+        $eventId = $id;
+        $dokumentasi = Dokumentasi::where('event_id', $eventId)->first();
+        return view('show_acara', compact('events', 'dokumentasi'));
     }
 }

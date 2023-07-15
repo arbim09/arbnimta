@@ -20,19 +20,19 @@ class CategoryController extends Controller
         if ($request->ajax()) {
             $data = Category::select('*');
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<a href="'.route('category.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
-                        $btn .= '<a href="'.route('category.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
-                        $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '<a href="' . route('category.show', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                    $btn .= '<a href="' . route('category.edit', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
+                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
-        
+
         return view('admin.category.index');
     }
 
@@ -98,9 +98,9 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
 
-        $category = Category::findOrFail($id);
-        $validatedData = $request->validate([
-            'name' => 'required|unique:categories,name,' . $category->id . '|max:255',
+        $category       = Category::findOrFail($id);
+        $validatedData  = $request->validate([
+            'name'      => 'required|unique:categories,name,' . $category->id . '|max:255',
         ]);
         $category->update($validatedData);
 

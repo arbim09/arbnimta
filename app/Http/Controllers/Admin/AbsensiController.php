@@ -21,19 +21,16 @@ class AbsensiController extends Controller
                 ->leftJoin('events', 'absensis.event_id', '=', 'events.id');
             return DataTables::of($data)
                 ->addIndexColumn()
-                // ->addColumn('events_name', function($row){
-                //     return $row->event_name ?? '-';
-                // })
                 ->addColumn('events_name', function ($row) {
                     if ($row->event_id) {
-                        $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->event_name . "</a>";
+                        $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->events_name . "</a>";
                     } else {
                         $event_name = "-";
                     }
                     return $event_name;
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<div class="row">';
+                    $btn  = '<div class="row">';
                     $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
                     $btn .= '</div>';
                     return $btn;
@@ -52,9 +49,6 @@ class AbsensiController extends Controller
                 ->where('events.category_id', '=', 3);
             return DataTables::of($data)
                 ->addIndexColumn()
-                // ->addColumn('events_name', function($row){
-                //     return $row->event_name ?? '-';
-                // })
                 ->addColumn('events_name', function ($row) {
                     if ($row->event_id) {
                         $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->event_name . "</a>";
@@ -111,9 +105,6 @@ class AbsensiController extends Controller
                 ->where('events.category_id', '=', 1);
             return DataTables::of($data)
                 ->addIndexColumn()
-                // ->addColumn('events_name', function($row){
-                //     return $row->event_name ?? '-';
-                // })
                 ->addColumn('events_name', function ($row) {
                     if ($row->event_id) {
                         $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->event_name . "</a>";

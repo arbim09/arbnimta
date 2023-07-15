@@ -1,6 +1,6 @@
 @extends('layout.anggotaLayouts.main')
 @section('title')
-    <title>Kegiatan</title>
+    <title>Acara</title>
 @endsection
 @section('content')
     <div id="page">
@@ -48,38 +48,101 @@
                     </div>
                 </div>
             </div>
-            @if ($events->status == 0)
+            @if ($events->status == 0 && $dokumentasi)
                 <div class="card card-style">
                     <div class="content mb-0">
                         <h3 class="font-18 mb-1">Dokumentasi {{ $events->name }}</h3>
-                        <div class="row text-center row-cols-3 mb-0">
-                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
-                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar1) }}"
-                                    class="preload-img img-fluid rounded-xs" alt="img"
-                                    style="max-width: 400px; max-height: 400px; ">
-                            </a>
-                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
-                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar2) }}"
-                                    class="preload-img img-fluid rounded-xs" alt="img"
-                                    style="max-width: 400px; max-height: 400px; ">
-                            </a>
-                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
-                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar3) }}"
-                                    class="preload-img img-fluid rounded-xs" alt="img"
-                                    style="max-width: 400px; max-height: 400px; ">
-                            </a>
-                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
-                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar4) }}"
-                                    class="preload-img img-fluid rounded-xs" alt="img"
-                                    style="max-width: 400px; max-height: 400px; ">
-                            </a>
-                            <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
-                                <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar5) }}"
-                                    class="preload-img img-fluid rounded-xs" alt="img"
-                                    style="max-width: 400px; max-height: 400px; ">
-                            </a>
-                            <br>
-                        </div>
+                        <div class="divider mb-0 mx-3"></div>
+                        <br>
+                        @if ($dokumentasi)
+                            @php
+                                $gambarUploaded = false;
+                            @endphp
+                            <div class="row text-center row-cols-3 mb-0">
+                                @if ($dokumentasi->gambar1)
+                                    @php
+                                        $gambarUploaded = true;
+                                    @endphp
+                                    <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
+                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar1) }}"
+                                            class="preload-img img-fluid rounded-xs" alt="img"
+                                            style="max-width: 400px; max-height: 400px; ">
+                                    </a>
+                                @else
+                                    <div class="col"></div>
+                                @endif
+                                <!-- tambahkan pengecekan dan tampilkan kolom kosong untuk gambar2 dan seterusnya -->
+                                @if ($dokumentasi->gambar2)
+                                    @php
+                                        $gambarUploaded = true;
+                                    @endphp
+                                    <a class="col" data-gallery="gambar-2" href="#" title="Model Portrait">
+                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar2) }}"
+                                            class="preload-img img-fluid rounded-xs" alt="img"
+                                            style="max-width: 400px; max-height: 400px; ">
+                                    </a>
+                                @else
+                                    <div class="col"></div>
+                                @endif
+
+                                <!-- tambahkan pengecekan dan tampilkan kolom kosong untuk gambar3 -->
+                                @if ($dokumentasi->gambar3)
+                                    @php
+                                        $gambarUploaded = true;
+                                    @endphp
+                                    <a class="col" data-gallery="gambar-3" href="#" title="Model Portrait">
+                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar3) }}"
+                                            class="preload-img img-fluid rounded-xs" alt="img"
+                                            style="max-width: 400px; max-height: 400px; ">
+                                    </a>
+                                @else
+                                    <div class="col"></div>
+                                @endif
+
+                                <!-- tambahkan pengecekan dan tampilkan kolom kosong untuk gambar4 -->
+                                @if ($dokumentasi->gambar4)
+                                    @php
+                                        $gambarUploaded = true;
+                                    @endphp
+                                    <a class="col" data-gallery="gambar-4" href="#" title="Model Portrait">
+                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar4) }}"
+                                            class="preload-img img-fluid rounded-xs" alt="img"
+                                            style="max-width: 400px; max-height: 400px; ">
+                                    </a>
+                                @else
+                                    <div class="col"></div>
+                                @endif
+
+                                <!-- tambahkan pengecekan dan tampilkan kolom kosong untuk gambar5 -->
+                                @if ($dokumentasi->gambar5)
+                                    @php
+                                        $gambarUploaded = true;
+                                    @endphp
+                                    <a class="col" data-gallery="gambar-5" href="#" title="Model Portrait">
+                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar5) }}"
+                                            class="preload-img img-fluid rounded-xs" alt="img"
+                                            style="max-width: 400px; max-height: 400px; ">
+                                    </a>
+                                @else
+                                    <div class="col"></div>
+                                @endif
+                                <br>
+                            </div>
+
+                            @if (!$gambarUploaded)
+                                <div class="row text-center row-cols-12 mb-0">
+                                    <div class="col">
+                                        <p class="text-center">Gambar dokumentasi belum diupload</p>
+                                    </div>
+                                </div>
+                            @endif
+                        @else
+                            <div class="row text-center row-cols-3 mb-0">
+                                <div class="col">
+                                    <p class="text-center">Tidak ada gambar dokumentasi</p>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <br>
                 </div>

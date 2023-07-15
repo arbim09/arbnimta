@@ -7,6 +7,7 @@
     <link href="{{ asset('template/backend/sb-admin-2') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('vendor/sweetalert/sweetalert.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 @endpush
 
 @section('content')
@@ -22,6 +23,15 @@
             </div>
         </div>
         <div class="card-body">
+            <div class="form-group">
+                <label for="category">Pilih Kategori Event: </label>
+                <select id="category" class="form-control select2" name="category_id" data-event-id="">
+                    <option value="">Semua</option>
+                    @foreach ($category as $cate)
+                        <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered data-table">
                     <thead>
@@ -47,7 +57,12 @@
     <script src="{{ asset('template/backend/sb-admin-2') }}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('template/backend/sb-admin-2') }}/js/demo/datatables-demo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
     <script type="text/javascript">
         $(function() {
 
@@ -56,7 +71,13 @@
                 serverSide: true,
                 "ajax": {
                     "url": "{{ route('events.index') }}",
-                    "type": "GET" //(untuk mendapatkan data)
+                    "type": "GET",
+                    data: function(data) {
+                        // Mendapatkan nilai kategori yang dipilih
+                        var selectedCategoryId = $('#category').val();
+                        // Menambahkan parameter category_id ke data yang dikirim ke server
+                        data.category_id = selectedCategoryId;
+                    }
                 },
                 columns: [{
                         data: 'DT_RowIndex',
@@ -86,6 +107,11 @@
                         searchable: true
                     },
                 ]
+            });
+
+            $('#category').on('change', function() {
+                // Memuat ulang tabel saat kategori dipilih berubah
+                table.ajax.reload();
             });
         });
     </script>

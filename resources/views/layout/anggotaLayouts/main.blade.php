@@ -11,6 +11,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/styles/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/fonts/bootstrap-icons.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/styles/style.css') }}">
+    {{-- <link rel="stylesheet" type="text/css"
+        href="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/styles/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/fonts/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/styles/style.css"> --}}
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
@@ -19,6 +26,7 @@
     <meta id="theme-check" name="theme-color" content="#FFFFFF">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('images/backend/logo-rtik.ico') }}" />
+    {{-- <link rel="shortcut icon" href="https://1970-114-122-84-104.ngrok-free.app/images/backend/logo-rtik.ico" /> --}}
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @stack('css')
 
@@ -56,5 +64,8 @@
 
     <script src="{{ asset('/anggotatemplate/scripts/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/anggotatemplate/scripts/custom.js') }}"></script>
+    {{-- <script src="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/scripts/bootstrap.min.js"></script>
+    <script src="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/scripts/custom.js"></script> --}}
+
     @stack('js')
 </body>

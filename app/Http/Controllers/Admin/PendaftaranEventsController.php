@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\PendaftaranExport;
 use App\Models\Events;
 use Illuminate\Http\Request;
 use App\Models\PendaftaranEvents;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Console\Scheduling\Event;
 use Yajra\DataTables\Facades\DataTables;
 
 class PendaftaranEventsController extends Controller
@@ -21,7 +24,7 @@ class PendaftaranEventsController extends Controller
                 ->get();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('events_name', function($row){
+                ->addColumn('events_name', function ($row) {
                     if ($row->event_id) {
                         $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->event_name . "</a>";
                     } else {
@@ -29,21 +32,22 @@ class PendaftaranEventsController extends Controller
                     }
                     return $event_name;
                 })
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $btn = '<div class="row">';
-                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
                     $btn .= '</div>';
                     return $btn;
                 })
                 ->rawColumns(['action', 'events_name'])
                 ->make(true);
         }
-        
+
         return view('admin.pendaftaran.kegiatan');
     }
 
     public function acara(Request $request)
     {
+        $events = Events::where('category_id', 2)->get();
         if ($request->ajax()) {
             $data = PendaftaranEvents::select('pendaftaran_events.*', 'events.name as event_name')
                 ->leftJoin('events', 'pendaftaran_events.event_id', '=', 'events.id')
@@ -51,7 +55,7 @@ class PendaftaranEventsController extends Controller
                 ->get();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('events_name', function($row){
+                ->addColumn('events_name', function ($row) {
                     if ($row->event_id) {
                         $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->event_name . "</a>";
                     } else {
@@ -59,17 +63,17 @@ class PendaftaranEventsController extends Controller
                     }
                     return $event_name;
                 })
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $btn = '<div class="row">';
-                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
                     $btn .= '</div>';
                     return $btn;
                 })
                 ->rawColumns(['action', 'events_name'])
                 ->make(true);
         }
-            
-        return view('admin.pendaftaran.acara');
+
+        return view('admin.pendaftaran.acara', compact('events'));
     }
 
     public function pelatihan(Request $request)
@@ -81,7 +85,7 @@ class PendaftaranEventsController extends Controller
                 ->get();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('events_name', function($row){
+                ->addColumn('events_name', function ($row) {
                     if ($row->event_id) {
                         $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->event_name . "</a>";
                     } else {
@@ -89,16 +93,16 @@ class PendaftaranEventsController extends Controller
                     }
                     return $event_name;
                 })
-                ->addColumn('action', function($row){
+                ->addColumn('action', function ($row) {
                     $btn = '<div class="row">';
-                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
                     $btn .= '</div>';
                     return $btn;
                 })
                 ->rawColumns(['action', 'events_name'])
                 ->make(true);
         }
-        
+
         return view('admin.pendaftaran.pelatihan');
     }
     /**
@@ -106,86 +110,54 @@ class PendaftaranEventsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function index(Request $request)
     {
+        $events         = Events::all();
+
         if ($request->ajax()) {
-            $data = PendaftaranEvents::select('*');
+            $eventId    = $request->input('event_id');
+
+            $query      = PendaftaranEvents::select('pendaftaran_events.*', 'events.name as events_name')
+                ->leftJoin('events', 'pendaftaran_events.event_id', '=', 'events.id');
+
+            if ($eventId) {
+                $query->where('pendaftaran_events.event_id', $eventId);
+            }
+
+            $data       = $query->get();
+
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('events_name', function ($row) {
+                    if ($row->event_id) {
+                        $event_name = "<a href='" . route('events.show', $row->event_id) . "'>" . $row->events_name . "</a>";
+                    } else {
+                        $event_name = "-";
+                    }
+                    return $event_name;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'events_name'])
+                ->make(true);
         }
-        
-        return view('admin.pendaftaran.index');
+
+        return view('admin.pendaftaran.index', compact('events'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function exportToExcel($eventId)
     {
-        //
+
+        $export = new PendaftaranExport($eventId);
+        return Excel::download($export, 'data_pendaftaran.xlsx');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         try {

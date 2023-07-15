@@ -26,8 +26,8 @@ class PendaftaranController extends Controller
 
     public function index(Request $request)
     {
-        $events = Events::where('status', true)->get();
-        $category = Category::all();
+        $events     = Events::where('status', true)->get();
+        $category   = Category::all();
         return view('pendaftaran', compact('category', 'events'));
     }
 
@@ -49,8 +49,8 @@ class PendaftaranController extends Controller
      */
     public function store(Request $request)
     {
-        $user_id = auth()->user()->id;
-        $event_id = $request->event_id;
+        $user_id    = auth()->user()->id;
+        $event_id   = $request->event_id;
 
         // Cek apakah pengguna sudah terdaftar pada acara yang sama
         $existingPendaftaran = PendaftaranEvents::where('user_id', $user_id)
@@ -59,23 +59,21 @@ class PendaftaranController extends Controller
 
         if ($existingPendaftaran) {
             // Jika sudah terdaftar, lakukan tindakan yang sesuai
-            return redirect()->route('form-pendaftaran')->withErrors([
-                'warning' => 'Anda sudah terdaftar pada acara ini.',
-            ]);
+            return redirect()->route('form-pendaftaran')->with('warning', 'Anda Telah Terdaftar Pada Event Ini');
         }
         $request->validate([
-            'name' => 'required|string',
-            'event_id' => 'required|integer',
-            'email' => 'required|email',
-            'no_hp' => 'required|string',
+            'name'      => 'required|string',
+            'event_id'  => 'required|integer',
+            'email'     => 'required|email',
+            'no_hp'     => 'required|string',
         ]);
 
         $pendaftaran = new PendaftaranEvents();
-        $pendaftaran->name = $request->name;
-        $pendaftaran->user_id = auth()->user()->id;
-        $pendaftaran->event_id = $request->event_id;
-        $pendaftaran->email = $request->email;
-        $pendaftaran->no_hp = $request->no_hp;
+        $pendaftaran->name      = $request->name;
+        $pendaftaran->user_id   = auth()->user()->id;
+        $pendaftaran->event_id  = $request->event_id;
+        $pendaftaran->email     = $request->email;
+        $pendaftaran->no_hp     = $request->no_hp;
         $pendaftaran->save();
 
         return redirect()->route('form-pendaftaran')->with('success', 'Selamat Anda Berhasil Mendaftar!');

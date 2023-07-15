@@ -30,8 +30,13 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
+        $category = Category::all();
         if ($request->ajax()) {
-            $data = Events::select('*')->orderBy('created_at', 'desc');;
+            $data = Events::select('*')->orderBy('created_at', 'desc');
+            $categoryId = $request->category_id;
+            if ($categoryId) {
+                $data->where('category_id', $categoryId);
+            }
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('category_name', function ($row) {
@@ -65,7 +70,7 @@ class EventController extends Controller
                 ->make(true);
         }
 
-        return view('admin.events.index');
+        return view('admin.events.index', compact('category'));
     }
 
     /**
@@ -88,38 +93,36 @@ class EventController extends Controller
     public function store(Request $request)
     {
         // Validasi data yang diinputkan oleh user
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'keterangan' => 'nullable',
-            'is_show' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'waktu_mulai' => 'required',
-            'jam' => 'required',
-            'pilih_keterangan' => 'required',
-            'ondar' => 'required',
-            'status' => 'required'
+        $validatedData          = $request->validate([
+            'name'              => 'required|max:255',
+            'category_id'       => 'required|exists:categories,id',
+            'keterangan'        => 'nullable',
+            'is_show'           => 'required',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'waktu_mulai'       => 'required',
+            'jam'               => 'required',
+            'pilih_keterangan'  => 'required',
+            'ondar'             => 'required',
+            'status'            => 'required'
         ]);
 
-        // Membuat event baru dengan data yang diinputkan oleh user
-        $event = new Events;
-        $event->name = $validatedData['name'];
-        $event->is_show = $validatedData['is_show'];
-        $event->category_id = $validatedData['category_id'];
-        $event->keterangan = $validatedData['keterangan'];
-        $event->waktu_mulai = $validatedData['waktu_mulai'];
-        $event->jam = $validatedData['jam'];
-        $event->pilih_keterangan = $validatedData['pilih_keterangan'];
-        $event->ondar = $validatedData['ondar'];
-        $event->status = $validatedData['status'];
+        $event                      = new Events;
+        $event->name                = $validatedData['name'];
+        $event->is_show             = $validatedData['is_show'];
+        $event->category_id         = $validatedData['category_id'];
+        $event->keterangan          = $validatedData['keterangan'];
+        $event->waktu_mulai         = $validatedData['waktu_mulai'];
+        $event->jam                 = $validatedData['jam'];
+        $event->pilih_keterangan    = $validatedData['pilih_keterangan'];
+        $event->ondar               = $validatedData['ondar'];
+        $event->status              = $validatedData['status'];
 
-        // Menyimpan gambar event (jika ada)
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
-            $extension = $file->getClientOriginalExtension();
+            $file               = $request->file('image');
+            $filename           = $file->getClientOriginalName();
+            $extension          = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-            $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
+            $filenameToStore    = $filenameWithoutExt . '_' . time() . '.' . $extension;
 
             if (!$file->move(public_path('/images/events/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
@@ -129,10 +132,8 @@ class EventController extends Controller
             $event->image = $filenameToStore;
         }
 
-        // Menyimpan event ke dalam database
         $event->save();
 
-        // Kembali ke halaman utama dengan pesan sukses
         return redirect()->route('events.index')->with('success', 'Event berhasil ditambahkan.');
     }
 
@@ -146,35 +147,35 @@ class EventController extends Controller
     public function show($id)
     {
         // Mendapatkan objek event berdasarkan ID
-        $events = Events::findOrFail($id);
-        $eventId = $id;
-        $dokumentasi = Dokumentasi::where('event_id', $eventId)->first();
-        $qrCode = QrCode::format('png')->size(300)->generate($eventId);
-        $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCode);
+        $events         = Events::findOrFail($id);
+        $eventId        = $id;
+        $dokumentasi    = Dokumentasi::where('event_id', $eventId)->first();
+        $qrCode         = QrCode::format('png')->size(300)->generate($eventId);
+        $qrCodeDataUri  = 'data:image/png;base64,' . base64_encode($qrCode);
 
-        $jenisKelamin = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+        $jenisKelamin   = User::join('absensis', 'users.id', '=', 'absensis.user_id')
             ->where('absensis.event_id', $eventId)
             ->select('users.jenis_kelamin', DB::raw('COUNT(*) as jumlah'))
             ->groupBy('users.jenis_kelamin')
             ->get();
-        $agama = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+        $agama          = User::join('absensis', 'users.id', '=', 'absensis.user_id')
             ->where('absensis.event_id', $eventId)
             ->select('users.agama', DB::raw('COUNT(*) as jumlah'))
             ->groupBy('users.agama')
             ->get();
-        $pendidikan = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+        $pendidikan     = User::join('absensis', 'users.id', '=', 'absensis.user_id')
             ->where('absensis.event_id', $eventId)
             ->select('users.pendidikan', DB::raw('COUNT(*) as jumlah'))
             ->groupBy('users.pendidikan')
             ->get();
-        $pekerjaan = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+        $pekerjaan      = User::join('absensis', 'users.id', '=', 'absensis.user_id')
             ->join('pekerjaan', 'users.pekerjaan_id', '=', 'pekerjaan.id')
             ->where('absensis.event_id', $eventId)
             ->select('users.pekerjaan_id', 'pekerjaan.nama', DB::raw('COUNT(*) as jumlah'))
             ->groupBy('users.pekerjaan_id', 'pekerjaan.nama')
             ->get();
 
-        $umur = User::join('absensis', 'users.id', '=', 'absensis.user_id')
+        $umur           = User::join('absensis', 'users.id', '=', 'absensis.user_id')
             ->where('absensis.event_id', $eventId)
             ->select(
                 DB::raw("CASE
@@ -191,15 +192,15 @@ class EventController extends Controller
             ->get();
 
         return view('admin.events.show', [
-            'events' => $events,
+            'events'        => $events,
             'qrCodeDataUri' => $qrCodeDataUri,
-            'eventsId' => $id,
-            'jenisKelamin' => $jenisKelamin,
-            'umur'  => $umur,
-            'pendidikan'  => $pendidikan,
-            'pekerjaan' => $pekerjaan,
-            'dokumentasi' => $dokumentasi,
-            'agama'  => $agama
+            'eventsId'      => $id,
+            'jenisKelamin'  => $jenisKelamin,
+            'umur'          => $umur,
+            'pendidikan'    => $pendidikan,
+            'pekerjaan'     => $pekerjaan,
+            'dokumentasi'   => $dokumentasi,
+            'agama'         => $agama
         ]);
     }
 
@@ -213,8 +214,8 @@ class EventController extends Controller
      */
     public function edit($id)
     {
-        $event = Events::findOrFail($id);
-        $categories = Category::all();
+        $event          = Events::findOrFail($id);
+        $categories     = Category::all();
         return view('admin.events.edit')->with(compact('categories', 'event'));
     }
 
@@ -228,17 +229,17 @@ class EventController extends Controller
     public function update(Request $request, $id)
     {
         // Validasi data yang diinputkan oleh user
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'keterangan' => 'nullable',
-            'is_show' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'waktu_mulai' => 'required',
-            'jam' => 'required',
-            'pilih_keterangan' => 'required',
-            'ondar' => 'required',
-            'status' => 'required'
+        $validatedData          = $request->validate([
+            'name'              => 'required|max:255',
+            'category_id'       => 'required|exists:categories,id',
+            'keterangan'        => 'nullable',
+            'is_show'           => 'required',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'waktu_mulai'       => 'required',
+            'jam'               => 'required',
+            'pilih_keterangan'  => 'required',
+            'ondar'             => 'required',
+            'status'            => 'required'
         ]);
 
         // Mengambil event yang akan diupdate
@@ -247,18 +248,17 @@ class EventController extends Controller
             return response()->json(['error' => 'Event tidak ditemukan.'], 404);
         }
 
-        // Update data event dengan data yang diinputkan oleh user
-        $event->name = $validatedData['name'];
-        $event->is_show = $validatedData['is_show'];
-        $event->category_id = $validatedData['category_id'];
-        $event->keterangan = $validatedData['keterangan'];
-        $event->waktu_mulai = $validatedData['waktu_mulai'];
-        $event->jam = $validatedData['jam'];
-        $event->pilih_keterangan = $validatedData['pilih_keterangan'];
-        $event->ondar = $validatedData['ondar'];
-        $event->status = $validatedData['status'];
+        $event->name                = $validatedData['name'];
+        $event->is_show             = $validatedData['is_show'];
+        $event->category_id         = $validatedData['category_id'];
+        $event->keterangan          = $validatedData['keterangan'];
+        $event->waktu_mulai         = $validatedData['waktu_mulai'];
+        $event->jam                 = $validatedData['jam'];
+        $event->pilih_keterangan    = $validatedData['pilih_keterangan'];
+        $event->ondar               = $validatedData['ondar'];
+        $event->status              = $validatedData['status'];
 
-        // Menghapus gambar lama jika ada gambar baru yang diunggah
+
         if ($request->hasFile('image')) {
             $oldImage = $event->image;
             if ($oldImage) {
@@ -268,26 +268,23 @@ class EventController extends Controller
             }
         }
 
-        // Menyimpan gambar event yang baru (jika ada)
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
-            $extension = $file->getClientOriginalExtension();
+            $file               = $request->file('image');
+            $filename           = $file->getClientOriginalName();
+            $extension          = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-            $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
+            $filenameToStore    = $filenameWithoutExt . '_' . time() . '.' . $extension;
 
             if (!$file->move(public_path('/images/events/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
-            $image = Image::make(public_path('/images/events/') . $filenameToStore);
+            $image              = Image::make(public_path('/images/events/') . $filenameToStore);
             $image->save(public_path('/images/events/') . $filenameToStore);
-            $event->image = $filenameToStore;
+            $event->image       = $filenameToStore;
         }
 
-        // Menyimpan event ke dalam database
         $event->save();
 
-        // Kembali ke halaman utama dengan pesan sukses
         return redirect()->route('events.index')->with('success', 'Event berhasil diupdate.');
     }
 
@@ -418,9 +415,9 @@ class EventController extends Controller
 
     function dataAbsensi($id)
     {
-        $event = Events::findOrFail($id);
+        $event  = Events::findOrFail($id);
 
-        $data = Absensi::where('event_id', $event->id)
+        $data   = Absensi::where('event_id', $event->id)
             ->with('user') // Mengambil relasi user
             ->get();
 

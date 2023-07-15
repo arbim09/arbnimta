@@ -25,10 +25,10 @@ class DokumentasiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($eventId)
     {
         $events = Events::where('status', false)->get();
-        return view('admin.dokumentasi.create', compact('events'));
+        return view('admin.dokumentasi.create', compact('events', 'eventId'));
     }
 
     /**
@@ -44,15 +44,14 @@ class DokumentasiController extends Controller
             'gambar1' => 'required',
         ]);
 
-        $dokumentasi = new Dokumentasi();
-
-        $dokumentasi->event_id = $request->event_id;
-        $gambar1 = $request->file('gambar1');
-        $gambar2 = $request->file('gambar2');
-        $gambar3 = $request->file('gambar3');
-        $gambar4 = $request->file('gambar4');
-        $gambar5 = $request->file('gambar5');
-        $path = 'images/dokumentasi';
+        $dokumentasi            = new Dokumentasi();
+        $dokumentasi->event_id  = $request->event_id;
+        $gambar1                = $request->file('gambar1');
+        $gambar2                = $request->file('gambar2');
+        $gambar3                = $request->file('gambar3');
+        $gambar4                = $request->file('gambar4');
+        $gambar5                = $request->file('gambar5');
+        $path                   = 'images/dokumentasi';
         if ($gambar1 !== null) {
             $dokumentasi->gambar1 = time() . '_gambar1_' . $gambar1->getClientOriginalName();
         }
@@ -123,8 +122,8 @@ class DokumentasiController extends Controller
     public function edit($id)
     {
 
-        $dokumentasi = Dokumentasi::findOrfail($id);
-        $events = Events::where('status', false)->get();
+        $dokumentasi    = Dokumentasi::findOrfail($id);
+        $events         = Events::where('status', false)->get();
         return view('admin.dokumentasi.edit', compact('dokumentasi', 'events'));
     }
 
@@ -138,18 +137,18 @@ class DokumentasiController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'event_id' => 'required',
-            'gambar1' => 'sometimes',
+            'event_id'  => 'required',
+            'gambar1'   => 'sometimes',
         ]);
 
-        $dokumentasi = Dokumentasi::find($id);
-        $dokumentasi->event_id = $request->event_id;
-        $gambar1 = $request->file('gambar1');
-        $gambar2 = $request->file('gambar2');
-        $gambar3 = $request->file('gambar3');
-        $gambar4 = $request->file('gambar4');
-        $gambar5 = $request->file('gambar5');
-        $path = 'images/dokumentasi';
+        $dokumentasi            = Dokumentasi::find($id);
+        $dokumentasi->event_id  = $request->event_id;
+        $gambar1                = $request->file('gambar1');
+        $gambar2                = $request->file('gambar2');
+        $gambar3                = $request->file('gambar3');
+        $gambar4                = $request->file('gambar4');
+        $gambar5                = $request->file('gambar5');
+        $path                   = 'images/dokumentasi';
 
         if ($gambar1 !== null) {
             if ($dokumentasi->gambar1) {

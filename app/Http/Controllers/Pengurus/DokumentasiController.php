@@ -136,18 +136,18 @@ class DokumentasiController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'event_id' => 'required',
-            'gambar1' => 'sometimes',
+            'event_id'  => 'required',
+            'gambar1'   => 'sometimes',
         ]);
 
-        $dokumentasi = Dokumentasi::find($id);
-        $dokumentasi->event_id = $request->event_id;
-        $gambar1 = $request->file('gambar1');
-        $gambar2 = $request->file('gambar2');
-        $gambar3 = $request->file('gambar3');
-        $gambar4 = $request->file('gambar4');
-        $gambar5 = $request->file('gambar5');
-        $path = 'images/dokumentasi';
+        $dokumentasi            = Dokumentasi::find($id);
+        $dokumentasi->event_id  = $request->event_id;
+        $gambar1                = $request->file('gambar1');
+        $gambar2                = $request->file('gambar2');
+        $gambar3                = $request->file('gambar3');
+        $gambar4                = $request->file('gambar4');
+        $gambar5                = $request->file('gambar5');
+        $path                   = 'images/dokumentasi';
 
         if ($gambar1 !== null) {
             if ($dokumentasi->gambar1) {

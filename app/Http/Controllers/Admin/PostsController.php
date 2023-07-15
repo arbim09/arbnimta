@@ -74,37 +74,37 @@ class PostsController extends Controller
     public function store(Request $request)
     {
 
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:2048', // tambahan validasi pada input gambar
+        $validatedData      = $request->validate([
+            'title'         => 'required|max:255',
+            'content'       => 'required',
+            'category_id'   => 'required|exists:categories,id',
+            'image'         => 'file|image|mimes:jpeg,png,jpg,gif|max:2048', // tambahan validasi pada input gambar
         ]);
 
-        $posts = new Posts;
+        $posts          = new Posts;
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
-            $extension = $file->getClientOriginalExtension();
+            $file               = $request->file('image');
+            $filename           = $file->getClientOriginalName();
+            $extension          = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-            $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
+            $filenameToStore    = $filenameWithoutExt . '_' . time() . '.' . $extension;
             if (!$file->move(public_path('/images/posts/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
-            $image = Image::make(public_path('/images/posts/') . $filenameToStore);
+            $image              = Image::make(public_path('/images/posts/') . $filenameToStore);
             $image->fit(400, 400);
             $image->save(public_path('/images/posts/') . $filenameToStore);
 
-            $posts->image = $filenameToStore;
+            $posts->image       = $filenameToStore;
         }
 
-        $posts->title = $validatedData['title'];
-        $posts->slug = Str::slug($validatedData['title'], '-');
-        $posts->content = $validatedData['content'];
-        $posts->category_id = $validatedData['category_id'];
-        $posts->penulis = Auth::user()->name;
+        $posts->title           = $validatedData['title'];
+        $posts->slug            = Str::slug($validatedData['title'], '-');
+        $posts->content         = $validatedData['content'];
+        $posts->category_id     = $validatedData['category_id'];
+        $posts->penulis         = Auth::user()->name;
         $posts->save();
-        // Redirect ke halaman index berita
+
         return redirect()->route('posts.index')->with('success', 'Berita berhasil disimpan.');
     }
 
@@ -129,8 +129,8 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        $posts = Posts::findOrFail($id);
-        $category_id = Category::all();
+        $posts          = Posts::findOrFail($id);
+        $category_id    = Category::all();
         return view('admin.posts.edit')->with(compact('posts', 'category_id'));
     }
 
@@ -143,41 +143,40 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'file|image|mimes:jpeg,png,jpg,gif|max:2048', // tambahan validasi pada input gambar
+        $validatedData      = $request->validate([
+            'title'         => 'required|max:255',
+            'content'       => 'required',
+            'category_id'   => 'required|exists:categories,id',
+            'image'         => 'file|image|mimes:jpeg,png,jpg,gif|max:2048', // tambahan validasi pada input gambar
         ]);
 
-        $posts = Posts::findOrFail($id); // ambil data berita berdasarkan id
+        $posts                  = Posts::findOrFail($id); // ambil data berita berdasarkan id
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = $file->getClientOriginalName();
-            $extension = $file->getClientOriginalExtension();
+            $file               = $request->file('image');
+            $filename           = $file->getClientOriginalName();
+            $extension          = $file->getClientOriginalExtension();
             $filenameWithoutExt = pathinfo($filename, PATHINFO_FILENAME);
-            $filenameToStore = $filenameWithoutExt . '_' . time() . '.' . $extension;
+            $filenameToStore    = $filenameWithoutExt . '_' . time() . '.' . $extension;
             if (!$file->move(public_path('/images/posts/'), $filenameToStore)) {
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
-            $image = Image::make(public_path('/images/posts/') . $filenameToStore);
+            $image              = Image::make(public_path('/images/posts/') . $filenameToStore);
             $image->fit(400, 400);
             $image->save();
             if ($posts->image && File::exists(public_path('/images/posts/' . $posts->image))) {
                 File::delete(public_path('/images/posts/' . $posts->image));
             }
-            $posts->image = $filenameToStore;
+            $posts->image       = $filenameToStore;
         }
-        // Update data berita di database
-        $posts->title = $validatedData['title'];
-        $posts->slug = Str::slug($validatedData['title'], '-');
-        $posts->content = $validatedData['content'];
-        $posts->category_id = $validatedData['category_id'];
-        $posts->penulis = Auth::user()->name;
+
+        $posts->title           = $validatedData['title'];
+        $posts->slug            = Str::slug($validatedData['title'], '-');
+        $posts->content         = $validatedData['content'];
+        $posts->category_id     = $validatedData['category_id'];
+        $posts->penulis         = Auth::user()->name;
         $posts->save();
 
-        // Redirect ke halaman index berita
         return redirect()->route('posts.index')->with('success', 'Berita berhasil diupdate.');
     }
 

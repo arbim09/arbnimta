@@ -19,24 +19,24 @@ class ContactController extends Controller
         if ($request->ajax()) {
             $data = Contact::select('*');
             return DataTables::of($data)
-                    ->addIndexColumn()
-                    ->addColumn('status', function($row){
-                        if ($row->is_read) {
-                            return '<span class="badge badge-success">Sudah dibaca</span>';
-                        } else {
-                            return '<span class="badge badge-danger">Belum dibaca</span>';
-                        }
-                    })
-                    ->addColumn('action', function($row){
-                        $btn = '<div class="row">';
-                        $btn .= '<a href="'.route('contact.show', $row->id).'" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
-                        $btn .= '<a href="'.route('contact.edit', $row->id).'" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
-                        $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData('.$row->id.')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
-                        $btn .= '</div>';
-                        return $btn;
-                    })
-                    ->rawColumns(['action', 'status'])
-                    ->make(true);
+                ->addIndexColumn()
+                ->addColumn('status', function ($row) {
+                    if ($row->is_read) {
+                        return '<span class="badge badge-success">Sudah dibaca</span>';
+                    } else {
+                        return '<span class="badge badge-danger">Belum dibaca</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<div class="row">';
+                    $btn .= '<a href="' . route('contact.show', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Detail"><i class="far fa-eye"></i>&nbsp</a>';
+                    $btn .= '<a href="' . route('contact.edit', $row->id) . '" class="btn btn-link btn-sm text-primary" title="Edit"><i class="fas fa-pen-fancy"></i>&nbsp</a>';
+                    $btn .= '&nbsp;&nbsp;&nbsp;<button onclick="deleteData(' . $row->id . ')" class="btn btn-link btn-sm text-danger" title="Hapus"><i class="fas fa-trash"></i></button>';
+                    $btn .= '</div>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'status'])
+                ->make(true);
         }
         return view('admin.contact.index');
     }
@@ -98,19 +98,19 @@ class ContactController extends Controller
         $contact = Contact::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'phone' => 'nullable|string|max:255',
-            'message' => 'required|string',
-            'status' => 'required|boolean',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|string|email|max:255',
+            'phone'     => 'nullable|string|max:255',
+            'message'   => 'required|string',
+            'status'    => 'required|boolean',
         ]);
 
         $contact->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'message' => $request->message,
-            'is_read' => $request->status,
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'phone'     => $request->phone,
+            'message'   => $request->message,
+            'is_read'   => $request->status,
         ]);
 
         return redirect()->route('contact.index')->with('success', 'Contact berhasil diupdate.');
@@ -124,6 +124,12 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $pesan = Contact::find($id);
+
+        if (!$pesan) {
+            return response()->json(['message' => 'pesan tidak ditemukan'], 404);
+        }
+        $pesan->delete();
+        return response()->json(['message' => 'pesan berhasil dihapus'], 200);
     }
 }

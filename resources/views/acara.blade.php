@@ -3,6 +3,19 @@
     <title>Acara</title>
 @endsection
 
+@push('css')
+    <style>
+        @media (max-width: 767px) {
+            .truncated-text {
+                display: block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="page">
         <div class="card card-style">
@@ -14,7 +27,7 @@
                         <a href="{{ route('show.acara', $event->id) }}">
                             <div class="d-flex mb-3">
                                 <div class="align-self-center me-auto">
-                                    <h5 class="font-500 font-15 pb-1">{{ $event->name }}</h5>
+                                    <h5 class="font-500 font-15 pb-1" id="event-name">{{ $event->name }}</h5>
                                     <span class="color-theme font-15 ps-2 opacity-50"><i class="bi bi-calendar font-16"></i>
                                         Waktu:
                                         {{ date('j F Y', strtotime($event->waktu_mulai)) }}</span>
@@ -22,10 +35,20 @@
                                         <span class="color-theme font-15 ps-2 opacity-50"><i
                                                 class="bi bi-clock font-16"></i> Pukul: {{ $event->jam }}</span>
                                     </div>
+                                    <div>
+                                        @if ($event->status)
+                                            <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Sedang
+                                                Berjalan</span>
+                                        @else
+                                            <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Telah Selesai</span>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="align-self-start ms-auto">
-                                    <img src="{{ asset('images/events/' . $event->image) }}" class="rounded-m ms-3"
-                                        width="90">
+                                    <div style="max-width: 300px; max-height: 400px;">
+                                        <img src="{{ asset('images/events/' . $event->image) }}" class="rounded-m ms-3"
+                                            style="width: 100%; height: 100%;">
+                                    </div>
                                 </div>
                             </div>
                         </a>

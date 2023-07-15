@@ -12,6 +12,15 @@
                 <button type="button" class="btn-close opacity-10" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+        @if (session('warning'))
+            <div class="alert bg-yellow-light shadow-bg shadow-bg-m alert-dismissible rounded-s fade show mb-0"
+                role="alert">
+                <i class="bi bi-exclamation-circle-fill pe-2"></i>
+                <strong>Perhatian</strong> - {{ session('warning') }}
+                <button type="button" class="btn-close opacity-10" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="content">
             <div class="card card-style p-5">
                 <h1 class="text-center font-800 font-30 mb-2">Pendaftaran</h1>
@@ -42,10 +51,10 @@
                         <select class="form-select select2" id="events" name="event_id" required>
                             <option value="">Pilih Events</option>
                             @foreach ($events as $ev)
-                                <option value="{{ $ev->id }}">{{ substr($ev->name, 0, 65) }}...</option>
-                                {{-- <option value="{{ $ev->id }}">{{ $ev->name }}</option> --}}
+                                <option value="{{ $ev->id }}">{{ substr($ev->name, 0, 100) }}</option>
                             @endforeach
                         </select>
+
                         <label for="events" class="color-theme form-label-always-active font-10 opacity-50">Events</label>
                     </div>
                     <button type="submit"

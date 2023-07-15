@@ -96,26 +96,35 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	Route::resource('/banners', 'BannerController')->middleware(['can:admin']);
 	Route::resource('/events', 'EventController')->middleware(['can:admin']);
 	Route::resource('/absensi', 'AbsensiController')->middleware(['can:admin']);
-	Route::resource('/dokumentasi', 'DokumentasiController')->middleware(['can:admin']);
+	// Route::resource('/dokumentasi', 'DokumentasiController')->middleware(['can:admin']);
 	Route::resource('/pendaftaran', 'PendaftaranEventsController')->middleware(['can:admin']);
-	// Route::post('/dokumentasi/{id}', [DokumentasiController::class, 'store'])->name('dokumentasi.store');
+
+
+	Route::get('/dokumentasi/create/{eventId}', 'DokumentasiController@create')->name('dokumentasi.create');
+	Route::post('/dokumentasi', 'DokumentasiController@store')->name('dokumentasi.store');
+
+
+
 
 	//datatable
 	Route::get('/acara', [EventController::class, 'acara'])->name('acara.event')->middleware(['can:admin']);
 	Route::get('/kegiatan', [EventController::class, 'kegiatan'])->name('kegiatan.event')->middleware(['can:admin']);
 	Route::get('/pelatihan', [EventController::class, 'pelatihan'])->name('pelatihan.event')->middleware(['can:admin']);
 	Route::get('/data-absensi/{id}', [EventController::class, 'dataAbsensi'])->name('dataAbsensi.event')->middleware(['can:admin']);
-	Route::get('/export/data-absensi/{id}', [EventController::class, 'exportToExcel'])->name('dataAbsensiExport.event')->middleware(['can:admin']);
 	Route::get('/absen/kegiatan', [AbsensiController::class, 'kegiatan'])->name('kegiatan.absensi')->middleware(['can:admin']);
 	Route::get('/absen/acara', [AbsensiController::class, 'acara'])->name('acara.absensi')->middleware(['can:admin']);
 	Route::get('/absen/pelatihan', [AbsensiController::class, 'pelatihan'])->name('pelatihan.absensi')->middleware(['can:admin']);
 	Route::get('/daftar/kegiatan', [PendaftaranEventsController::class, 'kegiatan'])->name('kegiatan.pendaftaran')->middleware(['can:admin']);
 	Route::get('/daftar/acara', [PendaftaranEventsController::class, 'acara'])->name('acara.pendaftaran')->middleware(['can:admin']);
 	Route::get('/daftar/pelatihan', [PendaftaranEventsController::class, 'pelatihan'])->name('pelatihan.pendaftaran')->middleware(['can:admin']);
-	// Route::resource('/user', 'UserController')->middleware('can:admin,pengurus');
+
+	//export Excel
+	Route::get('/export/data-absensi/{id}', [EventController::class, 'exportToExcel'])->name('dataAbsensiExport.event')->middleware(['can:admin']);
+	Route::get('/export/data-pendaftaran/{event_id}', [PendaftaranEventsController::class, 'exportToExcel'])->name('dataPendaftaranExport')->middleware(['can:admin']);
+
+
 
 	//Dokumentasi
-
 	Route::delete('dokumentasi/{id}/delete-gambar1', 'DokumentasiController@deleteGambar1')->name('dokumentasi.delete-gambar1');
 	Route::delete('dokumentasi/{id}/delete-gambar2', 'DokumentasiController@deleteGambar2')->name('dokumentasi.delete-gambar2');
 	Route::delete('dokumentasi/{id}/delete-gambar3', 'DokumentasiController@deleteGambar3')->name('dokumentasi.delete-gambar3');
@@ -136,6 +145,8 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	Route::view('/tables', 'admin.tables')->name('tables');
 });
 
+
+//Pengurus
 Route::group(['namespace' => 'Pengurus', 'middleware' => 'auth', 'prefix' => 'pengurus'], function () {
 
 	//resource
@@ -162,6 +173,11 @@ Route::group(['namespace' => 'Pengurus', 'middleware' => 'auth', 'prefix' => 'pe
 	Route::get('/pendaftar/acara', [PendaftaranController::class, 'acara'])->name('acara.pendaftarans')->middleware(['can:pengurus']);
 	Route::get('/pendaftar/pelatihans', [PendaftaranController::class, 'pelatihan'])->name('pelatihan.pendaftarans')->middleware(['can:pengurus']);
 	Route::get('/data-absensi/{id}', [PengurusEventController::class, 'dataAbsensi'])->name('pengurus.dataAbsensi.event')->middleware(['can:pengurus']);
+	Route::get('/pendaftar', [PendaftaranController::class, 'index'])->name('pengurus.pendaftaran.event')->middleware(['can:pengurus']);
+
+
+	//export Excel
+	Route::get('/export/data-pendaftaran/{event_id}', [PendaftaranController::class, 'exportToExcel'])->name('pengurus.dataPendaftaranExport')->middleware(['can:pengurus']);
 	Route::get('/export/data-absensi/{id}', [PengurusEventController::class, 'exportToExcel'])->name('pengurus.dataAbsensiExport.event')->middleware(['can:pengurus']);
 
 	Route::get('/', [UserController::class, 'index'])->name('pengurus');

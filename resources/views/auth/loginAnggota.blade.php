@@ -40,7 +40,7 @@
                     @csrf
                     <div class="form-custom form-label form-icon mb-3">
                         <i class="bi bi-person-circle font-14"></i>
-                        <input type="text" class="form-control rounded-xs" id="email" name="email"
+                        <input type="email" class="form-control rounded-xs" id="email" name="email"
                             placeholder="Email" required />
                         <label for="email" class="color-theme">Email</label>
                     </div>

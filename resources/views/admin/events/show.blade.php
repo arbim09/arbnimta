@@ -7,14 +7,21 @@
         .delete-button {
             float: right;
         }
+
+        #pieChart {
+            max-width: 100%;
+            max-height: 100%;
+        }
     </style>
     <link href="{{ asset('template/backend/sb-admin-2') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 @endpush
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="btn-group">
+        <div class="card-header d-flex align-items-center" data-toggle="collapse" data-target="#cardBody">
+            <h5 class="card-title">Detail Event: {{ $events->name }}</h5>
+            <div class="btn-group ml-auto">
+                <!-- Menambahkan kelas "ml-auto" di sini -->
                 <a href="{{ route('events.index') }}" class="btn btn-sm btn-secondary" data-toggle="tooltip"
                     title="Kembali ke Daftar Event">
                     <i class="far fa-arrow-alt-circle-left mr-1"></i> Kembali
@@ -25,49 +32,55 @@
                 </a>
             </div>
         </div>
-        <div class="card-body">
-            <table class="table table-hover table-bordered">
-                <tr>
-                    <th style="width: 20%;">Nama Event</th>
-                    <td style="width: 80%;">{{ $events->name }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 20%;">Kategori</th>
-                    <td style="width: 80%;">{{ $events->category->name }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 20%;">Waktu Event</th>
-                    <td style="width: 80%;">
-                        {{ $events->waktu_mulai ? \Carbon\Carbon::parse($events->waktu_mulai)->format('d/m/Y') : '-' }} Jam:
-                        {{ $events->jam }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 20%;">Keterangan Daring/Luring</th>
-                    <td style="width: 80%;">{{ $events->ondar }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 20%;">Status Event</th>
-                    <td style="width: 80%;">{{ $events->status ? 'Berjalan' : 'Selesai' }}</td>
-                </tr>
-                <tr>
-                    <th style="width: 20%;">Keterangan</th>
-                    <td style="width: 80%;">{!! html_entity_decode($events->keterangan) !!}</td>
-                </tr>
-                <tr>
-                    <th style="width: 20%;">Foto</th>
-                    <td style="width: 80%;"><img src="{{ asset('images/events/' . $events->image) }}"
-                            alt="{{ $events->name }}" class="img-fluid" style="max-width: 200px; max-height: 200px;"></td>
-                </tr>
-                <tr>
-                    <th style="width: 20%;">QR Code</th>
-                    <td style="width: 80%;"><img src="{{ $qrCodeDataUri }}" alt="QR Code"></td>
-                </tr>
-            </table>
+
+        <div class="collapse show" id="cardBody">
+            <div class="card-body ">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        <th style="width: 20%;">Nama Event</th>
+                        <td style="width: 80%;">{{ $events->name }}</td>
+                    </tr>
+                    <tr>
+                        <th style="width: 20%;">Kategori</th>
+                        <td style="width: 80%;">{{ $events->category->name }}</td>
+                    </tr>
+                    <tr>
+                        <th style="width: 20%;">Waktu Event</th>
+                        <td style="width: 80%;">
+                            {{ $events->waktu_mulai ? \Carbon\Carbon::parse($events->waktu_mulai)->format('d/m/Y') : '-' }}
+                            Jam:
+                            {{ $events->jam }}</td>
+                    </tr>
+                    <tr>
+                        <th style="width: 20%;">Keterangan Daring/Luring</th>
+                        <td style="width: 80%;">{{ $events->ondar }}</td>
+                    </tr>
+                    <tr>
+                        <th style="width: 20%;">Status Event</th>
+                        <td style="width: 80%;">{{ $events->status ? 'Berjalan' : 'Selesai' }}</td>
+                    </tr>
+                    <tr>
+                        <th style="width: 20%;">Keterangan</th>
+                        <td style="width: 80%;">{!! html_entity_decode($events->keterangan) !!}</td>
+                    </tr>
+                    <tr>
+                        <th style="width: 20%;">Foto</th>
+                        <td style="width: 80%;"><img src="{{ asset('images/events/' . $events->image) }}"
+                                alt="{{ $events->name }}" class="img-fluid" style="max-width: 200px; max-height: 200px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="width: 20%;">QR Code</th>
+                        <td style="width: 80%;"><img src="{{ $qrCodeDataUri }}" alt="QR Code"></td>
+                    </tr>
+                </table>
+            </div>
         </div>
+
     </div>
     <br>
     <div class="card">
-        <div class="card-header d-flex align-items-center">
+        <div class="card-header d-flex align-items-center" data-toggle="" data-target="">
             <h5 class="card-title">Data Yang Mengikuti Event:</h5>
             <div class="card-tools ml-auto mr-0">
                 <a href="{{ route('dataAbsensiExport.event', $events->id) }}" class="btn btn-primary btn-sm"
@@ -76,24 +89,27 @@
                 </a>
             </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered data-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Pendidikan</th>
-                            <th>Pekerjaan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+        <div class="" id="">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Pendidikan</th>
+                                <th>Pekerjaan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
     <br>
     <div class="card collapsed-card">
@@ -128,9 +144,8 @@
                     </div>
                 </div>
             </div>
-
             <!-- Pie Chart -->
-            <div class="col-xl-4 col-lg-5">
+            <div class="col-xl-4 col-lg-12">
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -158,8 +173,8 @@
                             <i class="fas fa-edit  mr-1"></i> Edit
                         </a>
                     @else
-                        <a href="{{ route('dokumentasi.create') }}" class="btn btn-primary btn-sm" data-toggle="tooltip"
-                            title="#">
+                        <a href="{{ route('dokumentasi.create', ['eventId' => $events->id]) }}"
+                            class="btn btn-primary btn-sm" data-toggle="tooltip" title="#">
                             <i class="fas fa-upload  mr-1"></i> Upload
                         </a>
                     @endif

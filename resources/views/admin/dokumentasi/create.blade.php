@@ -27,8 +27,8 @@
                     <select class="form-control select2" id="events" name="event_id" required>
                         <option value="">Pilih Events</option>
                         @foreach ($events as $ev)
-                            <option value="{{ $ev->id }}">{{ $ev->name }}</option>
-                            {{-- <option value="{{ $ev->id }}">{{ $ev->name }}</option> --}}
+                            <option value="{{ $ev->id }}" {{ $ev->id == $eventId ? 'selected' : '' }}>
+                                {{ $ev->name }}</option>
                         @endforeach
                     </select>
                 </div>
