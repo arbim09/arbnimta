@@ -8,25 +8,18 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     @yield('title')
-    <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/styles/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/fonts/bootstrap-icons.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/styles/style.css') }}">
-    {{-- <link rel="stylesheet" type="text/css"
-        href="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/styles/bootstrap.css">
-    <link rel="stylesheet" type="text/css"
-        href="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/fonts/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css"
-        href="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/styles/style.css"> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('anggotatemplate/styles/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('anggotatemplate/fonts/bootstrap-icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('anggotatemplate/styles/style.css') }}">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
         rel="stylesheet">
-    <link rel="manifest" href="{{ asset('/anggotatemplate/_manifest.json') }}">
+    <link rel="manifest" href="{{ asset('anggotatemplate/_manifest.json') }}">
     <meta id="theme-check" name="theme-color" content="#FFFFFF">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('images/backend/logo-rtik.ico') }}" />
-    {{-- <link rel="shortcut icon" href="https://1970-114-122-84-104.ngrok-free.app/images/backend/logo-rtik.ico" /> --}}
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @stack('css')
 
@@ -47,13 +40,6 @@
         <div id="menu-main" data-menu-active="nav-homes" data-menu-load="#" style="width:280px;"
             class="offcanvas offcanvas-start offcanvas-detached rounded-m">
         </div>
-
-        <!-- Menu Highlights-->
-        {{-- <div id="menu-color" data-menu-load="menu-highlights.html" style="height:340px"
-            class="offcanvas offcanvas-bottom offcanvas-detached rounded-m">
-        </div> --}}
-
-
         <!-- Your Page Content Goes Here-->
         <div class="page-content header-clear-medium">
             @yield('content')
@@ -62,10 +48,8 @@
     </div>
     <!--End of Page ID-->
 
-    <script src="{{ asset('/anggotatemplate/scripts/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('/anggotatemplate/scripts/custom.js') }}"></script>
-    {{-- <script src="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/scripts/bootstrap.min.js"></script>
-    <script src="https://1970-114-122-84-104.ngrok-free.app/anggotatemplate/scripts/custom.js"></script> --}}
+    <script src="{{ asset('anggotatemplate/scripts/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('anggotatemplate/scripts/custom.js') }}"></script>
 
     @stack('js')
 </body>

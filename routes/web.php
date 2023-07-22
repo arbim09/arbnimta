@@ -99,7 +99,8 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 	// Route::resource('/dokumentasi', 'DokumentasiController')->middleware(['can:admin']);
 	Route::resource('/pendaftaran', 'PendaftaranEventsController')->middleware(['can:admin']);
 
-
+	Route::get('/dokumentasi/edit/{id}', 'DokumentasiController@edit')->name('dokumentasi.edit');
+	Route::put('/dokumentasi/update/{id}', 'DokumentasiController@update')->name('dokumentasi.update');
 	Route::get('/dokumentasi/create/{eventId}', 'DokumentasiController@create')->name('dokumentasi.create');
 	Route::post('/dokumentasi', 'DokumentasiController@store')->name('dokumentasi.store');
 
@@ -156,7 +157,7 @@ Route::group(['namespace' => 'Pengurus', 'middleware' => 'auth', 'prefix' => 'pe
 	route::get('/dokumen/create', [PengurusDokumentasiController::class, 'create'])->name('dokumen.create')->middleware('can:pengurus');
 	route::post('/dokumen/create', [PengurusDokumentasiController::class, 'store'])->name('dokumen.store')->middleware('can:pengurus');
 	route::get('/dokumen/edit/{id}', [PengurusDokumentasiController::class, 'edit'])->name('dokumen.edit')->middleware('can:pengurus');
-	Route::post('/dokumen/edit/{id}', [PengurusDokumentasiController::class, 'update'])->name('dokumen.update')->middleware('can:pengurus');
+	Route::post('/dokumen/update/{id}', [PengurusDokumentasiController::class, 'update'])->name('dokumen.update')->middleware('can:pengurus');
 
 	//delete
 	Route::delete('/daftar/{id}', 'PendaftaranController@destroy')->name('daftar.destroy');

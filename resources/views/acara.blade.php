@@ -92,23 +92,25 @@
         var loadMoreButton = document.getElementById('loadMoreButton');
         var acaraContainer = document.getElementById('acaraContainer');
 
-        loadMoreButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentPage++;
+        if (loadMoreButton) {
+            loadMoreButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage++;
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', "{{ route('load-more-acara') }}" + "?page=" + currentPage, true);
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', "{{ route('load-more-acara') }}" + "?page=" + currentPage, true);
 
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = xhr.responseText;
-                    var parser = new DOMParser();
-                    var newAcara = parser.parseFromString(response, 'text/html').querySelector(
-                        '#acaraContainer');
-                    acaraContainer.innerHTML += newAcara.innerHTML;
-                }
-            };
-            xhr.send();
-        });
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = xhr.responseText;
+                        var parser = new DOMParser();
+                        var newAcara = parser.parseFromString(response, 'text/html').querySelector(
+                            '#acaraContainer');
+                        acaraContainer.innerHTML += newAcara.innerHTML;
+                    }
+                };
+                xhr.send();
+            });
+        }
     </script>
 @endpush

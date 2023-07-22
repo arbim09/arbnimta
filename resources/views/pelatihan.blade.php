@@ -60,7 +60,10 @@
                     <div class="text-center">
                         <p>Tidak ada pelatihan lain yang tersedia.</p>
                         <script>
-                            document.getElementById('loadMoreButton').style.display = 'none';
+                            var loadMoreButton = document.getElementById('loadMoreButton');
+                            if (loadMoreButton) {
+                                loadMoreButton.style.display = 'none';
+                            }
                         </script>
                     </div>
                 @endif
@@ -81,26 +84,31 @@
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
     <script>
         var currentPage = 1;
         var loadMoreButton = document.getElementById('loadMoreButton');
         var pelatihanContainer = document.getElementById('pelatihanContainer');
-        loadMoreButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentPage++;
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', "{{ route('load-more-pelatihan') }}" + "?page=" + currentPage, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = xhr.responseText;
-                    var parser = new DOMParser();
-                    var newPelatihan = parser.parseFromString(response, 'text/html').querySelector(
-                        '#pelatihanContainer');
-                    pelatihanContainer.innerHTML += newPelatihan.innerHTML;
-                }
-            };
 
-            xhr.send();
-        });
+        if (loadMoreButton) {
+            loadMoreButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage++;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', "{{ route('load-more-pelatihan') }}" + "?page=" + currentPage, true);
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = xhr.responseText;
+                        var parser = new DOMParser();
+                        var newPelatihan = parser.parseFromString(response, 'text/html').querySelector(
+                            '#pelatihanContainer');
+                        pelatihanContainer.innerHTML += newPelatihan.innerHTML;
+                    }
+                };
+                xhr.send();
+            });
+        }
     </script>
 @endpush

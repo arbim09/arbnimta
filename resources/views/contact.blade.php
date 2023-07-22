@@ -11,7 +11,7 @@
         </div>
     @endif
     <!-- Your Page Content Goes Here-->
-    <div class="content">
+    <div class="content-page">
         <div class="card p-5">
             <h1 class="pb-2">Hubungi Kami</h1>
             <div class="divider"></div>

@@ -1,6 +1,6 @@
 @extends('layout.backend.app', [
-    'title' => 'Tambah Dokumentasi',
-    'pageTitle' => 'Tambah Dokumentasi',
+    'title' => 'Edit Dokumentasi',
+    'pageTitle' => 'Edit Dokumentasi',
 ])
 
 @push('css')

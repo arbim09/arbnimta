@@ -25,7 +25,7 @@
     </style>
 @endpush
 @section('content')
-    <div class="content text-center">
+    <div class="content-page text-center">
         <div class="card card-style">
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
@@ -88,7 +88,10 @@
                 <div class="text-center">
                     <p>Tidak ada berita lain yang tersedia.</p>
                     <script>
-                        document.getElementById('loadMoreButton').style.display = 'none';
+                        var loadMoreButton = document.getElementById('loadMoreButton');
+                        if (loadMoreButton) {
+                            loadMoreButton.style.display = 'none';
+                        }
                     </script>
                 </div>
             @endif
@@ -105,30 +108,35 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         var currentPage = 1;
         var loadMoreButton = document.getElementById('loadMoreButton');
         var beritaContainer = document.getElementById('beritaContainer');
 
-        loadMoreButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentPage++;
+        if (loadMoreButton) {
+            loadMoreButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage++;
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', "{{ route('load-more-berita') }}" + "?page=" + currentPage, true);
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', "{{ route('load-more-berita') }}" + "?page=" + currentPage, true);
 
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = xhr.responseText;
-                    var parser = new DOMParser();
-                    var newBerita = parser.parseFromString(response, 'text/html').querySelector(
-                        '#beritaContainer');
-                    beritaContainer.innerHTML += newBerita.innerHTML;
-                }
-            };
-            xhr.send();
-        });
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = xhr.responseText;
+                        var parser = new DOMParser();
+                        var newBerita = parser.parseFromString(response, 'text/html').querySelector(
+                            '#beritaContainer');
+                        beritaContainer.innerHTML += newBerita.innerHTML;
+                    }
+                };
+                xhr.send();
+            });
+        }
     </script>
+
+
     <script>
         $(document).ready(function() {
             $('.carousel').carousel({
