@@ -107,7 +107,7 @@
             </div>
         </div>
     </li>
-    @can('admin')
+    {{-- @can('admin')
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAbsensi"
                 aria-expanded="true" aria-controls="collapseAbsensi">
@@ -126,7 +126,7 @@
                 </div>
             </div>
         </li>
-    @endcan
+    @endcan --}}
 
     @can('admin')
         <li class="nav-item">
@@ -165,43 +165,6 @@
             </div>
         </div>
     </li>
-
-    {{-- @can('admin')
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                aria-expanded="true" aria-controls="collapsePages">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Pages</span>
-            </a>
-            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" href="{{ route('login') }}">Login</a>
-                    <a class="collapse-item" href="{{ route('register') }}">Register</a>
-                    <a class="collapse-item" href="{{ route('forgot-password') }}">Forgot Password</a>
-                    <div class="collapse-divider"></div>
-                    <h6 class="collapse-header">Other Pages:</h6>
-                    <a class="collapse-item" href="{{ route('404-page') }}">404 Page</a>
-                    <a class="collapse-item" href="{{ route('blank-page') }}">Blank Page</a>
-                </div>
-            </div>
-        </li>
-    
-        <!-- Nav Item - Charts -->
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('chart') }}">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Charts</span></a>
-        </li>
-    
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('tables') }}">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Tables</span></a>
-        </li>
-@endcan --}}
 
 
     <!-- Divider -->

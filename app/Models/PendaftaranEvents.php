@@ -10,7 +10,7 @@ class PendaftaranEvents extends Model
     use HasFactory;
 
     protected $table = 'pendaftaran_events';
-    protected $fillable = ['name', 'user_id', 'event_id', 'email', 'no_hp'];
+    protected $fillable = ['name', 'user_id', 'event_id', 'email', 'no_hp', 'pekerjaan_id', 'pendidikan', 'organisasi', 'nama_event'];
 
     public function user()
     {
@@ -20,5 +20,10 @@ class PendaftaranEvents extends Model
     public function event()
     {
         return $this->belongsTo(Events::class);
+    }
+
+    public function pekerjaan()
+    {
+        return $this->belongsTo(Pekerjaan::class);
     }
 }

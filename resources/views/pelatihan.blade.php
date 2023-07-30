@@ -30,7 +30,10 @@
                                     <div>
                                         @if ($event->status)
                                             <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Sedang
-                                                Berjalan</span>
+                                                Berjalan</span><br>
+                                            <a href="{{ route('form-pendaftaran', $event->id) }}"
+                                                class="ps-3 pb-1 pt-3 font-17 color-highlight">Daftar
+                                                Sekarang</a>
                                         @else
                                             <span class="ps-3 pb-1 pt-3 font-13 color-highlight">Event Telah Selesai</span>
                                         @endif

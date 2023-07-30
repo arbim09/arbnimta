@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/styles/bootstrap.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/fonts/bootstrap-icons.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/anggotatemplate/styles/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
@@ -18,7 +19,7 @@
     <link rel="manifest" href="{{ asset('/anggotatemplate/_manifest.json') }}">
     <meta id="theme-check" name="theme-color" content="#FFFFFF">
     <link rel="shortcut icon" href="{{ asset('images/backend/logo-rtik.ico') }}" />
-    @stack('css')
+</head>
 
 <body class="theme-light">
 
@@ -92,7 +93,8 @@
                                 <option value="Laki-laki">Laki-laki</option>
                                 <option value="Perempuan">Perempuan</option>
                             </select>
-                            <label for="gender" class="color-theme form-label-always-active font-10 opacity-50">Jenis
+                            <label for="gender"
+                                class="color-theme form-label-always-active font-10 opacity-50">Jenis
                                 Kelamin</label>
                             <span>(required)</span>
                         </div>
@@ -197,6 +199,8 @@
 
     <script src="{{ asset('/anggotatemplate/scripts/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/anggotatemplate/scripts/custom.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> --}}
     <script>
         $(document).ready(function() {
             $('#anggota').submit(function(e) {
@@ -240,28 +244,12 @@
             });
         });
     </script>
-    {{-- <script>
-        function checkPasswordMatch() {
-            var password = document.getElementById("password").value;
-            var confirmPassword = document.getElementById("password_confirmation").value;
-
-            if (password !== confirmPassword) {
-                var alertDiv = document.createElement("div");
-                alertDiv.classList.add("alert", "bg-red-light", "shadow-bg", "shadow-bg-m", "alert-dismissible",
-                    "rounded-s", "fade", "show", "mb-0");
-                alertDiv.setAttribute("role", "alert");
-                alertDiv.innerHTML =
-                    '<i class="bi bi-exclamation-triangle-fill pe-2"></i><strong>Error</strong> - Password tidak cocok.';
-
-                var parentDiv = document.getElementById("password_confirmation").parentNode;
-                parentDiv.insertBefore(alertDiv, document.getElementById("password_confirmation").nextSibling);
-
-                setTimeout(function() {
-                    alertDiv.remove();
-                }, 5000);
-            }
-        }
-    </script> --}}
+    <script>
+        // Inisialisasi Select2 pada elemen dengan class "select2"
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
 
     <script>
         // Fungsi untuk menghilangkan notifikasi setelah 10 detik

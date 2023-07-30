@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Events;
 use App\Models\Category;
+use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
 use App\Models\PendaftaranEvents;
 use Illuminate\Support\Facades\DB;
 use Dotenv\Exception\ValidationException;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class PendaftaranController extends Controller
 {
@@ -24,11 +26,13 @@ class PendaftaranController extends Controller
         return json_encode($events);
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $event_id)
     {
-        $events     = Events::where('status', true)->get();
+        $events     = Events::findOrfail($event_id);
+        // $events     = Events::where('status', true)->get();
         $category   = Category::all();
-        return view('pendaftaran', compact('category', 'events'));
+        $pekerjaan  = Pekerjaan::all();
+        return view('pendaftaran', compact('category', 'events', 'pekerjaan'));
     }
 
     /**
@@ -49,8 +53,8 @@ class PendaftaranController extends Controller
      */
     public function store(Request $request)
     {
-        $user_id    = auth()->user()->id;
-        $event_id   = $request->event_id;
+        $user_id = auth()->user()->id;
+        $event_id = $request->event_id;
 
         // Cek apakah pengguna sudah terdaftar pada acara yang sama
         $existingPendaftaran = PendaftaranEvents::where('user_id', $user_id)
@@ -59,24 +63,29 @@ class PendaftaranController extends Controller
 
         if ($existingPendaftaran) {
             // Jika sudah terdaftar, lakukan tindakan yang sesuai
-            return redirect()->route('form-pendaftaran')->with('warning', 'Anda Telah Terdaftar Pada Event Ini');
+            return redirect()->route('form-pendaftaran', $event_id)->with('warning', 'Anda Telah Terdaftar Pada Event Ini');
         }
+
         $request->validate([
-            'name'      => 'required|string',
-            'event_id'  => 'required|integer',
-            'email'     => 'required|email',
-            'no_hp'     => 'required|string',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'no_hp' => 'required|string',
         ]);
 
         $pendaftaran = new PendaftaranEvents();
-        $pendaftaran->name      = $request->name;
-        $pendaftaran->user_id   = auth()->user()->id;
-        $pendaftaran->event_id  = $request->event_id;
-        $pendaftaran->email     = $request->email;
-        $pendaftaran->no_hp     = $request->no_hp;
+        $pendaftaran->name = $request->name;
+        $pendaftaran->user_id = auth()->user()->id;
+        $pendaftaran->event_id = $event_id;
+        $pendaftaran->email = $request->email;
+        $pendaftaran->pendidikan = $request->pendidikan;
+        $pendaftaran->organisasi = $request->organisasi;
+        $pendaftaran->no_hp = $request->no_hp;
         $pendaftaran->save();
 
-        return redirect()->route('form-pendaftaran')->with('success', 'Selamat Anda Berhasil Mendaftar!');
+        // Debugging atau hapus baris berikut jika tidak diperlukan
+        // dd($pendaftaran);
+
+        return redirect()->route('form-pendaftaran', $event_id)->with('success', 'Selamat Anda Berhasil Mendaftar!');
     }
 
     /**

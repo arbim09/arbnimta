@@ -13,10 +13,10 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name ?? 'Guest' }}</span>
-                @php
+                {{-- @php
                     $foto_profil = auth()->user()->foto_profil ? asset('images/profil/') . '/' . auth()->user()->foto_profil : asset('images/profil/user.png');
                 @endphp
-                <img class="img-profile rounded-circle" src="{{ $foto_profil }}">
+                <img class="img-profile rounded-circle" src="{{ $foto_profil }}"> --}}
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

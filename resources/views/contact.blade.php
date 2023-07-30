@@ -50,6 +50,16 @@
                     <label for="message" class="color-theme form-label-always-active font-10 opacity-50">Pesan</label>
                     <span>(required)</span>
                 </div>
+                {{-- <div class="form-custom form-label form-icon mb-3">
+                    <label for="captcha" class="color-theme form-label-always-active font-10 opacity-50">CAPTCHA</label>
+                    <div class="captcha-container">
+                        {!! captcha_img() !!}
+                        <input id="captcha" type="text" class="form-control" name="captcha" required>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="reloadCaptcha()">Reload
+                            CAPTCHA</button>
+                    </div>
+                </div> --}}
+
                 <button type="submit"
                     class="btn btn-m btn-full rounded-sm shadow-l bg-green-dark text-uppercase font-900 mt-4">Kirim</button>
             </form>

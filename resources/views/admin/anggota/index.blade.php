@@ -13,8 +13,14 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-
+                <div class="card-header d-flex align-items-center">
+                    <h5 class="card-title">Data Anggota</h5>
+                    <div class="card-tools ml-auto mr-0">
+                        <a href="{{ route('dataAnggotaExport') }}" id="export-link" class="btn btn-primary btn-sm"
+                            data-toggle="tooltip" title="Eksport">
+                            <i class="fas fa-download mr-1"></i> Eksport
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

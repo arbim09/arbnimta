@@ -203,7 +203,6 @@
             $(document).ready(function() {
                 $('#anggota').submit(function(e) {
                     e.preventDefault();
-
                     var formData = new FormData(this);
                     $.ajax({
                         url: '{{ route('profil.update', $user->id) }}',

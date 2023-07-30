@@ -66,8 +66,7 @@
             <div id="beritaContainer" class="row text-center row-cols-3 mb-n1">
                 <!-- Konten berita awal -->
                 @foreach ($berita as $brt)
-                    <a class="col" data-gallery="gallery-1" href="{{ route('berita.show', $brt->slug) }}"
-                        title="{{ $brt->title }}">
+                    <a class="col" href="{{ route('berita.show', $brt->slug) }}" title="{{ $brt->title }}">
                         <img src="{{ asset('/images/posts/' . $brt->image) }}" class="preload-img img-fluid rounded-m"
                             alt="img">
                         <br>

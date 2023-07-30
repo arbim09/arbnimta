@@ -7,6 +7,7 @@
     <link href="{{ asset('template/backend/sb-admin-2') }}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('vendor/sweetalert/sweetalert.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 
 @section('content')
@@ -25,7 +26,7 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="event-acara">Pilih Event: </label>
-                <select id="event-acara" class="form-control" name="event_id" data-event-id="">
+                <select id="event-acara" class="form-control select2" name="event_id" data-event-id="">
                     <option value="">Semua</option>
                     @foreach ($events as $event)
                         <option value="{{ $event->id }}">{{ $event->name }}</option>
@@ -57,6 +58,7 @@
     <script src="{{ asset('template/backend/sb-admin-2') }}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('template/backend/sb-admin-2') }}/js/demo/datatables-demo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -140,6 +142,13 @@
                 });
             });
         }
+    </script>
+
+    <script>
+        // Inisialisasi Select2 pada elemen dengan class "select2"
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
     </script>
 
     <script>

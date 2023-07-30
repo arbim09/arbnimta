@@ -2,6 +2,7 @@
 @section('title')
     <title>Kegiatan</title>
 @endsection
+
 @section('content')
     <div id="page">
         <div class="content">
@@ -19,11 +20,19 @@
 
                     <div class="divider mb-0 mx-3"></div>
                     <div class="divider mb-0 mx-3"></div>
-                    <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3"
+                    {{-- <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3"
                         style="display: flex; flex-direction: column; align-items: center;">
                         <img src="{{ asset('images/events/' . $events->image) }}" alt="{{ $events->name }}"
                             class="img-fluid" style="max-width: 500px; max-height: 500px; ">
+                    </div> --}}
+                    <div class="list-group list-custom list-group-m rounded-xs list-group-flush px-3"
+                        style="display: flex; flex-direction: column; align-items: center;">
+                        <div class="d-flex justify-content-center mb-3">
+                            <img src="{{ asset('images/events/' . $events->image) }}" alt="{{ $events->name }}"
+                                class="img-fluid" style="max-width: 300px; max-height: 600px;">
+                        </div>
                     </div>
+
                     <div class="divider mb-0 mx-3"></div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 5px;">
                         <span
@@ -59,16 +68,18 @@
                             @php
                                 $gambarUploaded = false;
                             @endphp
-                            <div class="row text-center row-cols-3 mb-0">
+                            <div class="row text-center">
                                 @if ($dokumentasi->gambar1)
                                     @php
                                         $gambarUploaded = true;
                                     @endphp
-                                    <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
-                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar1) }}"
-                                            class="preload-img img-fluid rounded-xs" alt="img"
-                                            style="max-width: 400px; max-height: 400px; ">
-                                    </a>
+                                    <div class="col-md-6 mb-4">
+                                        <a class="col" data-gallery="gambar-1" href="#" title="Model Portrait">
+                                            <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar1) }}"
+                                                class="preload-img img-fluid rounded-xs" alt="img"
+                                                style="max-width: 400px; max-height: 400px; ">
+                                        </a>
+                                    </div>
                                 @else
                                     <div class="col"></div>
                                 @endif
@@ -77,11 +88,13 @@
                                     @php
                                         $gambarUploaded = true;
                                     @endphp
-                                    <a class="col" data-gallery="gambar-2" href="#" title="Model Portrait">
-                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar2) }}"
-                                            class="preload-img img-fluid rounded-xs" alt="img"
-                                            style="max-width: 400px; max-height: 400px; ">
-                                    </a>
+                                    <div class="col-md-6 mb-4">
+                                        <a class="col" data-gallery="gambar-2" href="#" title="Model Portrait">
+                                            <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar2) }}"
+                                                class="preload-img img-fluid rounded-xs" alt="img"
+                                                style="max-width: 400px; max-height: 400px; ">
+                                        </a>
+                                    </div>
                                 @else
                                     <div class="col"></div>
                                 @endif
@@ -91,11 +104,13 @@
                                     @php
                                         $gambarUploaded = true;
                                     @endphp
-                                    <a class="col" data-gallery="gambar-3" href="#" title="Model Portrait">
-                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar3) }}"
-                                            class="preload-img img-fluid rounded-xs" alt="img"
-                                            style="max-width: 400px; max-height: 400px; ">
-                                    </a>
+                                    <div class="col-md-6 mb-4">
+                                        <a class="col" data-gallery="gambar-3" href="#" title="Model Portrait">
+                                            <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar3) }}"
+                                                class="preload-img img-fluid rounded-xs" alt="img"
+                                                style="max-width: 400px; max-height: 400px; ">
+                                        </a>
+                                    </div>
                                 @else
                                     <div class="col"></div>
                                 @endif
@@ -105,11 +120,13 @@
                                     @php
                                         $gambarUploaded = true;
                                     @endphp
-                                    <a class="col" data-gallery="gambar-4" href="#" title="Model Portrait">
-                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar4) }}"
-                                            class="preload-img img-fluid rounded-xs" alt="img"
-                                            style="max-width: 400px; max-height: 400px; ">
-                                    </a>
+                                    <div class="col-md-6 mb-4">
+                                        <a class="col" data-gallery="gambar-4" href="#" title="Model Portrait">
+                                            <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar4) }}"
+                                                class="preload-img img-fluid rounded-xs" alt="img"
+                                                style="max-width: 400px; max-height: 400px; ">
+                                        </a>
+                                    </div>
                                 @else
                                     <div class="col"></div>
                                 @endif
@@ -119,11 +136,13 @@
                                     @php
                                         $gambarUploaded = true;
                                     @endphp
-                                    <a class="col" data-gallery="gambar-5" href="#" title="Model Portrait">
-                                        <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar5) }}"
-                                            class="preload-img img-fluid rounded-xs" alt="img"
-                                            style="max-width: 400px; max-height: 400px; ">
-                                    </a>
+                                    <div class="col-md-6 mb-4">
+                                        <a class="col" data-gallery="gambar-5" href="#" title="Model Portrait">
+                                            <img src="{{ asset('images/dokumentasi/' . $dokumentasi->gambar5) }}"
+                                                class="preload-img img-fluid rounded-xs" alt="img"
+                                                style="max-width: 400px; max-height: 400px; ">
+                                        </a>
+                                    </div>
                                 @else
                                     <div class="col"></div>
                                 @endif
@@ -148,10 +167,6 @@
                     <br>
                 </div>
             @endif
-
-
-
-
         </div>
         <!-- End of Page Content-->
     </div>

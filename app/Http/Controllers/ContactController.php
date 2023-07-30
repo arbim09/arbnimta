@@ -34,7 +34,8 @@ class ContactController extends Controller
             'email' => 'required|email',
             'no_hp' => 'required',
             'subject' => 'required',
-            'message' => 'required'
+            'message' => 'required',
+            // 'captcha' => 'required|captcha',
         ]);
 
         $data = array(

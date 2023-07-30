@@ -14,4 +14,9 @@ class Pekerjaan extends Model
     {
         return $this->hasMany(User::class, 'pekerjaan_id');
     }
+
+    public function pendaftaranEvents()
+    {
+        return $this->hasMany(PendaftaranEvents::class, 'pekerjaan_id');
+    }
 }

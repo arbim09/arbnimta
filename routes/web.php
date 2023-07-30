@@ -28,8 +28,10 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Admin\PendaftaranEventsController;
 use App\Http\Controllers\PendaftaranController as DaftarControllers;
 use App\Http\Controllers\AbsensiController as ControllersAbsensiController;
+use App\Http\Controllers\Admin\AnggotaController;
 use App\Http\Controllers\Admin\DokumentasiController;
 use App\Http\Controllers\AnggotaController as ControllersAnggotaController;
+use App\Http\Controllers\Pengurus\AnggotaController as PengurusAnggotaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +73,8 @@ Route::middleware(['auth'])->group(function () {
 		->name('verification.verify');
 	Route::get('/email/resend', [EmailVerificationController::class, 'resend'])->middleware(['auth', 'throttle:6,1'])->name('verification.resend');
 	Route::get('/verify-code', [EmailVerificationController::class, 'show'])->name('verification.code');
-	Route::get('/form-pendaftaran', [DaftarControllers::class, 'index'])->name('form-pendaftaran');
+	// Route::get('/form-pendaftaran', [DaftarControllers::class, 'index'])->name('form-pendaftaran');
+	Route::get('/form-pendaftaran/{event_id}', [DaftarControllers::class, 'index'])->name('form-pendaftaran')->middleware('auth');
 	Route::post('/store-form-pendaftaran', [DaftarControllers::class, 'store'])->name('form-pendaftaran.store');
 	Route::get('/getEvents/{id}', [DaftarControllers::class, 'getEventsByCategory']);
 });
@@ -121,6 +124,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth', 'can:admin'], 'pr
 
 	//export Excel
 	Route::get('/export/data-absensi/{id}', [EventController::class, 'exportToExcel'])->name('dataAbsensiExport.event')->middleware(['can:admin']);
+	Route::get('/export/data-anggota', [AnggotaController::class, 'exportToExcel'])->name('dataAnggotaExport')->middleware(['can:admin']);
 	Route::get('/export/data-pendaftaran/{event_id}', [PendaftaranEventsController::class, 'exportToExcel'])->name('dataPendaftaranExport')->middleware(['can:admin']);
 
 
@@ -180,6 +184,7 @@ Route::group(['namespace' => 'Pengurus', 'middleware' => 'auth', 'prefix' => 'pe
 	//export Excel
 	Route::get('/export/data-pendaftaran/{event_id}', [PendaftaranController::class, 'exportToExcel'])->name('pengurus.dataPendaftaranExport')->middleware(['can:pengurus']);
 	Route::get('/export/data-absensi/{id}', [PengurusEventController::class, 'exportToExcel'])->name('pengurus.dataAbsensiExport.event')->middleware(['can:pengurus']);
+	Route::get('/export/data-anggota', [PengurusAnggotaController::class, 'exportToExcel'])->name('pengurus.dataAnggotaExport')->middleware(['can:pengurus']);
 
 	Route::get('/', [UserController::class, 'index'])->name('pengurus');
 	Route::get('/profile', [ProfileController::class, 'index'])->name('profile');

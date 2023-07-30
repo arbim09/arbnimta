@@ -166,7 +166,7 @@ class HomeController extends Controller
             ->where('categories.id', '=', $id_category)
             ->where('events.is_show', true)
             ->select('events.*', 'categories.name as category_name')
-            ->orderByDesc('events.created_at')
+            ->orderBy('created_at', 'desc')
             ->paginate(6);
 
         if ($request->ajax()) {
