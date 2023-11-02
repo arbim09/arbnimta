@@ -92,7 +92,7 @@ class PostsController extends Controller
                 return response()->json(['error' => 'Gagal mengunggah gambar.'], 400);
             }
             $image              = Image::make(public_path('/images/posts/') . $filenameToStore);
-            $image->fit(400, 400);
+            // $image->fit(400, 400);
             $image->save(public_path('/images/posts/') . $filenameToStore);
 
             $posts->image       = $filenameToStore;

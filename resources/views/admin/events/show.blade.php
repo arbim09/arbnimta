@@ -69,10 +69,17 @@
                                 alt="{{ $events->name }}" class="img-fluid" style="max-width: 200px; max-height: 200px;">
                         </td>
                     </tr>
-                    <tr>
-                        <th style="width: 20%;">QR Code</th>
-                        <td style="width: 80%;"><img src="{{ $qrCodeDataUri }}" alt="QR Code"></td>
-                    </tr>
+                    @if ($events->status == 0)
+                        <tr>
+                            <th style="width: 20%;">QR Code</th>
+                            <td style="width: 80%;">Qr code tidak tersedia event telah selesai</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <th style="width: 20%;">QR Code</th>
+                            <td style="width: 80%;"><img src="{{ $qrCodeDataUri }}" alt="QR Code"></td>
+                        </tr>
+                    @endif
                 </table>
             </div>
         </div>
@@ -81,7 +88,7 @@
     <br>
     <div class="card">
         <div class="card-header d-flex align-items-center" data-toggle="" data-target="">
-            <h5 class="card-title">Data Yang Mengikuti Event:</h5>
+            <h5 class="card-title">Data Absensi Yang Mengikuti Event:</h5>
             <div class="card-tools ml-auto mr-0">
                 <a href="{{ route('dataAbsensiExport.event', $events->id) }}" class="btn btn-primary btn-sm"
                     data-toggle="tooltip" title="#">

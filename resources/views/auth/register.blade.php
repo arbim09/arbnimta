@@ -166,7 +166,7 @@
                             <input type="text" class="form-control rounded-xs" id="c1"
                                 placeholder="Alamat" name="alamat" required />
                             <label for="c1"
-                                class="color-theme form-label-always-active font-10 opacity-50">Address</label>
+                                class="color-theme form-label-always-active font-10 opacity-50">Alamat</label>
                             <span>(required)</span>
                         </div>
                         <div class="form-custom form-label form-icon mb-3">

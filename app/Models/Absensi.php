@@ -18,6 +18,11 @@ class Absensi extends Model
 
     public function event()
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsTo(Events::class);
+    }
+
+    public function pendaftaranEvents()
+    {
+        return $this->belongsTo(PendaftaranEvents::class);
     }
 }

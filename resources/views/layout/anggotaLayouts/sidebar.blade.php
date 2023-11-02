@@ -55,33 +55,10 @@
                 <br>
                 <form action="{{ route('logout') }}" method="POST" id="logoutForm">
                     @csrf
-                    <button type="button" class="btn-full btn bg-blue-dark" data-bs-toggle="modal"
-                        data-bs-target="#logoutModal">
+                    <button type="submit" class="btn-full btn bg-blue-dark">
                         <i class=" shadow-bg shadow-bg-xs bi bi-box-arrow-right"></i>
                         <span>Logout</span>
                     </button>
-
-                    <!-- Modal Logout -->
-                    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel"
-                        aria-hidden="true" data-bs-backdrop="false">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Apakah Anda yakin ingin logout?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-danger">Logout</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>

@@ -53,10 +53,17 @@
                     <td style="width: 80%;"><img src="{{ asset('images/events/' . $events->image) }}"
                             alt="{{ $events->name }}" class="img-fluid" style="max-width: 200px; max-height: 200px;"></td>
                 </tr>
-                <tr>
-                    <th style="width: 20%;">QR Code</th>
-                    <td style="width: 80%;"><img src="{{ $qrCodeDataUri }}" alt="QR Code"></td>
-                </tr>
+                @if ($events->status == 0)
+                    <tr>
+                        <th style="width: 20%;">QR Code</th>
+                        <td style="width: 80%;">Qr code tidak tersedia event telah selesai</td>
+                    </tr>
+                @else
+                    <tr>
+                        <th style="width: 20%;">QR Code</th>
+                        <td style="width: 80%;"><img src="{{ $qrCodeDataUri }}" alt="QR Code"></td>
+                    </tr>
+                @endif
             </table>
         </div>
     </div>

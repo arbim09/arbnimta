@@ -19,6 +19,8 @@
         <form action="{{ route('store.absensi') }}" method="POST" id="absensiForm">
             @csrf
             <input type="hidden" id="event_id" name="event_id" value="">
+            {{-- <input type="hidden" id="waktu_mulai" name="waktu_mulai">
+            <input type="hidden" id="jam" name="jam"> --}}
             <div id="reader" width="600px"></div>
         </form>
     </div>
@@ -30,69 +32,14 @@
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    {{-- <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            // handle the scanned code as you like, for example:
-            console.log(`Code matched = ${decodedText}`, decodedResult);
-            // alert('QR code berhasil dipindai!');
-            const form = document.getElementById("absensiForm");
-            document.getElementById("event_id").value = decodedText
-
-            const formData = new FormData(form);
-            fetch("{{ route('store.absensi') }}", {
-                    headers: {
-                        Accept: "application/json, text-plain, */*",
-                        "X-CSRF-TOKEN": document
-                            .querySelector('meta[name="csrf-token"]')
-                            .getAttribute("content"),
-                    },
-                    method: "post",
-                    body: formData
-                })
-                .then(function(response) {
-                    return response.json()
-                })
-                .then(function(response) {
-                    if (response.success) {
-                        swal("Sukses!", "Absen event berhasil dilakukan", "success");
-                    } else {
-                        swal("Oops...!", "Anda Belum Melakukan Pendaftaran Event! Daftar Terlebih Dahulu", "error");
-                    }
-                })
-                .catch(function(error) {
-                    swal("Oops...!", "Absen event gagal dilakukan, silakan coba lagi 1", "error");
-                });
-        }
-
-        function onScanFailure(error) {
-            // handle scan failure, usually better to ignore and keep scanning.
-            // for example:
-            console.warn(`Code scan error = ${error}`);
-        }
-
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", {
-                fps: 10,
-                qrbox: {
-                    width: 250,
-                    height: 250
-                }
-            },
-            /* verbose= */
-            false);
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-    </script> --}}
 
     <script>
-        let scanning = true; // Tambahkan variabel untuk mengontrol status pemindaian
+        let scanning = true;
 
         function onScanSuccess(decodedText, decodedResult) {
-            if (scanning) { // Tambahkan pengecekan apakah masih dalam status pemindaian
-                scanning = false; // Setel status pemindaian ke false
-
-                // handle the scanned code as you like, for example:
+            if (scanning) {
+                scanning = false;
                 console.log(`Code matched = ${decodedText}`, decodedResult);
-                // alert('QR code berhasil dipindai!');
                 const form = document.getElementById("absensiForm");
                 document.getElementById("event_id").value = decodedText;
 
@@ -135,20 +82,16 @@
                                 });
                             }
                         }
-                        // Menghentikan pemindaian setelah pemindaian pertama
                         html5QrcodeScanner.clear();
                     })
                     .catch(function(error) {
                         swal("Oops...!", "Absen event gagal dilakukan, silakan coba lagi", "error");
-                        // Menghentikan pemindaian setelah pemindaian pertama
                         html5QrcodeScanner.clear();
                     });
             }
         }
 
         function onScanFailure(error) {
-            // handle scan failure, usually better to ignore and keep scanning.
-            // for example:
             console.warn(`Code scan error = ${error}`);
         }
 
@@ -164,4 +107,188 @@
             false);
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     </script>
+
+    {{-- <script>
+        let scanning = true;
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (scanning) {
+                scanning = false;
+                console.log(`Code matched = ${decodedText}`, decodedResult);
+                const qrCodeData = decodedText.split(';').reduce((acc, item) => {
+                    const [key, value] = item.split(':');
+                    acc[key] = value;
+                    return acc;
+                }, {});
+
+                const eventId = qrCodeData.event_id;
+                const startTime = qrCodeData.waktu_mulai;
+                const jam = qrCodeData.jam;
+
+                const eventStartTime = new Date(`${startTime} ${jam}`).getTime();
+                const eventExpiryTime = new Date(qrCodeData.expiry).getTime();
+
+                const now = new Date().getTime();
+
+                if (now >= eventStartTime && now <= eventExpiryTime) {
+                    const form = document.getElementById("absensiForm");
+                    document.getElementById("event_id").value = eventId;
+
+                    const formData = new FormData(form);
+                    fetch("{{ route('store.absensi') }}", {
+                            headers: {
+                                Accept: "application/json, text-plain, */*",
+                                "X-CSRF-TOKEN": document
+                                    .querySelector('meta[name="csrf-token"]')
+                                    .getAttribute("content"),
+                            },
+                            method: "post",
+                            body: formData
+                        })
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(response) {
+                            if (response.success) {
+                                swal({
+                                    title: "Sukses!",
+                                    text: "Absen event berhasil dilakukan",
+                                    icon: "success",
+                                    button: "OK"
+                                });
+                            } else {
+                                if (response.message === "Anda telah melakukan absensi pada event ini sebelumnya.") {
+                                    swal({
+                                        title: "Oops...!",
+                                        text: "Anda telah melakukan absensi pada event ini sebelumnya.",
+                                        icon: "error",
+                                        button: "OK"
+                                    });
+                                }
+                            }
+                            html5QrcodeScanner.clear();
+                        })
+                        .catch(function(error) {
+                            swal("Oops...!", "Absen event gagal dilakukan, silakan coba lagi", "error");
+                            html5QrcodeScanner.clear();
+                        });
+                } else {
+                    swal({
+                        title: "Oops...!",
+                        text: "QR code telah kadaluarsa.",
+                        icon: "error",
+                        button: "OK"
+                    });
+                    html5QrcodeScanner.clear();
+                }
+            }
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", {
+                fps: 10,
+                qrbox: {
+                    width: 250,
+                    height: 250
+                }
+            },
+            /* verbose= */
+            false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script> --}}
+
+    {{-- <script>
+        let scanning = true;
+
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (scanning) {
+                scanning = false;
+                console.log(`Code matched = ${decodedText}`, decodedResult);
+                const qrCodeData = decodedText.split(';').reduce((acc, item) => {
+                    const [key, value] = item.split(':');
+                    acc[key] = value;
+                    return acc;
+                }, {});
+
+                const eventId = qrCodeData.event_id;
+                const startTimeString = qrCodeData.waktu_mulai.replace(' ', 'T'); // Ubah format spasi menjadi "T"
+                const expiryTimeString = qrCodeData.expiry.replace(' ', 'T');
+
+                const eventStartTime = new Date(startTimeString).getTime();
+                const eventExpiryTime = new Date(expiryTimeString).getTime();
+                const now = new Date().getTime();
+
+                if (now >= eventStartTime && now <= eventExpiryTime) {
+                    const form = new FormData();
+                    form.append('event_id', eventId); // Tambahkan event_id ke FormData
+
+                    fetch("{{ route('store.absensi') }}", {
+                            method: "POST",
+                            headers: {
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    "content"),
+                            },
+                            body: form,
+                        })
+                        .then(function(response) {
+                            return response.json();
+                        })
+                        .then(function(response) {
+                            if (response.success) {
+                                swal({
+                                    title: "Sukses!",
+                                    text: "Absen event berhasil dilakukan",
+                                    icon: "success",
+                                    button: "OK"
+                                });
+                            } else {
+                                if (response.message === "Anda telah melakukan absensi pada event ini sebelumnya.") {
+                                    swal({
+                                        title: "Oops...!",
+                                        text: "Anda telah melakukan absensi pada event ini sebelumnya.",
+                                        icon: "error",
+                                        button: "OK"
+                                    });
+                                }
+                            }
+                            html5QrcodeScanner.clear();
+                        })
+                        .catch(function(error) {
+                            swal("Oops...!", "Absen event gagal dilakukan, silakan coba lagi", "error");
+                            html5QrcodeScanner.clear();
+                        });
+                } else {
+                    const expiryTime = new Date(qrCodeData.expiry).toLocaleString();
+                    swal({
+                        title: "Oops...!",
+                        text: `QR code telah kadaluarsa pada ${expiryTime}`,
+                        icon: "error",
+                        button: "OK"
+                    });
+                    html5QrcodeScanner.clear();
+                }
+            }
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", {
+                fps: 10,
+                qrbox: {
+                    width: 250,
+                    height: 250
+                }
+            },
+            /* verbose= */
+            false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script> --}}
 @endpush

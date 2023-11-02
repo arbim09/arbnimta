@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\AnggotaExport;
+use App\Models\User;
+use Box\Spout\Common\Type;
 use Illuminate\Http\Request;
+use App\Exports\AnggotaExport;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
+use Box\Spout\Writer\Common\Creator\WriterFactory;
+
 
 
 class AnggotaController extends Controller

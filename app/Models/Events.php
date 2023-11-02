@@ -29,4 +29,9 @@ class Events extends Model
     {
         return $this->hasMany(Dokumentasi::class, 'event_id');
     }
+
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class);
+    }
 }

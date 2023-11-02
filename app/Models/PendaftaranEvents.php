@@ -26,4 +26,9 @@ class PendaftaranEvents extends Model
     {
         return $this->belongsTo(Pekerjaan::class);
     }
+
+    function absensi()
+    {
+        return $this->hasOne(PendaftaranEvents::class);
+    }
 }

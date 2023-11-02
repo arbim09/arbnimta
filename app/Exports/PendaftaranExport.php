@@ -33,7 +33,7 @@ class PendaftaranExport implements FromQuery, WithMapping, WithHeadings
         return [
             $pendaftaran->name,
             $pendaftaran->email,
-            $pendaftaran->events_name,
+            $pendaftaran->event->name,
             $pendaftaran->no_hp,
         ];
     }

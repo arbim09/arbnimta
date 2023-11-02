@@ -37,8 +37,8 @@
                 </tr>
                 <tr>
                     <th style="width: 20%;">Foto</th>
-                    <td style="width: 80%;"><img src="{{ asset('images/posts/' . $posts->image) }}" alt="{{ $posts->title }}"
-                            class="img-fluid" width="350"></td>
+                    <td style="width: 80%;"><img src="{{ asset('images/posts/' . $posts->image) }}"
+                            alt="{{ $posts->title }}" class="img-fluid" width="350"></td>
                 </tr>
             </table>
         </div>

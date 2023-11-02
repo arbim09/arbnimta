@@ -72,14 +72,15 @@ class PendaftaranController extends Controller
             'no_hp' => 'required|string',
         ]);
 
-        $pendaftaran = new PendaftaranEvents();
-        $pendaftaran->name = $request->name;
-        $pendaftaran->user_id = auth()->user()->id;
-        $pendaftaran->event_id = $event_id;
-        $pendaftaran->email = $request->email;
-        $pendaftaran->pendidikan = $request->pendidikan;
-        $pendaftaran->organisasi = $request->organisasi;
-        $pendaftaran->no_hp = $request->no_hp;
+        $pendaftaran                = new PendaftaranEvents();
+        $pendaftaran->name          = $request->name;
+        $pendaftaran->user_id       = auth()->user()->id;
+        $pendaftaran->event_id      = $event_id;
+        $pendaftaran->email         = $request->email;
+        $pendaftaran->pendidikan    = $request->pendidikan;
+        $pendaftaran->pekerjaan_id    = $request->pekerjaan_id;
+        $pendaftaran->organisasi    = $request->organisasi;
+        $pendaftaran->no_hp         = $request->no_hp;
         $pendaftaran->save();
 
         // Debugging atau hapus baris berikut jika tidak diperlukan

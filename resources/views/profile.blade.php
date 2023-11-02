@@ -179,7 +179,7 @@
                     <i class="bi bi-at font-16"></i>
                     <input type="password" name="password"
                         class="form-control rounded-xs @error('password') is-invalid @enderror" id="input-password"
-                        placeholder="********" maxlength="8" size="8">
+                        placeholder="********">
                     <label for="input-password"
                         class="color-theme form-label-always-active font-10 opacity-50">Password</label>
                 </div>
